@@ -3,7 +3,6 @@
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration Release' # Update this to match your need
 
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
