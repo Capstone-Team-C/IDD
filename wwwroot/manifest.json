@@ -1,0 +1,20 @@
+﻿{
+  "name": "Progressive Web Application Rapid Prototype",
+  "short_name": "PWA RP",
+  "description": "A PWA rapid prototype for the IDD Automation time sheet project.",
+  "icons": [
+    {
+      "src": "/images/clown_pineapple-192x192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/clown_pineapple-512x512.png",
+      "sizes": "512x512"
+    }
+  ],
+  "display": "standalone",
+  "start_url": "https://clowngang.azurewebsites.net/",
+  "theme_color": "green",
+  "background_color": "white",
+  "scope":  "/mvc_trail"
+}
