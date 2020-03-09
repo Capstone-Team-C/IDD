@@ -39,11 +39,18 @@ namespace ImageUpload
             
             // Create a local file in the ./data/ directory for uploading and downloading
             string localPath = "./data/";
+
+            //##########################################
+            // Hard code an image file name here instead
+            //##########################################
             string fileName = "quickstart" + Guid.NewGuid().ToString() + ".txt";
             string localFilePath = Path.Combine(localPath, fileName);
 
             // Write text to the file
             await File.WriteAllTextAsync(localFilePath, "Hello, World!");
+
+            //#########################################
+            //#########################################
 
             // Get a reference to a blob
             BlobClient blobClient = containerClient.GetBlobClient(fileName);
@@ -85,8 +92,15 @@ namespace ImageUpload
             // Download the blob to a local file
             // Append the string "DOWNLOAD" before the .txt extension 
             // so you can compare the files in the data directory
+            
+            //#########################################
+            // Download to same image file+.Download
+            //#########################################
             string downloadFilePath = localFilePath.Replace(".txt", "DOWNLOAD.txt");
 
+
+            //#########################################
+            //#########################################
             Console.WriteLine("\nDownloading blob to\n\t{0}\n", downloadFilePath);
 
             // Download the blob's contents and save it to a file
