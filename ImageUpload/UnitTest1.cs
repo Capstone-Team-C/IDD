@@ -34,13 +34,6 @@ namespace ImageUpload
             // Create the container and return a container client object
             BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);
 
-
-            Directory.CreateDirectory("./data");
-
-            
-            // Create a local file in the ./data/ directory for uploading and downloading
-            // string localPath = "./data/";
-
             // Hard code an image file name here instead
             string fileName = "pineapple.jpg";
             string localPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
@@ -73,10 +66,13 @@ namespace ImageUpload
             Console.WriteLine("Listing blobs...");
 
             // List all blobs in the container
+            Boolean fileExists = false;
             await foreach (BlobItem blobItem in containerClient.GetBlobsAsync())
             {
                 Console.WriteLine("\t" + blobItem.Name);
+                if(blobItem.Name == fileName) fileExists = true;
             }
+            Assert.IsTrue(fileExists);
 
             
             ///////////////////////////
@@ -87,14 +83,9 @@ namespace ImageUpload
             // Append the string "DOWNLOAD" before the .txt extension 
             // so you can compare the files in the data directory
             
-            //#########################################
             // Download to same image file+.Download
-            //#########################################
             string downloadFilePath = localFilePath.Replace(".jpg", "DOWNLOAD.jpg");
 
-
-            //#########################################
-            //#########################################
             Console.WriteLine("\nDownloading blob to\n\t{0}\n", downloadFilePath);
 
             // Download the blob's contents and save it to a file
@@ -104,16 +95,11 @@ namespace ImageUpload
             await download.Content.CopyToAsync(downloadFileStream);
             downloadFileStream.Close();
 
-            Assert.IsTrue(false);
-
             //////////////////////////////////////////////////////////////////////////////
             // Teardown test
             //////////////////////////////////////////////////////////////////////////////
 
-            
-
-            // Empty Directory First!!
-            Directory.Delete("./data");
+            // Assert.IsTrue(false);
         }
     }
 }
