@@ -1,40 +1,49 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FormSubmit;
 using System;
+using System.Diagnostics;
 
 namespace FormSubmit
 {
     [TestClass]
     public class UnitTest1
     {
-        
-
+    
+        //[TestMethod]
+        //public void FromJSON()
+        //{
+        //    Assert.IsFalse(true);
+        //}
         [TestMethod]
-        public void TestMethod1()
+        public void testStoringImagetoAzure()
         {
-            AbstractFormObject obj;
-            obj = new TimesheetForm();
-            obj.print();
-            System.Console.Write("First Run");
-            Assert.IsFalse(false);
+            // First grab a file from filesystem
+            // Setup bucket in azure
+
+            // Call my code(file)
+            // check my code
+
+            // remove things from azure
+            // clean up
         }
 
-        [TestMethod]
-        public void FromJSON()
-        {
-            Assert.IsFalse(true);
-        }
 
         [TestMethod]
         public void ToJSON()
         {
             string k = "{\"json\":\"Something Here\"}";
-            AbstractFormObject obj;
+            TimesheetForm obj;
             obj = new TimesheetForm();
 
-            string j = obj.ToJSON();
-            System.Console.Write(j);
+            for( int i =0; i < 10; ++i){
+               obj.addTimeRow(i, 100, 200, true);
+            }
             
+            string j = obj.ToJSON();
+            System.Console.WriteLine(j);
+            System.Console.WriteLine(k);
+            
+            Assert.IsTrue(false);
             Assert.IsTrue(String.Equals(j,k));
         }
     }
