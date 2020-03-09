@@ -13,6 +13,7 @@ namespace ImageUpload
     public class UnitTest1
     {
         [TestMethod]
+        [DeploymentItem(@"ImageUpload\pineapple.jpg")]
         public async Task TestMethod1()
         {
             
@@ -38,19 +39,12 @@ namespace ImageUpload
 
             
             // Create a local file in the ./data/ directory for uploading and downloading
-            string localPath = "./data/";
+            // string localPath = "./data/";
 
-            //##########################################
             // Hard code an image file name here instead
-            //##########################################
-            string fileName = "quickstart" + Guid.NewGuid().ToString() + ".txt";
+            string fileName = "pineapple.jpg";
+            string localPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
             string localFilePath = Path.Combine(localPath, fileName);
-
-            // Write text to the file
-            await File.WriteAllTextAsync(localFilePath, "Hello, World!");
-
-            //#########################################
-            //#########################################
 
             // Get a reference to a blob
             BlobClient blobClient = containerClient.GetBlobClient(fileName);
@@ -96,7 +90,7 @@ namespace ImageUpload
             //#########################################
             // Download to same image file+.Download
             //#########################################
-            string downloadFilePath = localFilePath.Replace(".txt", "DOWNLOAD.txt");
+            string downloadFilePath = localFilePath.Replace(".jpg", "DOWNLOAD.jpg");
 
 
             //#########################################
