@@ -1,23 +1,35 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<!-- Test CICD -->
 <link rel="manifest" href="~/manifest.json">
 <!-- Note: Avoid using inline styles as much as possible. Instead, use classes or ids & .css files -->
-    <div style="width:100%; margin: 0;">
-        <div class="text-center" 
-             style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 50px; padding-bottom: 50px;
-                    left: 0; border-radius: 10px;">
-            <h1 class="display-4">This will be the AdminUI</h1>
-            <p>Eventually files will be displayed here in a tabular format with sortable columns</p>
-            <br /><br />
-                  <dir id="check-the-css-file">
-                      <p class="color-div" style="background-color:lightgreen;">Timesheet 1</p>
-                      <p class="color-div" style="background-color:lightgreen;">Timesheet 2</p>
-                      <p class="color-div" style="background-color:lightgreen;">Timesheet 3</p>
-                      <p class="color-div" style="background-color:lightgreen;">Timesheet 4</p>
-                      <p class="color-div" style="background-color:lightgreen;">Timesheet 5</p>
-                      <p class="color-div" style="background-color:lightgreen;">Timesheet 6</p>
-                  </dir>
-        </div>
+<div class="leftnav">
+    <p>This space could be use for saved filters, like so:</p>
+    <p><a href="#">Submitted by Bob</a></p>
+    <p><a href="#">Submitted in the last two weeks</a></p>
+    <p><a href="#">All unprocessed timesheets</a></p>
+    <p>Filters themselves can be down below the saved filters</p>
+</div>
+<div class="rightnav">
+    <p>This space could be used to preview a timesheet instead of opening it up a new tab</p>
+    <p>Definitely not a part of the MVP</p>
+    <p>Could be a fun stretch goal tho</p>
+    <p>Regardless, both sidebars should be collapsible/adjustable</p>
+</div>
+    <div class="text-center" 
+         style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 50px; padding-bottom: 50px;
+                                                                                                      left: 0; border-radius: 10px;">
+        <h1 class="display-4">This will be the AdminUI</h1>
+        <p>Eventually files will be displayed here in a tabular format with sortable columns</p>
+        <br /><br />
+        <dir id="check-the-css-file">
+            <p class="color-div" style="background-color:#467839;"><a href="#">These rows will be previews of timesheets</a></p>
+            <p class="color-div" style="background-color:#295F97;"><a href="#">They'll have the file data at a glance</a></p>
+            <p class="color-div" style="background-color:#467839;"><a href="#">Each piece of data will be in a column like so:</a></p>
+            <p class="color-div" style="background-color:#295F97;"><a href="#">Client Name | Provider Name | Provider Prime | Date Submitted | Hours</a></p>
+            <p class="color-div" style="background-color:#467839;"><a href="#">Clicking one of these will open up a timesheet in a new tab</a></p>
+            <p class="color-div" style="background-color:#295F97;"><a href="#">Or maybe a preview window on the side?</a></p>
+            <p class="color-div" style="background-color:#467839;"><a href="#">Throw some check marks on the left of each time sheet a button below to batch process all selected time sheets?</a></p>
+        </dir>
+        <button type="submit">Process selected timesheets</button>
     </div>
