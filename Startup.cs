@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace mvc_trial
+namespace AdminUI
 {
     public class Startup
     {
@@ -53,11 +53,6 @@ namespace mvc_trial
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/");
-
-                // Image upload route
-                endpoints.MapControllerRoute(
-                    name: "image_upload_route",
-                    pattern: "{controller=Home}/{action=Timesheet}");
 
                 // Admin login route
                 endpoints.MapControllerRoute(
