@@ -1,0 +1,1 @@
+{"name":"Vue PWA Rapid Prototype","short_name":"Vue IDD PWA","theme_color":"green","icons":[{"src":"img/icons/clown_pineapple-192x192.png","sizes":"192x192"},{"src":"img/icons/clown_pineapple-512x512.png","sizes":"512x512"}],"start_url":"/","display":"standalone","background_color":"white","description":"A PWA rapid prototype for the IDD Automation time sheet project."}
