@@ -1,8 +1,19 @@
-﻿@{
+﻿@using System.Collections
+@using Amazon.CodeDeploy
+@{
     ViewData["Title"] = "Home Page";
+
+    //Multnomah County Blue and Green
+    var m_blue = "#295F97";
+    var m_green = "#467839";
+
+    //used for zebra print table
+    string color;
+    var even = false;
 }
 <link rel="manifest" href="~/manifest.json">
 <!-- Note: Avoid using inline styles as much as possible. Instead, use classes or ids & .css files -->
+
 <div class="leftnav">
     <p>This space could be use for saved filters, like so:</p>
     <p><a href="#">Submitted by Bob</a></p>
@@ -10,26 +21,108 @@
     <p><a href="#">All unprocessed timesheets</a></p>
     <p>Filters themselves can be down below the saved filters</p>
 </div>
+
 <div class="rightnav">
     <p>This space could be used to preview a timesheet instead of opening it up a new tab</p>
     <p>Definitely not a part of the MVP</p>
     <p>Could be a fun stretch goal tho</p>
     <p>Regardless, both sidebars should be collapsible/adjustable</p>
 </div>
-    <div class="text-center" 
-         style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 50px; padding-bottom: 50px;
-                                                                                                      left: 0; border-radius: 10px;">
-        <h1 class="display-4">This will be the AdminUI</h1>
-        <p>Eventually files will be displayed here in a tabular format with sortable columns</p>
-        <br /><br />
-        <dir id="check-the-css-file">
-            <p class="color-div" style="background-color:#467839;"><a href="#">These rows will be previews of timesheets</a></p>
-            <p class="color-div" style="background-color:#295F97;"><a href="#">They'll have the file data at a glance</a></p>
-            <p class="color-div" style="background-color:#467839;"><a href="#">Each piece of data will be in a column like so:</a></p>
-            <p class="color-div" style="background-color:#295F97;"><a href="#">Client Name | Provider Name | Provider Prime | Date Submitted | Hours</a></p>
-            <p class="color-div" style="background-color:#467839;"><a href="#">Clicking one of these will open up a timesheet in a new tab</a></p>
-            <p class="color-div" style="background-color:#295F97;"><a href="#">Or maybe a preview window on the side?</a></p>
-            <p class="color-div" style="background-color:#467839;"><a href="#">Throw some check marks on the left of each time sheet a button below to batch process all selected time sheets?</a></p>
-        </dir>
-        <button type="submit">Process selected timesheets</button>
-    </div>
+
+<div class="text-center" 
+     style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 50px; padding-bottom: 50px;
+                                      left: 0; border-radius: 10px;">
+    <h1 class="display-4">This will be the AdminUI</h1>
+    <p>Eventually files will be displayed here in a tabular format with sortable columns</p>
+    <br /><br />
+    <dir id="check-the-css-file">
+        <table width="100%">
+            <tr class="color-div" style="background-color: #0294B5">
+                <!--This ugly block of code can probably be fixed, but I'm not sure how tbh. Right now each 
+                    HTML ActionLink sorts the data in the table and having 2 sets for each column allows the 
+                    user to toggle back and forth between descending and ascending-->
+                @if ((string) ViewData["sort"] == "ID")
+                {
+                    <th>@Html.ActionLink("ID", "Index", new {sortOrder = "ID_desc"})</th>
+                }
+                else
+                {
+
+                    <th>@Html.ActionLink("ID", "Index", new {sortOrder = "ID"})</th>
+                }
+
+                @if ((string) ViewData["sort"] == "pname")
+                {
+                    <th>@Html.ActionLink("Provider Name", "Index", new {sortOrder = "pname_desc"})</th>
+                }
+                else
+                {
+                    <th>@Html.ActionLink("Provider Name", "Index", new {sortOrder = "pname"})</th>
+                }
+                @if ((string) ViewData["sort"] == "prime")
+                {
+                    <th>@Html.ActionLink("Prime", "Index", new {sortOrder = "prime_desc"})</th>
+                }
+                else
+                {
+
+                    <th>@Html.ActionLink("Prime", "Index", new {sortOrder = "prime"})</th>
+                }
+                @if ((string) ViewData["sort"] == "cname")
+                {
+                    <th>@Html.ActionLink("Client Name", "Index", new {sortOrder = "cname_desc"})</th>
+                }
+                else
+                {
+
+                    <th>@Html.ActionLink("Client Name", "Index", new {sortOrder = "cname"})</th>
+                }
+                @if ((string) ViewData["sort"] == "hours")
+                {
+                    <th>@Html.ActionLink("Hours", "Index", new {sortOrder = "hours_desc"})</th>
+                }
+                else
+                {
+
+                    <th>@Html.ActionLink("Hours", "Index", new {sortOrder = "hours"})</th>
+                }
+                @if ((string) ViewData["sort"] == "date")
+                {
+                    <th>@Html.ActionLink("Date Submitted", "Index", new {sortOrder = "date_desc"})</th>
+                }
+                else
+                {
+
+                    <th>@Html.ActionLink("Date Submitted", "Index", new {sortOrder = "date"})</th>
+                }
+            </tr>
+            @if (ViewData["Testsheets"] != null)
+            {
+                foreach (var t in ViewData["Testsheets"] as IEnumerable<Timesheet>)
+                {
+                    {
+                        //I guess this is how you do zebra print tables in CSHTML? n-thchild CSS doesn't work in IE
+                        if (even)
+                        {
+                            color = "#8fdde6";
+                        }
+                        else
+                        {
+                            color = "#E6EFF3";
+                        }
+                        even = !even;
+                    }
+                    <tr class ="color-div" style="background-color: @color">
+                        <td>@Html.ActionLink(@t.ID.ToString(), "Timesheet", new {ID = @t.ID})</td>
+                        <td>@t.ProviderName</td>
+                        <td>@t.Prime</td>
+                        <td>@t.ClientName</td>
+                        <td>@t.Hours</td>
+                        <td>@t.Submitted</td>
+                    </tr>
+                }
+            }
+        </table>
+    </dir>
+    <button type="submit">Process selected timesheets</button>
+</div>
