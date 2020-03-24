@@ -186,3 +186,25 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.flex-container.column {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    align-items: left;
+}
+
+.flex-container.row {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+.solid-border {
+    border: 3px solid black;
+    display: inline;
+}
+
+.column {
+    flex: 1;
+}
