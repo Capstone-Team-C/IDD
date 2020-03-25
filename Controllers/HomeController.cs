@@ -20,56 +20,95 @@ namespace AdminUI.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(string sortOrder)
+        public IActionResult Index(string sortOrder, string pName, string cName, string dateFrom, string dateTo, string prime, string id)
         {
+            var sheets = GetTestSheets();
+            var model = new HomeModel();
+            
+            //filter the timesheets 
+            if (!string.IsNullOrEmpty(pName))
+            {
+                model.PName = pName;
+                sheets = sheets.Where(t => t.ProviderName.ToLower().Contains(pName.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(cName))
+            {
+                model.CName = cName;
+                sheets = sheets.Where(t => t.ClientName.ToLower().Contains(cName.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(dateFrom))
+            {
+                model.DateFrom = dateFrom;
+                sheets = sheets.Where(t => t.Submitted >= DateTime.Parse(dateFrom));
+            }
+
+            if (!string.IsNullOrEmpty(dateTo))
+            {
+                model.DateTo = dateTo;
+                sheets = sheets.Where(t => t.Submitted <= DateTime.Parse(dateTo));
+            }
+
+            if (!string.IsNullOrEmpty(prime))
+            {
+                model.Prime = int.Parse(prime);
+                sheets = sheets.Where(t => t.Prime == int.Parse(prime));
+            }
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                model.Id = int.Parse(id);
+                sheets = sheets.Where(t => t.ID == int.Parse(id));
+            }
+
             //big ol' switch statement determines how to sort the data in the table
             switch (sortOrder)
-            {
-                case "ID":
-                    ViewData["Testsheets"] = GetTestSheets().OrderBy(t => t.ID);
+            { 
+                case "id":
+                    sheets = sheets.OrderBy(t => t.ID);
                     break;
-                case "ID_desc":
-                    ViewData["Testsheets"] = GetTestSheets().OrderByDescending(t => t.ID);
+                case "id_desc":
+                    sheets = sheets.OrderByDescending(t => t.ID);
                     break;
                 case "pname":
-                    ViewData["Testsheets"] = GetTestSheets().OrderBy(t => t.ProviderName);
+                    sheets = sheets.OrderBy(t => t.ProviderName);
                     break;
                 case "pname_desc":
-                    ViewData["Testsheets"] = GetTestSheets().OrderByDescending(t => t.ProviderName);
+                    sheets = sheets.OrderByDescending(t => t.ProviderName);
                     break;
                 case "prime":
-                    ViewData["Testsheets"] = GetTestSheets().OrderBy(t => t.Prime);
+                    sheets = sheets.OrderBy(t => t.Prime);
                     break;
                 case "prime_desc":
-                    ViewData["Testsheets"] = GetTestSheets().OrderByDescending(t => t.Prime);
+                    sheets = sheets.OrderByDescending(t => t.Prime);
                     break;
                 case "cname":
-                    ViewData["Testsheets"] = GetTestSheets().OrderBy(t => t.ClientName);
+                    sheets = sheets.OrderBy(t => t.ClientName);
                     break;
                 case "cname_desc":
-                    ViewData["Testsheets"] = GetTestSheets().OrderByDescending(t => t.ClientName);
+                    sheets = sheets.OrderByDescending(t => t.ClientName);
                     break;
                 case "date":
-                    ViewData["Testsheets"] = GetTestSheets().OrderBy(t => t.Submitted);
+                    sheets = sheets.OrderBy(t => t.Submitted);
                     break;
                 case "date_desc":
-                    ViewData["Testsheets"] = GetTestSheets().OrderByDescending(t => t.Submitted);
+                    sheets = sheets.OrderByDescending(t => t.Submitted);
                     break;
                 case "hours":
-                    ViewData["Testsheets"] = GetTestSheets().OrderBy(t => t.Hours);
+                    sheets = sheets.OrderBy(t => t.Hours);
                     break;
-                case "house_desc":
-                    ViewData["Testsheets"] = GetTestSheets().OrderByDescending(t => t.Hours);
+                case "hours_desc":
+                    sheets = sheets.OrderByDescending(t => t.Hours);
                     break;
                 default:
-                    ViewData["Testsheets"] = GetTestSheets().OrderBy(t => t.ID);
+                    sheets = sheets.OrderBy(t => t.ID);
                     break;
             }
 
-            //keep track of the current sort order
-            ViewData["Sort"] = sortOrder;
-
-            return View();
+            model.SortOrder = sortOrder;
+            model.Sheets = new List<Timesheet>(sheets);
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -79,9 +118,9 @@ namespace AdminUI.Controllers
         }
 
         //generate some fake time sheets
-        private static List<Timesheet> GetTestSheets()
+        private static IEnumerable<Timesheet> GetTestSheets()
         {
-            return new List<Timesheet>
+            var t = new List<Timesheet>
             {
                 new Timesheet { ID = 1, ClientName = "Mickey Mouse", ProviderName = "Minnie Mouse", Prime = 12345, Submitted = DateTime.Parse("2020-03-23") , Hours = 30.0},
                 new Timesheet { ID = 2, ClientName = "Huey Duck", ProviderName = "Donald Duck", Prime = 4444, Submitted = DateTime.Parse("2020-03-21"), Hours = 35.3 },
@@ -113,6 +152,17 @@ namespace AdminUI.Controllers
                 new Timesheet { ID = 28, ClientName = "Dalmation 9", ProviderName = "Dalmation Daddy", Prime = 101, Submitted = DateTime.Parse("2020-03-20") , Hours = 34.3 },
                 new Timesheet { ID = 29, ClientName = "Dalmation 10", ProviderName = "Dalmation Daddy", Prime = 101, Submitted = DateTime.Parse("2020-03-20"), Hours = 25.3  }
             };
+            for (int i = 30; i < 1000; i++)
+            {
+                t.Add(new Timesheet
+                {
+                    ID = i, ClientName = "Dalmation " + i.ToString(), ProviderName = "Dalmation Daddy", Prime = 101,
+                    Submitted = DateTime.Parse("2020-03-20"), Hours = 25.3
+                });
+            }
+
+            return t;
+
         }
 
         //should return a Timesheet View

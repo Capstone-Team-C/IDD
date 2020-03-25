@@ -1,5 +1,6 @@
 ﻿@using System.Collections
 @using Amazon.CodeDeploy
+@model HomeModel
 @{
     ViewData["Title"] = "Home Page";
 
@@ -8,17 +9,16 @@
     var m_green = "#467839";
 
     //used for zebra print table
-    string color;
-    var even = false;
+    var color = "#8FDDE6";
 }
 <link rel="manifest" href="~/manifest.json">
 <!-- Note: Avoid using inline styles as much as possible. Instead, use classes or ids & .css files -->
 
 <div class="leftnav">
     <p>This space could be use for saved filters, like so:</p>
-    <p><a href="#">Submitted by Bob</a></p>
-    <p><a href="#">Submitted in the last two weeks</a></p>
-    <p><a href="#">All unprocessed timesheets</a></p>
+    <p>@Html.ActionLink("Submitted by Donald Duck", "Index", new {pname="Donald Duck"})</p>
+    <p>@Html.ActionLink("Submitted in the last two days", "Index", new {datefrom=@DateTime.Today.AddDays(-2)}) </p>
+    <p>@Html.ActionLink("All unprocessed Timesheets", "Index", new { })</p>
     <p>Filters themselves can be down below the saved filters</p>
 </div>
 
@@ -30,99 +30,222 @@
 </div>
 
 <div class="text-center" 
-     style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 50px; padding-bottom: 50px;
+     style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 25px; padding-bottom: 25px;
                                       left: 0; border-radius: 10px;">
-    <h1 class="display-4">This will be the AdminUI</h1>
-    <p>Eventually files will be displayed here in a tabular format with sortable columns</p>
-    <br /><br />
+    <form>
+        <label for="id">ID:</label>
+        <input type="number" name="id" id="id" value="@Model.Id" />
+        
+        <label for="pName">Provider Name:</label>
+        <input type="text" name="pName" id="pName" value ="@Model.PName">
+        
+        <label for="prime">Prime:</label>
+        <input type="number" name="prime" id="prime" value ="@Model.Prime"><br/>
+        
+        <label for="cName">Client Name:</label>
+        <input type="text" name="cName" id="cName" value="@Model.CName">
+        
+        <label for="dateFrom">From:</label>
+        <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom">
+        
+        <label for="dateTo">To:</label>
+        <input type="date" name="dateTo" id="dateTo" value ="@Model.DateTo"><br/>
+
+        <input type="submit" value ="Apply Filters"/>
+        <br/><br/>
+    </form>
     <dir id="check-the-css-file">
         <table width="100%">
             <tr class="color-div" style="background-color: #0294B5">
                 <!--This ugly block of code can probably be fixed, but I'm not sure how tbh. Right now each 
-                    HTML ActionLink sorts the data in the table and having 2 sets for each column allows the 
-                    user to toggle back and forth between descending and ascending-->
-                @if ((string) ViewData["sort"] == "ID")
+                HTML ActionLink sorts the data in the table and having 2 sets for each column allows the 
+                user to toggle back and forth between descending and ascending-->
+                @if (Model.SortOrder == "id")
                 {
-                    <th>@Html.ActionLink("ID", "Index", new {sortOrder = "ID_desc"})</th>
+                    <th>@Html.ActionLink("ID", "Index", new
+                        {
+                            sortOrder = "id_desc",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
                 else
                 {
 
-                    <th>@Html.ActionLink("ID", "Index", new {sortOrder = "ID"})</th>
+                    <th>@Html.ActionLink("ID", "Index", new
+                        {
+                            sortOrder = "id",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+
+                        })</th>
                 }
 
-                @if ((string) ViewData["sort"] == "pname")
+                @if (Model.SortOrder == "pname")
                 {
-                    <th>@Html.ActionLink("Provider Name", "Index", new {sortOrder = "pname_desc"})</th>
+                    <th>@Html.ActionLink("Provider Name", "Index", new
+                        {
+                            sortOrder = "pname_desc",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+
+                        })</th>
                 }
                 else
                 {
-                    <th>@Html.ActionLink("Provider Name", "Index", new {sortOrder = "pname"})</th>
+                    <th>@Html.ActionLink("Provider Name", "Index", new
+                        {
+                            sortOrder = "pname",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+
+                        })</th>
                 }
-                @if ((string) ViewData["sort"] == "prime")
+                @if (Model.SortOrder == "prime")
                 {
-                    <th>@Html.ActionLink("Prime", "Index", new {sortOrder = "prime_desc"})</th>
+                    <th>@Html.ActionLink("Prime", "Index", new
+                        {
+                            sortOrder = "prime_desc",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
                 else
                 {
 
-                    <th>@Html.ActionLink("Prime", "Index", new {sortOrder = "prime"})</th>
+                    <th>@Html.ActionLink("Prime", "Index", new
+                        {
+                            sortOrder = "prime",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
-                @if ((string) ViewData["sort"] == "cname")
+                @if (Model.SortOrder == "cname")
                 {
-                    <th>@Html.ActionLink("Client Name", "Index", new {sortOrder = "cname_desc"})</th>
+                    <th>@Html.ActionLink("Client Name", "Index", new
+                        {
+                            sortOrder = "cname_desc",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
                 else
                 {
 
-                    <th>@Html.ActionLink("Client Name", "Index", new {sortOrder = "cname"})</th>
+                    <th>@Html.ActionLink("Client Name", "Index", new
+                        {
+                            sortOrder = "cname",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
-                @if ((string) ViewData["sort"] == "hours")
+                @if (Model.SortOrder == "hours")
                 {
-                    <th>@Html.ActionLink("Hours", "Index", new {sortOrder = "hours_desc"})</th>
+                    <th>@Html.ActionLink("Hours", "Index", new
+                        {
+                            sortOrder = "hours_desc",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
                 else
                 {
 
-                    <th>@Html.ActionLink("Hours", "Index", new {sortOrder = "hours"})</th>
+                    <th>@Html.ActionLink("Hours", "Index", new
+                        {
+                            sortOrder = "hours",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
-                @if ((string) ViewData["sort"] == "date")
+                @if (Model.SortOrder == "date")
                 {
-                    <th>@Html.ActionLink("Date Submitted", "Index", new {sortOrder = "date_desc"})</th>
+                    <th>@Html.ActionLink("Date Submitted", "Index", new
+                        {
+                            sortOrder = "date_desc",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
                 else
                 {
 
-                    <th>@Html.ActionLink("Date Submitted", "Index", new {sortOrder = "date"})</th>
+                    <th>@Html.ActionLink("Date Submitted", "Index", new
+                        {
+                            sortOrder = "date",
+                            id = Model.Id,
+                            pname = Model.PName,
+                            prime = Model.Prime,
+                            cname = Model.CName,
+                            datefrom = Model.DateFrom,
+                            dateto = Model.DateTo
+                        })</th>
                 }
             </tr>
-            @if (ViewData["Testsheets"] != null)
+            @foreach (var t in Model.Sheets)
             {
-                foreach (var t in ViewData["Testsheets"] as IEnumerable<Timesheet>)
                 {
-                    {
-                        //I guess this is how you do zebra print tables in CSHTML? n-thchild CSS doesn't work in IE
-                        if (even)
-                        {
-                            color = "#8fdde6";
-                        }
-                        else
-                        {
-                            color = "#E6EFF3";
-                        }
-                        even = !even;
-                    }
-                    <tr class ="color-div" style="background-color: @color">
-                        <td>@Html.ActionLink(@t.ID.ToString(), "Timesheet", new {ID = @t.ID})</td>
-                        <td>@t.ProviderName</td>
-                        <td>@t.Prime</td>
-                        <td>@t.ClientName</td>
-                        <td>@t.Hours</td>
-                        <td>@t.Submitted</td>
-                    </tr>
+                    //I guess this is how you do zebra print tables in CSHTML? n-thchild CSS doesn't work in IE
+                    color = color == "#8FDDE6" ? "#E6EFF3" : "#8FDDE6";
                 }
+                <tr class ="color-div" style="background-color: @color">
+                    <td>@Html.ActionLink(@t.ID.ToString(), "Timesheet", new {ID = @t.ID})</td>
+                    <td>@t.ProviderName</td>
+                    <td>@t.Prime</td>
+                    <td>@t.ClientName</td>
+                    <td>@t.Hours</td>
+                    <td>@t.Submitted</td>
+                </tr>
             }
         </table>
+        @if (Model.Sheets.Count == 0)
+        {
+            <br /><p>No Timesheets found matching parameters</p>
+        }
     </dir>
-    <button type="submit">Process selected timesheets</button>
+    <br/><button type="submit">Process selected timesheets</button>
 </div>
