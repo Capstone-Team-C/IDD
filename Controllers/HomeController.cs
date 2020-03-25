@@ -162,7 +162,6 @@ namespace AdminUI.Controllers
             }
 
             return t;
-
         }
 
         //should return a Timesheet View
