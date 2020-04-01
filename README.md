@@ -1,24 +1,21 @@
-# vue
+# IDD Timesheet Project
 
-## Project setup
-```
-npm install
-```
+This project is to help facilitate third parties uploading timesheet images
+and having the image digitized into a timesheet object using services
+such as AWS Textract or Google Vision.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## PWA
 
-### Compiles and minifies for production
-```
-npm run build
-```
+This directory is the PWA portion of the project that is used by the third
+party to upload their timesheets.
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Appserver
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+This directory contains the backend API that is used in conjunction with the
+PWA to receive the image, digitize the information, and send responses back
+to the PWA.
+
+## Admin UI
+
+This directory contains the administrative side which allows a company to 
+examine the digitized information and approve or disapprove submissions.
