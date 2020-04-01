@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewData["Title"] = "Timesheet";
+    var sheet = ViewData["Sheet"] as Timesheet;
+}
+
+<div class="flex-container column">
+    <h1>eXPRS Plan of Care - Services Delivered Report Form</h1>
+    <div class="flex-container row">
+        <div class="column">
+            <label for="client-name">Timesheet ID:</label> @sheet.ID
+        </div>
+    </div>
+    <div class="flex-container row">
+        <div class="column">
+            <label for="client-name">Customer Name:</label> @sheet.ClientName
+        </div>
+        <div class="column">
+            <label for="prime">Prime: </label> @sheet.Prime
+        </div>
+    </div>
+    <div class="flex-container row">
+        <div class="column">
+            <label for="provider-name">Provider Name:</label> @sheet.ProviderName
+        </div>
+        <div class="column">
+            <label for="provider-num">Provider #:</label>
+        </div>
+    </div>
+    <div class="flex-container row">
+        <div class="column">
+            <label for="cm-organization">CM Organization:</label> Multnomah Case Mangement Provider
+        </div>
+        <div class="column">
+            <label for="sc-pa-name">SC/PA Name:</label>
+        </div>
+    </div>
+    <div class="flex-container row">
+        <div class="column">
+            <label for="service-authorized">Service Authorized:</label> SE151/OR526
+        </div>
+        <div class="column">
+            <label for="mod-cd">Mod Cd:</label>
+        </div>
+        <div class="column">
+            <label for="units">Units:</label>
+        </div>
+        <div class="column">
+            <label for="type">Type:</label>
+        </div>
+        <div class="column">
+            <label for="freq">Freq:</label>
+        </div>
+    </div>
+    <div class="flex-container row">
+        <b>Timesheet Total Hours: <div class="solid-border">@sheet.Hours</div></b>
+    </div>
+
+</div>
