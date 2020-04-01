@@ -24,6 +24,7 @@
 		<h3>Drop files to upload</h3>
       </div>
 
+	<!-- coment !-->
 	<div class="example-btn">
 		<file-upload
           class="btn btn-primary"
@@ -39,6 +40,7 @@
           <i class="fa fa-plus"></i>
           Select files
         </file-upload>
+
         <button type="button" class="btn btn-success" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
           <i class="fa fa-arrow-up" aria-hidden="true"></i>
           Start Upload
@@ -51,6 +53,7 @@
     </div>
   </div>
 </template>
+<!-- seperate into different files (CSS, JS, HTML) !-->
 
 <style lang="scss" scoped>
 .example-drag.drop-space{
@@ -105,6 +108,7 @@
 import FileUpload from 'vue-upload-component'
 //mport {upload} from '../fakeFileUploadService'
 //import {wait} from '../utils'
+//create enum (strongly typed) for specific cases that are testable.
 //const STATUS_INITIAL = 0, STATUS_FAILED = 1, STATUS_SAVING = 1; STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 
 
