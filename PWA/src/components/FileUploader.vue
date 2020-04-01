@@ -27,7 +27,7 @@
 	<div class="example-btn">
 		<file-upload
           class="btn btn-primary"
-          post-action="https://en91d9jkz3gou.x.pipedream.net"
+          post-action="https://localhost:5004/ImageUpload"
           :multiple="true"
           :drop="true"
           :drop-directory="true"
@@ -121,8 +121,24 @@ export default {
       //currentStatus: null,
       //uploadFieldName: 'files'
     }
+  },
+/*
+  methods: {
+      onChange(event) {
+        if (!event.target.files.length) {return}
+		const image = event.target.files[0]
+		const reader = new FileReader()
+		
+		reader.readAsDataURL(image)
+
+		this.persist(image)
+		},
+      persist (image) {
+        const data = new FormData()
+		data.append('image', image)
+    }
   }
-  /*computer: {
+  computer: {
     isInitial() {
      return this.currentStatus === STATUS_INITIAL; 
     },

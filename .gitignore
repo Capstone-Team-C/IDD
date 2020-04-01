@@ -370,3 +370,8 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Generated webpack and chunk files
+chunk-vendors.*
+precache-manifest.*
+app.*
