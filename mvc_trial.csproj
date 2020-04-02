@@ -19,9 +19,26 @@
 
   <ItemGroup>
     <Content Remove="Views\Index.cshtml" />
+    <Content Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.dgspec.json" />
+    <Content Remove="mvc_trialTest\obj\project.assets.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Admin\" />
     <Folder Include="uploaded_docs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="mvc_trialTest\AdminControllereTest.cs" />
+    <Compile Remove="mvc_trialTest\ImageUploadControllerTest.cs" />
+    <Compile Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="mvc_trialTest\.gitignore" />
+    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.g.targets" />
+    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.cache" />
+    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.g.props" />
+    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.csprojAssemblyReference.cache" />
+    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.assets.cache" />
+    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.AssemblyInfoInputs.cache" />
+    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.csproj.FileListAbsolute.txt" />
   </ItemGroup>
 </Project>
