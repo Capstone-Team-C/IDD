@@ -233,9 +233,9 @@
                     color = color == "#8FDDE6" ? "#E6EFF3" : "#8FDDE6";
                 }
                 <tr class ="color-div" style="background-color: @color">
-                    <td>@Html.ActionLink(@t.ID.ToString(), "Timesheet", new {ID = @t.ID})</td>
+                    <td>@Html.ActionLink(@t.TimesheetID.ToString(), "Timesheet", new {ID = @t.TimesheetID})</td>
                     <td>@t.ProviderName</td>
-                    <td>@t.Prime</td>
+                    <td>@t.ClientPrime</td>
                     <td>@t.ClientName</td>
                     <td>@t.Hours</td>
                     <td>@t.Submitted</td>
