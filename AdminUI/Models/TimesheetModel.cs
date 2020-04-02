@@ -9,6 +9,7 @@ namespace AdminUI.Models
 {
     public class Timesheet
     {
+
         //unique ID for each timesheet
         public int TimesheetID { get; set; }
         
@@ -57,6 +58,4 @@ namespace AdminUI.Models
         public double Hours { get; set; }
         public bool Group { get; set; }
     }
-
-
 }

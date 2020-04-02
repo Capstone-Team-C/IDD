@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.3283cd57ee4560a9288c75ec3aa74ba5.js"
+  "/precache-manifest.a43733c41f2074e043293c15d39c405d.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "Vue-PWA-Rapid-Prototype"});

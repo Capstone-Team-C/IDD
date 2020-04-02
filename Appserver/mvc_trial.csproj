@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseNETCoreGenerator>true</UseNETCoreGenerator>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.59" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.104.33" />
+    <PackageReference Include="AWSSDK" Version="2.3.55.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+    <PackageReference Include="AWSSDK.Textract" Version="3.3.102.32" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <Content Remove="Views\Index.cshtml" />
+    <Content Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.dgspec.json" />
+    <Content Remove="mvc_trialTest\obj\project.assets.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Admin\" />
+    <Folder Include="uploaded_docs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="mvc_trialTest\AdminControllereTest.cs" />
+    <Compile Remove="mvc_trialTest\ImageUploadControllerTest.cs" />
+    <Compile Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="mvc_trialTest\.gitignore" />
+    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.g.targets" />
+    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.cache" />
+    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.g.props" />
+    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.csprojAssemblyReference.cache" />
+    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.assets.cache" />
+    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.AssemblyInfoInputs.cache" />
+    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.csproj.FileListAbsolute.txt" />
+  </ItemGroup>
+</Project>
