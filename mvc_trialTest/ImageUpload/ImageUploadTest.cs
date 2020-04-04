@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 namespace ImageUpload.Tests
 {
     [TestClass()]
-    public class UnitTest1
+    public class ImageUploadTest
     {
         [TestMethod()]
         [DeploymentItem(@"Appserver/ImageUpload/pineapple.jpg")]
