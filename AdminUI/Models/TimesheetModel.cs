@@ -9,8 +9,11 @@ namespace AdminUI.Models
         public int ID { get; set; }
         public string ClientName { get; set; }
         public string ProviderName { get; set; }
+        public int ProviderNum { get; set; }
         public int Prime { get; set; }
         public double Hours { get; set; }
         public DateTime Submitted { get; set; }
+        public string FormType { get; set; }
+        public string ServiceAuth { get; set; }
     }
 }

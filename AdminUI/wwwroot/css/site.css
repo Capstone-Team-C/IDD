@@ -207,4 +207,14 @@ body {
 
 .column {
     flex: 1;
+    font-weight: bold;
+}
+
+/*Timesheet.cshtml*/
+label {
+    font-weight: bold;
+}
+
+header {
+    font-weight: bold;
 }
