@@ -21,26 +21,26 @@
 
   <ItemGroup>
     <Content Remove="Views\Index.cshtml" />
-    <Content Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.dgspec.json" />
-    <Content Remove="mvc_trialTest\obj\project.assets.json" />
+    <Content Remove="AppserverTest\obj\AppserverTest.csproj.nuget.dgspec.json" />
+    <Content Remove="AppserverTest\obj\project.assets.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Admin\" />
     <Folder Include="uploaded_docs\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="mvc_trialTest\AdminControllereTest.cs" />
-    <Compile Remove="mvc_trialTest\ImageUploadControllerTest.cs" />
-    <Compile Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.AssemblyInfo.cs" />
+    <Compile Remove="AppserverTest\AdminControllereTest.cs" />
+    <Compile Remove="AppserverTest\ImageUploadControllerTest.cs" />
+    <Compile Remove="AppserverTest\obj\Debug\netcoreapp3.1\AppserverTest.AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="mvc_trialTest\.gitignore" />
-    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.g.targets" />
-    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.cache" />
-    <None Remove="mvc_trialTest\obj\mvc_trialTest.csproj.nuget.g.props" />
-    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.csprojAssemblyReference.cache" />
-    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.assets.cache" />
-    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.AssemblyInfoInputs.cache" />
-    <None Remove="mvc_trialTest\obj\Debug\netcoreapp3.1\mvc_trialTest.csproj.FileListAbsolute.txt" />
+    <None Remove="AppserverTest\.gitignore" />
+    <None Remove="AppserverTest\obj\AppserverTest.csproj.nuget.g.targets" />
+    <None Remove="AppserverTest\obj\AppserverTest.csproj.nuget.cache" />
+    <None Remove="AppserverTest\obj\AppserverTest.csproj.nuget.g.props" />
+    <None Remove="AppserverTest\obj\Debug\netcoreapp3.1\AppserverTest.csprojAssemblyReference.cache" />
+    <None Remove="AppserverTest\obj\Debug\netcoreapp3.1\AppserverTest.assets.cache" />
+    <None Remove="AppserverTest\obj\Debug\netcoreapp3.1\AppserverTest.AssemblyInfoInputs.cache" />
+    <None Remove="AppserverTest\obj\Debug\netcoreapp3.1\AppserverTest.csproj.FileListAbsolute.txt" />
   </ItemGroup>
 </Project>

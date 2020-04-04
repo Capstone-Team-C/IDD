@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Appserver\mvc_trial.csproj" />
+    <ProjectReference Include="..\Appserver\Appserver.csproj" />
   </ItemGroup>
 
 </Project>
