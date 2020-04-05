@@ -20,5 +20,13 @@ namespace IDD
             await blobClient.UploadFromStreamAsync(uploadFileStream);
             uploadFileStream.Close();
         }
+
+        public static async Task UploadImage64(CloudBlockBlob blobClient, string fileName, string base64)
+        {
+            using MemoryStream memoryStream = new MemoryStream( Convert.FromBase64String(base64) );
+
+            var imageBlob = blobClient.Container.GetBlockBlobReference(fileName);
+            await imageBlob.UploadFromStreamAsync(memoryStream);
+        }
     }
 }
