@@ -25,6 +25,7 @@ namespace mvc_trial
         {
             services.AddControllersWithViews();
             services.AddProgressiveWebApp();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +44,9 @@ namespace mvc_trial
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseCors(builder =>
+              builder.WithOrigins("http://localhost:8080"));
+    
             app.UseRouting();
 
             app.UseAuthorization();

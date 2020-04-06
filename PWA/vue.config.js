@@ -1,5 +1,18 @@
+var webpack = require('webpack')
 module.exports = {
   // ...other vue-cli plugin options...
+  devServer: {
+		public: 'http://localhost:8080',
+		//https: true,
+		/*proxy: {
+			"/ImageUpload/": {
+				target: "https://localhost:5004/ImageUpload",
+				changeOrigin: true,
+				pathRewrite: {"^/ImageUpload": "/"},
+				logLevel: "debug"
+			}
+		}*/
+  },
   pwa: {
     name: 'Vue PWA Rapid Prototype',
     short_name: 'Vue IDD PWA',

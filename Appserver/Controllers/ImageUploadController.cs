@@ -33,6 +33,9 @@ namespace mvc_trial.Controllers
             image_types.Add("image/png");
             image_types.Add("image/tiff");
 
+            //List of file upload times
+            List<String> stats = new List<string>();
+
             // Iterate over list of submitted documents
             foreach (var file in files)
             {
@@ -42,12 +45,31 @@ namespace mvc_trial.Controllers
                     // Process image file upload
                     if (image_types.Contains(file.ContentType))
                     {
+                        //Time how long it takes to upload image
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
                         process_image_upload(file);
+
+                        stopwatch.Stop();
+                        TimeSpan ts = stopwatch.Elapsed;
+                        string s = String.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
+                        stopwatch.Reset();
+                        stats.Add(file.FileName + " :: " + s);
                     }
                     // Process PDF upload
                     else if ("application/pdf".Equals(file.ContentType))
                     {
+                        //Time how long it takes to upload pdf
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
                         process_pdf_upload(file);
+
+                        stopwatch.Stop();
+                        TimeSpan ts = stopwatch.Elapsed;
+                        string s = String.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
+                        stopwatch.Reset();
+                        stats.Add(file.FileName + " :: " + s);
                     }
                     // Skip unhandled MIME types
                     else
@@ -59,7 +81,7 @@ namespace mvc_trial.Controllers
                 }
             }
 
-            return Json(new { count = files.Count, total_size = size});
+            return Json(new { count = files.Count, total_size = size, upload_times=stats});
         }
 
         // Method to generate the connection string to remote SQL Server

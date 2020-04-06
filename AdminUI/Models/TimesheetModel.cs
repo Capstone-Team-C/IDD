@@ -21,10 +21,9 @@ namespace AdminUI.Models
         public string SCPAName { get; set; }
         public string Service { get; set; }
         public string ModCD { get; set; }
+        public string Units { get; set; }
         public string Type { get; set; }
         public string Freq { get; set; }
-        public string Units { get; set; }
-
         
         //hours worked
         public IList<Shift> Shifts = new List<Shift>();
@@ -39,7 +38,6 @@ namespace AdminUI.Models
         public bool ProviderSignature { get; set; }
         [DataType(DataType.Date)]
         public DateTime? ProviderSigned { get; set; }
-
         public DateTime Submitted { get; set; }
 
 
@@ -50,7 +48,7 @@ namespace AdminUI.Models
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         
-        [DataType(DataType.Time)] //https://www.c-sharpcorner.com/article/datetime-in-c-sharp/
+        [DataType(DataType.Time)]
         public DateTime In { get; set; }
         
         [DataType(DataType.Time)] 

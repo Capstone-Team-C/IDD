@@ -1,4 +1,4 @@
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using mvc_trial.Controllers;
@@ -6,14 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace mvc_trialTest
 {
+    [TestClass]
     public class AdminControllereTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
+        
 
-        [Test]
+        [TestMethod]
         public void AdminDashboardTest()
         {
             AdminController adc = new AdminController();
@@ -21,20 +19,20 @@ namespace mvc_trialTest
             Assert.IsNotNull(result.ViewData);
         }
 
-        [Test]
+        [TestMethod]
         public void AdminFilterDateTest()
         {
             AdminController adc = new AdminController();
             var result = (JsonResult)adc.FilterDate("today", "yesterday");
-            Assert.IsNotEmpty(result.ToString());
+            Assert.IsTrue(result.ToString() != "");
         }
 
-        [Test]
+        [TestMethod]
         public void AdminFilterNameTest()
         {
             AdminController adc = new AdminController();
             var result = (JsonResult)adc.FilterName("Oranssi", "Pazuzu");
-            Assert.IsNotEmpty(result.ToString());
+            Assert.IsTrue(result.ToString() != "");
         }
 
     }
