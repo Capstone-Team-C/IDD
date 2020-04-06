@@ -1,41 +1,28 @@
-var webpack = require('webpack')
 module.exports = {
-  // ...other vue-cli plugin options...
-  devServer: {
-		public: 'http://localhost:8080',
-		//https: true,
-		/*proxy: {
-			"/ImageUpload/": {
-				target: "https://localhost:5004/ImageUpload",
-				changeOrigin: true,
-				pathRewrite: {"^/ImageUpload": "/"},
-				logLevel: "debug"
-			}
-		}*/
-  },
-  pwa: {
-    name: 'Vue PWA Rapid Prototype',
-    short_name: 'Vue IDD PWA',
-    theme_color: 'green',
-    background_color: 'white',
-    display: 'standalone',
-    start_url: '.',
-    iconPaths: {
-      favicon16: 'img/icons/favicon-32x32.ico',
-      favicon32: 'img/icons/favicon-32x32.ico',
-      icons: [
+  "pwa": {
+    "name": "IDD Timesheet Submission Application",
+    "short_name": "IDD Timesheets",
+    "theme_color": "green",
+    "background_color": "white",
+    "display": "standalone",
+    "start_url": ".",
+    "iconPaths": {
+      "favicon16": "img/icons/favicon-16x16.png",
+      "favicon32": "img/icons/favicon-32x32.png",
+      "icons": [
         {
-            src: 'assets/icons/clown_pineapple-192x192.png',
-            sizes: '192x192'
+          "src": "assets/icons/logo_short-192x192.png",
+          "sizes": "192x192"
         },
         {
-            src: 'assets/icons/clown_pineapple-512x512.png',
-            sizes: '512x512'
+          "src": "assets/icons/logo_short-512x512.png",
+          "sizes": "512x512"
         }
       ]
     },
-    // configure the workbox plugin
-    // Must change this for custom service worker file
-    workboxPluginMode: 'GenerateSW',
-  }
+    "workboxPluginMode": "GenerateSW"
+  },
+  "transpileDependencies": [
+    "vuetify"
+  ]
 }

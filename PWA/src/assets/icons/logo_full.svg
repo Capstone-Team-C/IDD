@@ -11,10 +11,10 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
    id="svg3713"
-   width="229.3262"
-   height="165.60797"
-   viewBox="0 0 229.3262 165.60797"
-   sodipodi:docname="short_logo.svg"
+   width="600.13019"
+   height="183.02049"
+   viewBox="0 0 600.13019 183.02049"
+   sodipodi:docname="case-study-multnomah-logo.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
      id="metadata3719">
@@ -50,7 +50,7 @@
      fit-margin-bottom="0"
      inkscape:zoom="1.2041667"
      inkscape:cx="141.99928"
-     inkscape:cy="121.54455"
+     inkscape:cy="138.95707"
      inkscape:window-x="-11"
      inkscape:window-y="35"
      inkscape:window-maximized="1"
@@ -73,5 +73,21 @@
        d="m 103.76471,83.438277 c -3.919339,-1.154915 -5.397928,-1.945055 -5.397928,-2.884597 0,-1.289933 28.116308,-53.223053 36.966588,-68.280324 4.40078,-7.4871833 6.17236,-9.6794255 8.90083,-11.0143422 2.16609,-1.05976604 2.47254,-1.1072446 4.08492,-0.63287625 3.18923,0.93827955 4.7745,3.13160675 11.71951,16.21469245 7.83415,14.758069 31.80245,62.762724 31.67384,63.43761 -0.0749,0.393052 -0.51217,0.768777 -0.97172,0.834947 -0.45955,0.06617 -4.19467,-0.769682 -8.30026,-1.857447 L 174.97578,77.278191 163.14187,77.1352 c -13.59346,-0.164255 -12.47185,0.169374 -15.21822,-4.52672 -0.86397,-1.477304 -1.89416,-2.859047 -2.28933,-3.070534 -0.80241,-0.429434 -1.71486,0.722873 -4.83477,6.105737 -2.56104,4.418604 -4.93615,6.21252 -9.61289,7.260602 -3.49578,0.783422 -13.09259,1.609329 -18.49462,1.591661 -4.50973,-0.01474 -5.97866,-0.188782 -8.92733,-1.057669 z"
        id="path4571"
        inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#335f93;fill-opacity:1;stroke:none"
+       x="216.33218"
+       y="92.726639"
+       id="text4575"><tspan
+         sodipodi:role="line"
+         id="tspan4573"
+         x="216.33218"
+         y="92.726639"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:73.33333588px;line-height:1;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Semi-Bold';fill:#335f93;fill-opacity:1">Multnomah</tspan><tspan
+         sodipodi:role="line"
+         x="216.33218"
+         y="166.05997"
+         id="tspan4577"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:73.33333588px;line-height:1;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Semi-Bold';fill:#335f93;fill-opacity:1"> County</tspan></text>
   </g>
 </svg>
