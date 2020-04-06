@@ -33,5 +33,6 @@
   <ItemGroup>
     <Folder Include="Views\Admin\" />
     <Folder Include="uploaded_docs\" />
+    <Folder Include="Views\Timesheets\NewFolder\" />
   </ItemGroup>
 </Project>

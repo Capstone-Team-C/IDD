@@ -30,8 +30,8 @@ namespace AdminUI.Models
                         ProviderName = "Mickey Mouse",
                         ProviderID = "B1GM0U53",
                         CMOrg = "Multnomah Case Management",
-                        SCPAName =  "Walt Disney",
-                        Service = "Attendant Relief Care OR526",
+                        SCPAName = "Walt Disney",
+                        Service = "SE49 Family Support",
                         Hours = 34.3,
                         ServiceGoal = "To help her eat cheese",
                         ProgressNotes = "She ate the cheese",
@@ -39,6 +39,7 @@ namespace AdminUI.Models
                         ClientSigned = DateTime.Parse("03/25/2020"),
                         ProviderSignature = true,
                         ProviderSigned = DateTime.Parse("3/25/20"),
+                        Type = "OR526 Attendant Care",
                         Submitted = DateTime.Parse("4/2/20 2:03PM")
                     },
                     new Timesheet
@@ -49,7 +50,7 @@ namespace AdminUI.Models
                         ProviderID = "B3113",
                         CMOrg = "Gaston's Monster Management",
                         SCPAName =  "Walt Disney",
-                        Service = "Attendant Relief Care OR526",
+                        Service = "SE151 In Home Support Children",
                         Hours = 80.7,
                         ServiceGoal = "Transmogrification",
                         ProgressNotes = "Progress is a little hairy",
@@ -57,6 +58,7 @@ namespace AdminUI.Models
                         ClientSigned = DateTime.Parse("03/24/2020"),
                         ProviderSignature = true,
                         ProviderSigned = DateTime.Parse("3/25/20"),
+                        Type = "OR526 Attendant Care",
                         Submitted = DateTime.Parse("4/1/20 1:45PM")
                     },
                     new Timesheet
@@ -67,7 +69,7 @@ namespace AdminUI.Models
                         ProviderID = "H0TT13",
                         CMOrg = "Party City",
                         SCPAName =  "Evil Stepmother",
-                        Service = "Attendant Relief Care OR507",
+                        Service = "SE49 In Home Support Adults",
                         Hours = 54.5,
                         ServiceGoal = "Shoe sizing",
                         ProgressNotes = "If the shoe fits, I must commit",
@@ -75,6 +77,7 @@ namespace AdminUI.Models
                         ClientSigned = DateTime.Parse("03/27/2020"),
                         ProviderSignature = true,
                         ProviderSigned = DateTime.Parse("3/28/20"),
+                        Type = "OR526 Attendant Care",
                         Submitted = DateTime.Parse("3/29/20 8:06AM")
                     },
                     new Timesheet
@@ -85,13 +88,14 @@ namespace AdminUI.Models
                         ProviderID = "L3T1TG0",
                         CMOrg = "Arendelle Government",
                         SCPAName =  "Kristoff",
-                        Service = "Attendant Relief Care OR507",
+                        Service = "SE49 In Home Support Adults",
                         Hours = 12,
                         ServiceGoal = "To help with her transition to queen",
                         ProgressNotes = "She aight",
                         ClientSignature = false,
                         ProviderSignature = true,
                         ProviderSigned = DateTime.Parse("3/25/20"),
+                        Type = "OR526 Attendant Care",
                         Submitted = DateTime.Parse("4/1/20 5:13PM")
                     },
                     new Timesheet
@@ -102,13 +106,14 @@ namespace AdminUI.Models
                         ProviderID = "K155",
                         CMOrg = "Dwarven Housekeeping",
                         SCPAName =  "Walt Disney",
-                        Service = "Attendant Relief Care OR526",
+                        Service = "SE151 In Home Support Children",
                         Hours = 89.2,
                         ServiceGoal = "To wake her up",
                         ProgressNotes = "She needs an energy drink or something",
                         ClientSignature = true,
                         ClientSigned = DateTime.Parse("03/27/2020"),
                         ProviderSignature = false,
+                        Type = "OR526 Attendant Care",
                         Submitted = DateTime.Parse("4/2/20 10:20AM")
                     }
                 );

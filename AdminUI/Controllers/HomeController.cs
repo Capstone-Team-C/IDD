@@ -132,7 +132,28 @@ namespace AdminUI.Controllers
         //should return a Timesheet View
         public IActionResult Timesheet(int ID)
         {
-            ViewData["Sheet"] = _context.Timesheet.Find(ID);
+            Timesheet timesheet =  _context.Timesheet.Find(ID);
+            timesheet.Shifts = new List<Shift>
+            {
+                new Shift
+                {
+                    Date = DateTime.Parse("3/11/2020"),
+                    In = DateTime.Parse("11:30 AM"),
+                    Out = DateTime.Parse("7:30 PM"),
+                    Hours = 8.00,
+                    Group = false
+                },
+                new Shift
+                {
+                    Date = DateTime.Parse("3/12/2020"),
+                    In = DateTime.Parse("11:30 AM"),
+                    Out = DateTime.Parse("7:30 PM"),
+                    Hours = 8.00,
+                    Group = false
+                }
+            };
+
+            ViewData["sheet"] = timesheet;
             return View();
         }
     }

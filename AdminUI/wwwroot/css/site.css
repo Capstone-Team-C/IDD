@@ -200,11 +200,24 @@ body {
     flex-direction: row;
 }
 
-.solid-border {
-    border: 3px solid black;
-    display: inline;
+.flex-container.row.border {
+    border: 2px solid black;
+    margin: 10px 0px 10px 0px;
 }
 
 .column {
     flex: 1;
+}
+
+/*Timesheet.cshtml*/
+label {
+    font-weight: bold;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
 }

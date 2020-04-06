@@ -24,7 +24,6 @@ namespace AdminUI.Models
         public string Units { get; set; }
         public string Type { get; set; }
         public string Freq { get; set; }
-
         
         //hours worked
         public IList<Shift> Shifts = new List<Shift>();
@@ -39,9 +38,9 @@ namespace AdminUI.Models
         public bool ProviderSignature { get; set; }
         [DataType(DataType.Date)]
         public DateTime? ProviderSigned { get; set; }
-
-
         public DateTime Submitted { get; set; }
+
+
     }
 
     public class Shift
