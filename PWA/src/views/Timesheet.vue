@@ -34,7 +34,9 @@
       </v-col>
 
       <v-col v-else-if="variant === 'Fill out a form'">
-        <IDDForm /> 
+        <IDDForm 
+          :parsedFileData="parsedFileData"
+        /> 
       </v-col>
     </v-row>
   </div>
@@ -43,6 +45,9 @@
 <script>
 import FileUploader from '@/components/Timesheet/FileUploader'
 import IDDForm from '@/components/Timesheet/IDDForm'
+
+// MOCK .json data
+import mock_json from '@/components/Timesheet/OR507_Example.json'
 
 export default {
   name: 'Timesheet',
@@ -57,6 +62,7 @@ export default {
       'Fill out a form',
     ],
     variant: 'default',
+    parsedFileData: mock_json
   })
 }
 </script>
