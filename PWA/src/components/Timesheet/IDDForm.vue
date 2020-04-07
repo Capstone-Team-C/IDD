@@ -87,11 +87,10 @@
     ></v-text-field>
     
     <!-- Table containing timesheet -->
-    <FormTable />
-      <!-- 
-      :entries="formFields.serviceDelieredOn" 
+    <FormTable
+      :entries="formFields.serviceDeliveredOn" 
     />
-      -->
+    <br/>
     
     <v-text-field
       filled
@@ -282,14 +281,16 @@ export default {
   // When this component has loaded onto the DOM, bind parsed form data
   // to each IDD Timesheet form field 
   mounted: function () {
-    Object.entries(this.parsedFileData).forEach(([key, value]) => {
-      if (key in this.formFields) {
-        this.formFields[key] = value;
-      } else {
-        console.log("Unrecognized parsed form field from server: " +
-        `${key} - ${value}`);
-      }
-    });
+    if (this.entries !== null) {
+      Object.entries(this.parsedFileData).forEach(([key, value]) => {
+        if (key in this.formFields) {
+          this.formFields[key] = value;
+        } else {
+          console.log("Unrecognized parsed form field from server: " +
+          `${key} - ${value}`);
+        }
+      });
+    }
   },
   data: function () {
     return {
