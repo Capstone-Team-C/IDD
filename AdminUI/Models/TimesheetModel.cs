@@ -39,7 +39,7 @@ namespace AdminUI.Models
         [DataType(DataType.Date)]
         public DateTime? ProviderSigned { get; set; }
         public DateTime Submitted { get; set; }
-
+        public string Status { get; set; }
 
     }
 

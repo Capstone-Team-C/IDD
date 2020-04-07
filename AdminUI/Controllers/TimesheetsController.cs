@@ -116,6 +116,22 @@ namespace AdminUI.Controllers
             return View(timesheet);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeStatus(Timesheet timesheet, string changestatus)
+        {
+            switch(changestatus)
+            {
+                case "Rejected":
+                    timesheet.Status = "Rejected";
+                    break;
+                case "Accepted":
+                    timesheet.Status = "Accepted";
+                    break;
+            }
+            return View("Result", timesheet);
+        }
+
         // GET: Timesheets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
