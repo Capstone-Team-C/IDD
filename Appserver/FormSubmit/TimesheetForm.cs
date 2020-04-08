@@ -31,10 +31,6 @@ public class TimesheetForm: AbstractFormObject{
     public bool brokerageSignature { get; set; }
     public string brokerageSignatureDate { get; set; }
 
-    public void addTimeRow(int date, int start, int end, bool am) => 
-        this.Times.Add(new TimesheetRowItem(date, start, end, am));
-
-    public override string ToJSON(){
-        return JsonConvert.SerializeObject(this);
-    }
+    public void addTimeRow(string date, string start, string end, float total, int numClient) => 
+        this.Times.Add(new TimesheetRowItem(date, start, end, total, numClient));
 }

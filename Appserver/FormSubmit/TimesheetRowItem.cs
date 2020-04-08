@@ -1,19 +1,17 @@
 class TimesheetRowItem : AbstractFormObject
 {
-    public int date=1;
-    public int starttime=100;
-    public int endtime=200;
-    public bool am=true;
+    public string date="2000-01-01";
+    public string starttime="9:00";
+    public string endtime="10:00";
+    public float totalHours=12;
+    public int numClient;
     
-    public TimesheetRowItem( int date, int start, int end, bool am)
+    public TimesheetRowItem( string date, string start, string end, float totalHours, int numClient)
     {
         this.date = date;
         this.starttime = start;
         this.endtime = end;
-        this.am = am;
-    }
-
-    public override string ToJSON(){
-        return "";
+        this.totalHours = totalHours;
+        this.numClient = numClient;
     }
 }
