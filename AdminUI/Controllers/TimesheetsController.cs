@@ -116,20 +116,36 @@ namespace AdminUI.Controllers
             return View(timesheet);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Process")]
         [ValidateAntiForgeryToken]
-        public ActionResult ChangeStatus(Timesheet timesheet, string changestatus)
+        public async Task<IActionResult> Process(int id, [Bind("Status,RejectionReason")] Timesheet timesheet)
         {
-            switch(changestatus)
+            if (id != timesheet.TimesheetID)
             {
-                case "Rejected":
-                    timesheet.Status = "Rejected";
-                    break;
-                case "Accepted":
-                    timesheet.Status = "Accepted";
-                    break;
+                return NotFound();
             }
-            return View("Result", timesheet);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(timesheet);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TimesheetExists(timesheet.TimesheetID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(timesheet);
         }
 
         // GET: Timesheets/Delete/5

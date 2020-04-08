@@ -1,21 +1,19 @@
+@model AdminUI.Models.Timesheet
+
 @{
     ViewData["Title"] = "Timesheet";
     var sheet = ViewData["Sheet"] as Timesheet;
 }
 
-    <div class="flex-container column">
-        <h1>eXPRS Plan of Care - Services Delivered Report Form</h1>
-
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-
-
-
+<div class="flex-container column">
+    <h1>eXPRS Plan of Care - Services Delivered Report Form</h1>
+    <form asp-action="Process">
         <div class="row">
             <div class="column">
                 <label for="client-name">Timesheet ID:</label> @sheet.TimesheetID
             </div>
             <div class="column">
-                <label for="status">Status of Timesheet:</label> @sheet.Status
+                <label asp-for="Status">Status of Timesheet:</label> @sheet.Status
             </div>
         </div>
         <div class="row">
@@ -139,18 +137,17 @@
         <img src="~/images/timesheet-front.png" alt="Sample Front" />
         <img src="~/images/timesheet-back.png" alt="Sample Front" />
         <div class="row">
-            @using (Html.BeginForm("ChangeStatus", "Timesheet", FormMethod.Post))
-            {
-                @Html.EditorForModel()
-                <div class="row">
-                    <div class="column">
-                        <input class="btn btn-danger" name="changestatus" value="Rejected" type="submit">
-                    </div>
-                    <div class="column">
-                        <input class="btn btn-primary" name="changestatus" value="Accepted" type="submit">
-                    </div>
+            <div class="row">
+                <div class="column">
+                    <input asp-for="Status" class="btn btn-danger" name="changestatus" value="Rejected" type="submit">
                 </div>
-            }
+                <div class="column">
+                    <input asp-for="RejectionReason" type="text"/>
+                </div>
+                <div class="column">
+                    <input asp-for="Status" class="btn btn-primary" name="changestatus" value="Accepted" type="submit">
+                </div>
+            </div>
         </div>
-
-    </div>
+    </form>
+</div>

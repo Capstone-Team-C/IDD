@@ -40,6 +40,7 @@ namespace AdminUI.Models
         public DateTime? ProviderSigned { get; set; }
         public DateTime Submitted { get; set; }
         public string Status { get; set; }
+        public string RejectionReason { get; set; }
 
     }
 
