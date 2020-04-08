@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AdminUI.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 
 namespace AdminUI
 {
@@ -29,6 +31,11 @@ namespace AdminUI
             services.AddProgressiveWebApp();
             services.AddDbContext<TimesheetContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LocalTestDB")));
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("LocalAdminAccountDB")));
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddRazorPages();
 
         }
 
@@ -38,6 +45,7 @@ namespace AdminUI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -50,6 +58,7 @@ namespace AdminUI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -58,11 +67,8 @@ namespace AdminUI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
 
-                // Admin login route
-                endpoints.MapControllerRoute(
-                    name: "admin_login_route",
-                    pattern: "{controller=Admin}/{action=Login}/");
             });
         }
     }

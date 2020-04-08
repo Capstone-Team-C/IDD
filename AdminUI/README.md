@@ -2,7 +2,8 @@
 
 ## Project Setup
 
-Just open AdminUI.sln in Visual Studio
+Open AdminUI.sln in Visual Studio
+Run the command "Update-Database" in Package Manager Console
 
 ## How to run
 
