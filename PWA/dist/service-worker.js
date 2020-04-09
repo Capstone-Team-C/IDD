@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.e1dbe6b4ee20c36da604227ce66fb7aa.js"
+  "/precache-manifest.9b94127846c4491e674ea26b6fa5ea99.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "Vue-PWA-Happy-Path"});

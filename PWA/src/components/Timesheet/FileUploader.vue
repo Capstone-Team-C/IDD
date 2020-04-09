@@ -3,7 +3,7 @@
     <div class="upload">
       <ul v-if="files.length">
         <li v-for="(file) in files" :key="file.id">
-          <span>{{file.name}}</span> -
+          <span data-testid="name">{{file.name}}</span> -
           <span>{{file.size | formatSize}}</span> -
           <span v-if="file.error">{{file.error}}</span>
           <span v-else-if="file.success">success</span>
@@ -27,7 +27,8 @@
 	<div class="example-btn">
 		<file-upload
           class="btn btn-primary"
-          post-action="https://en91d9jkz3gou.x.pipedream.net"
+					post-action="https://clownedpineapple.azurewebsites.net/api/
+					HttpTrigger1?code=amZ51qGYCfuLgelHpVFn1oyB3M/iEwHpunUAaTc5JOo/z6QUHNKWkQ=="
           :multiple="true"
           :drop="true"
           :drop-directory="true"
@@ -39,8 +40,8 @@
           <i class="fa fa-plus"></i>
           Select files
         </file-upload>
-        <button type="button" class="btn btn-success" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
-          <i class="fa fa-arrow-up" aria-hidden="true"></i>
+        <button @click="types" type="button" class="btn btn-success" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
+          <i id="startUpload" class="fa fa-arrow-up" aria-hidden="true"></i>
           Start Upload
         </button>
         <button type="button" class="btn btn-danger"  v-else @click.prevent="$refs.upload.active = false">
@@ -103,62 +104,31 @@
 
 <script>
 import FileUpload from 'vue-upload-component'
-//mport {upload} from '../fakeFileUploadService'
-//import {wait} from '../utils'
-//const STATUS_INITIAL = 0, STATUS_FAILED = 1, STATUS_SAVING = 1; STATUS_SUCCESS = 2, STATUS_FAILED = 3;
-
-
 
 export default {
   name: "file_uploader",
   components: {
-    FileUpload,
+    FileUpload
   },
+	props: {
+		uploadFiles: {
+			type: Array,
+			defaut: () => [],
+			validator: value =>
+			Array.isArray(value) && value.every(file => file.id && file.name && file.type)},
+	},
+	methods: {
+		types() {
+			this.uploadStatus = 1
+			return 1
+		}
+	},
   data() {
 	return {
       files: [],
-      //uploadError: null,
-      //currentStatus: null,
-      //uploadFieldName: 'files'
-    }
-  }
-  /*computer: {
-    isInitial() {
-     return this.currentStatus === STATUS_INITIAL; 
-    },
-    /*isSaving() {
-      return this.currentStatus === STATUS_SAVING;
-    },
-    isSuccess() {
-      return this.currentStatus === STATUS_SUCCESS;
-    },
-    isFailed() {
-      return this.currentStatus === STATUS_FAILED;
+			uploadStatus: 0
     }
   },
-  methods: {
-    reset() {
-      //reset form to initial state
-      this.currentStatus = STATUS_INITIAL
-      this.files = []
-      this.uploadError = null;
-    },
-    save(formData) {
-      //upload to the server
-      upload(formData)
-        .then(wait(40000))
-        .then(x=> {
-          this.files = [].concat(x)
-          })
-          .catch(err => {
-            this.uploadError = err.response
-            this.currentStatus = STATUS_FAILED
-          })
-    },
-    mounted() {
-      this.reset()
-    }
-  }*/
 }
 
 </script>
