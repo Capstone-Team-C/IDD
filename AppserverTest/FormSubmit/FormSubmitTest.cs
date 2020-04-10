@@ -13,12 +13,12 @@ namespace FormSubmit
         [TestMethod]
         public void EmptyTimesheet()
         {
-            string localPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-            string path = localPath + @"\FormSubmit\emptyTimesheet.json";
-            System.Console.WriteLine(path);
+            
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\FormSubmit\emptyTimesheet.json";
 
             if (!File.Exists(path))
             {
+                Console.WriteLine(path);
                 Assert.IsTrue(false);
             }
 
@@ -36,12 +36,11 @@ namespace FormSubmit
         [TestMethod]
         public void TenRowTimesheet()
         {
-            string localPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-            string path = localPath + @"\FormSubmit\TenRowTimesheet.json";
-            System.Console.WriteLine(path);
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\FormSubmit\TenRowTimesheet.json";
 
             if (!File.Exists(path))
             {
+                System.Console.WriteLine(path);
                 Assert.IsTrue(false);
             }
 
@@ -73,11 +72,11 @@ namespace FormSubmit
             obj.serviceGoal = "Feed them";
             obj.progressNotes = "Eating more fish";
             obj.employerSignature = true;
-            obj.employerSignatureDate = "2020-04-01";
+            obj.employerSignDate = "2020-04-01";
             obj.authorization = true;
             obj.approval = true;
-            obj.brokerageSignature = true;
-            obj.brokerageSignatureDate = "2020-04-01";
+            obj.providerSignature = true;
+            obj.providerSignDate = "2020-04-01";
 
             // Due to Windows adding \r for newlines we remove these, and for whatever reason Windows
             // Also adds a newline at the end of the file even if it doesn't exist, so we add that.

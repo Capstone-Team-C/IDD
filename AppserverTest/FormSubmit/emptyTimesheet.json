@@ -13,9 +13,9 @@
   "serviceGoal": null,
   "progressNotes": null,
   "employerSignature": false,
-  "employerSignatureDate": null,
+  "employerSignDate": null,
+  "providerSignature": false,
+  "providerSignDate": null,
   "authorization": false,
-  "approval": false,
-  "brokerageSignature": false,
-  "brokerageSignatureDate": null
+  "approval": false
 }

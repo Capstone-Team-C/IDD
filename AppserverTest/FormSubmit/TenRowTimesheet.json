@@ -84,9 +84,9 @@
   "serviceGoal": "Feed them",
   "progressNotes": "Eating more fish",
   "employerSignature": true,
-  "employerSignatureDate": "2020-04-01",
+  "employerSignDate": "2020-04-01",
+  "providerSignature": true,
+  "providerSignDate": "2020-04-01",
   "authorization": true,
-  "approval": true,
-  "brokerageSignature": true,
-  "brokerageSignatureDate": "2020-04-01"
+  "approval": true
 }
