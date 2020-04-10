@@ -5,9 +5,8 @@
     var sheet = ViewData["Sheet"] as Timesheet;
 }
 
-<div class="flex-container column">
-    <h1>eXPRS Plan of Care - Services Delivered Report Form</h1>
-    <form asp-action="Process">
+    <div class="flex-container column">
+        <h1>eXPRS Plan of Care - Services Delivered Report Form</h1>
         <div class="row">
             <div class="column">
                 <label for="client-name">Timesheet ID:</label> @sheet.TimesheetID
@@ -137,17 +136,8 @@
         <img src="~/images/timesheet-front.png" alt="Sample Front" />
         <img src="~/images/timesheet-back.png" alt="Sample Front" />
         <div class="row">
-            <div class="row">
-                <div class="column">
-                    <input asp-for="Status" class="btn btn-danger" name="changestatus" value="Rejected" type="submit">
-                </div>
-                <div class="column">
-                    <input asp-for="RejectionReason" type="text"/>
-                </div>
-                <div class="column">
-                    <input asp-for="Status" class="btn btn-primary" name="changestatus" value="Accepted" type="submit">
-                </div>
-            </div>
+            <input onclick="handleRejected" class="btn btn-danger" name="Status" value="Rejected" type="submit">
+            <input type="text" id="RejectionReason"/>
+            <input onclick="handleAccepted" class="btn btn-primary" name="Status" value="Accepted" type="submit">
         </div>
-    </form>
-</div>
+    </div>

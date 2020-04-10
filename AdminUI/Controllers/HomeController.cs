@@ -156,5 +156,51 @@ namespace AdminUI.Controllers
             ViewData["sheet"] = timesheet;
             return View();
         }
+
+        // GET: Timesheets/Edit/5
+        public async Task<IActionResult> Process(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var timesheet = await _context.Timesheet.FindAsync(id);
+            if (timesheet == null)
+            {
+                return NotFound();
+            }
+            return View(timesheet);
+        }
+
+        // POST: Timesheets/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Process(int id, string Status, string RejectionReason)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(timesheet);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TimesheetExists(timesheet.TimesheetID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(timesheet);
+        }
     }
 }
