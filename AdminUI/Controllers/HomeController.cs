@@ -157,29 +157,15 @@ namespace AdminUI.Controllers
             return View();
         }
 
-        // GET: Timesheets/Edit/5
-        public async Task<IActionResult> Process(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var timesheet = await _context.Timesheet.FindAsync(id);
-            if (timesheet == null)
-            {
-                return NotFound();
-            }
-            return View(timesheet);
-        }
-
-        // POST: Timesheets/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Process(int id, string Status, string RejectionReason)
         {
+            var timesheet = await _context.Timesheet
+                .FirstOrDefaultAsync(m => m.TimesheetID == id);
+            if (timesheet == null)
+                return NotFound();
+            timesheet.Status = Status;
+            timesheet.RejectionReason = RejectionReason;
             if (ModelState.IsValid)
             {
                 try
@@ -189,7 +175,9 @@ namespace AdminUI.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TimesheetExists(timesheet.TimesheetID))
+
+                    Console.WriteLine("There was an error");
+                    if (!_context.Timesheet.Any(e => e.TimesheetID == id))
                     {
                         return NotFound();
                     }
@@ -200,7 +188,7 @@ namespace AdminUI.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(timesheet);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
