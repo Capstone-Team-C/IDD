@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Threading.Tasks;
 using System.IO;
 using System;
@@ -9,11 +9,10 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace ImageUpload.Tests
 {
-    [TestClass()]
+    [TestFixture]
     public class ImageUploadTest
     {
-        [TestMethod()]
-        [DeploymentItem(@"Appserver/ImageUpload/pineapple.jpg")]
+        [Test]
         public async Task TestMethod1()
         {
 
@@ -89,8 +88,7 @@ namespace ImageUpload.Tests
 
         }
 
-        [TestMethod()]
-        [DeploymentItem(@"Appserver/ImageUpload/pineapple.jpg")]
+        [Test]
         public async Task TestMethod2()
         {
             //////////////////////////////////////////////////////////////////////////////

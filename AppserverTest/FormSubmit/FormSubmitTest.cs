@@ -1,16 +1,16 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FormSubmit;
 using System;
 using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace FormSubmit
+namespace FormSubmit.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class FormSubmitTest
     {
-        [TestMethod]
+        [Test]
         public void EmptyTimesheet()
         {
             
@@ -33,7 +33,7 @@ namespace FormSubmit
             Assert.IsTrue(String.Equals(j, k));
         }
 
-        [TestMethod]
+        [Test]
         public void TenRowTimesheet()
         {
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\FormSubmit\TenRowTimesheet.json";

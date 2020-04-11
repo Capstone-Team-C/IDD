@@ -1,12 +1,12 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace mvc_trialTest
+namespace Appserver.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ImageUploadControllerTest
     {
-        [TestMethod]
+        [Test]
         public void ImageUploadControllerTestMethod()
         {
         }
