@@ -31,10 +31,10 @@ namespace AdminUI
             services.AddProgressiveWebApp();
             services.AddDbContext<TimesheetContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LocalTestDB")));
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<AdminAccountContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LocalAdminAccountDB")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<AdminAccountContext>();
             services.AddRazorPages();
 
         }

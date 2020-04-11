@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdminUI.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class AdminAccountContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public AdminAccountContext(DbContextOptions<AdminAccountContext> options)
             : base(options)
         {
         }
