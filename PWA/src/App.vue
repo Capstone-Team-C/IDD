@@ -1,101 +1,68 @@
 <template>
-  <div id="app">
-    <div class="page-container">
-      <md-app md-waterfall md-mode="reveal">
-        <md-app-toolbar style="z-index:5; position: fixed;">
-          <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
-            <md-icon>menu</md-icon>
-          </md-button>
-          <span class="md-title">
-          <img alt="Multnomah County logo" src="./assets/icons/logo_short.svg">
-          IDD Timesheet Automation
-          </span>
-        </md-app-toolbar>
-
-        <md-app-drawer :md-active.sync="menuVisible">
-          <md-toolbar class="md-transparent" md-elevation="0">Navigation</md-toolbar>
-
-          <md-list>
-            <md-list-item>
-              <md-icon>home</md-icon>
-              <span class="md-list-item-text">Home</span>
-            </md-list-item>
-
-            <md-list-item>
-              <md-icon>playlist_add</md-icon>
-              <span class="md-list-item-text">Submit a Timesheet</span>
-            </md-list-item>
-
-            <md-list-item>
-              <md-icon>help</md-icon>
-              <span class="md-list-item-text">Help</span>
-            </md-list-item>
-
-            <md-list-item>
-              <md-icon>info</md-icon>
-              <span class="md-list-item-text">About</span>
-            </md-list-item>
-          </md-list>
-        </md-app-drawer>
-
-        <md-app-content>
-          <HelloWorld msg="IDD Timesheet Happy Path"/>
-        </md-app-content>
-      </md-app>
-    </div>
-  </div>
+  <v-app>
+    <!-- Hideable navigation pane appearing on the left side of the webpage -->
+    <NavigationDrawer
+      :open="openNavigationDrawer"
+      @drawer-change="handleDrawerChange"
+    />
+    
+    <!-- Bar at the top of the webpage -->
+    <AppBar
+      :open="openNavigationDrawer"
+      @drawer-change="handleDrawerChange"
+    />
+    
+    <!-- Main content of the page, controlled by the Vue Router -->
+    <v-content>
+      <!-- Fade-in/Fade-out for smooth navigation transitions -->
+      <transition 
+        mode="out-in" 
+        name="fade"
+      >
+        <router-view />
+      </transition>
+    </v-content>
+    
+    <!-- Footer, appears at the bottom of the page -->
+    <AppFooter />
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
-import Vue from 'vue'
-import { MdMenu, MdList, MdLayout, MdToolbar, MdIcon, MdButton, MdApp, MdDrawer } from 'vue-material/dist/components'
-import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default.css'
-
-Vue.use(MdMenu)
-Vue.use(MdDrawer)
-Vue.use(MdApp)
-Vue.use(MdToolbar)
-Vue.use(MdList)
-Vue.use(MdLayout)
-Vue.use(MdIcon)
-Vue.use(MdButton)
-
+import AppBar from '@/components/AppShell/AppBar'
+import AppFooter from '@/components/AppShell/AppFooter'
+import NavigationDrawer from '@/components/AppShell/NavigationDrawer'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    AppBar,
+    AppFooter,
+    NavigationDrawer
   },
   data: () => ({
-    menuVisible: false 
-  })
-}
+    // Stores the value for if the navigation drawer is open or not
+    openNavigationDrawer: false
+  }),
+  methods: {
+    // Toggle displaying the navigation drawer
+    handleDrawerChange(isOpen) {
+      this.openNavigationDrawer = isOpen
+    }
+  }
+};
 </script>
 
-<style lang="scss" scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.1s;
+  transition-property: opacity;
+  transition-timing-function: ease-out;
 }
 
-.md-app-content {
-  padding: 5%;
+.fade-enter,
+.fade-leave-active {
+  opacity: 0
 }
-
-  .md-app {
-    max-height: 100vh;
-    border: 1px solid rgba(#000, .12);
-  }
-
-   // Demo purposes only
-  .md-drawer {
-    width: 230px;
-    max-width: calc(100vw - 125px);
-  }
 </style>
