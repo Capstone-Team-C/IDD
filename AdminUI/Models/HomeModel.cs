@@ -17,8 +17,9 @@ namespace AdminUI.Models
         public string PName; 
         public int? Id;
         public string CName;
-        public int? Prime;
+        public string Prime;
         public string DateFrom;
         public string DateTo;
+        public string ProviderId;
     }
 }
