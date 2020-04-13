@@ -8,77 +8,42 @@
     <p class="title">
       Front side of the form
     </p>
-
-    <!-- Customer Name -->
-    <FormField 
-      v-bind="formFields.customerName"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
     
-    <!-- Prime -->
     <FormField 
-      v-bind="formFields.prime"
+      v-for="field in [
+        'customerName',
+        'prime',
+        'submissionDate',
+        'providerName',
+        'providerNumber',
+        'SC/PA Name',
+        'CMOrg',
+        'service',
+      ]"
+      v-model="formFields[field].value"
+      v-bind="formFields[field]"
+      :key="field"
       :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-    
-    <!-- submissionDate -->
-    <FormField 
-      v-bind="formFields.submissionDate"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-          
-    <!-- providerName -->
-    <FormField 
-      v-bind="formFields.providerName"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-
-    <!-- providerNumber-->
-    <FormField 
-      v-bind="formFields.providerNumber"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-    
-    <!-- SC/PA Name -->
-    <FormField 
-      v-bind="formFields['SC/PA Name']"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-
-    <!-- CMOrg -->
-    <FormField 
-      v-bind="formFields.CMOrg"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-    
-    <!-- service -->
-    <FormField 
-      v-bind="formFields.service"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
+      @disable-change="handleDisableChange(field, $event)"
     />
   
     <!-- Table containing timesheet  -->
     <v-card-text>
+      <!-- TODO connect child data to parent data -->
       <FormTable
+        v-model="formFields.serviceDeliveredOn.value"
         v-bind="formFields.serviceDeliveredOn"
         :reset="resetChild"
-        @formtable-change="validateFormTable"
+        @disable-change="handleDisableChange('serviceDeliveredOn', $event)"
       />
     </v-card-text>
 
     <!-- totalHours -->
     <FormField 
+      v-model="formFields.totalHours.value"
       v-bind="formFields.totalHours"
       :reset="resetChild"
-      @field-change="handleFieldChange"
+      @disable-change="handleDisableChange('totalHours', $event)"
     />
 
     <hr />
@@ -87,18 +52,16 @@
       Back side of the form
     </p>
     
-    <!-- serviceGoals -->
     <FormField 
-      v-bind="formFields.serviceGoal"
+      v-for="field in [
+        'serviceGoal',
+        'progressNotes',
+      ]"
+      v-model="formFields[field].value"
+      v-bind="formFields[field]"
+      :key="field"
       :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-
-    <!-- progressNotes -->
-    <FormField 
-      v-bind="formFields.progressNotes"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
+      @disable-change="handleDisableChange(field, $event)"
     />
     
     <hr />
@@ -115,18 +78,16 @@
       </em>
     </p>
     
-    <!-- employerSignature -->
     <FormField 
-      v-bind="formFields.employerSignature"
+      v-for="field in [
+        'employerSignature',
+        'employerSignDate',
+      ]"
+      v-model="formFields[field].value"
+      v-bind="formFields[field]"
+      :key="field"
       :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-
-    <!-- employerSignDate-->
-    <FormField 
-      v-bind="formFields.employerSignDate"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
+      @disable-change="handleDisableChange(field, $event)"
     />
     <!-- End Employer Verification Section -->
   
@@ -148,36 +109,32 @@
       </em>
     </p>
     
-    <!-- providerSignature -->
     <FormField 
-      v-bind="formFields.providerSignature"
+      v-for="field in [
+        'providerSignature',
+        'providerSignDate',
+      ]"
+      v-model="formFields[field].value"
+      v-bind="formFields[field]"
+      :key="field"
       :reset="resetChild"
-      @field-change="handleFieldChange"
-    />
-
-    <!-- providerSignDate-->
-    <FormField 
-      v-bind="formFields.providerSignDate"
-      :reset="resetChild"
-      @field-change="handleFieldChange"
+      @disable-change="handleDisableChange(field, $event)"
     />
     <!-- END Provider Verification Section -->
 
     <hr />
     
     <strong class="subtitle-1">
-      <!-- authorization-->
       <FormField 
-        v-bind="formFields.authorization"
+        v-for="field in [
+          'authorization',
+          'providerInitials',
+        ]"
+        v-model="formFields[field].value"
+        v-bind="formFields[field]"
+        :key="field"
         :reset="resetChild"
-        @field-change="handleFieldChange"
-      />
-
-      <!-- providerInitials -->
-      <FormField 
-        v-bind="formFields.providerInitials"
-        :reset="resetChild"
-        @field-change="handleFieldChange"
+        @disable-change="handleDisableChange(field, $event)"
       />
 
       Providers submit this completed/signed form to the CDDP, Brokerage
@@ -201,13 +158,15 @@
       @click="reset"
     >
       Reset Form
-    </v-btn>
-  </v-form>
+    </v-btn> 
+  </v-form> 
 </template>
 
 <script>
 import FormTable from '@/components/Timesheet/FormTable'
 import FormField from '@/components/Timesheet/FormField'
+import fieldData from '@/components/Timesheet/IDDFormFields.json'
+import rules from '@/components/Timesheet/FormRules.js'
 
 export default {
   name: 'IDDForm',
@@ -215,6 +174,7 @@ export default {
     FormTable,
     FormField,
   },
+
   props: {
     // A .json file that is the parsed uploaded IDD timesheet data
     parsedFileData: {
@@ -227,231 +187,43 @@ export default {
   // IDD Timesheet form field
   created: function () {
     this.initialize()
-  },
-  data: function () {
-    // Generic form validation rules 
-    let nameRules = [
-      v => !!v || 'This field is required',
-      v => (v && v.length <= 25) || 'This field must be less than 25 characters',
-    ];
-
-    let alphanumericRules = [
-      v => !!v || 'This field is required',
-      v => /^[a-zA-Z0-9]+$/.test(v) || 'This field must be letters or numbers',
-    ];
     
-    let numericRules = [
-      v => !!v || 'This field is required',
-      v => /^[0-9]+$/.test(v) || 'This field must be a number',
-    ];
+    // Bind validation rules to each field that has a 'rules' string 
+    // specified
+    Object.entries(fieldData).forEach(([key, value]) => {
+      if ("rules" in value) { 
+        fieldData[key].rules = rules[fieldData[key].rules]
+      }
+    })
+  },
 
-    let monthyearRules = [
-      v => !!v || 'This field is required',
-      v => /^[0-9]{4}-[01][0-9]$/.test(v) || 'This field must be in format YYYY-MM',
-    ];
-
-    let dateRules = [
-      v => !!v || 'This field is required',
-      v => /^[0-9]{4}-[01][0-9]-[0123][0-9]$/.test(v) || 'This field must be in format YYYY-MM-DD',
-    ];
-
-    /*
-    let emailRules = [
-      v => !!v || 'E-mail is required',
-      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-    ];
-    */
-
+  data: function () {
     return {
+      // Import form field structure data and store into local variable
+      formFields: fieldData,
+
       // Reset form of arbitrary value
       resetChildField: false,
 
-      // Default form field values and props
-      formFields: {
-        // Front side of form
-        customerName: {
-          counter: 25,              // max strlen for text field
-          disabled: false,          // is field blocked from being edited?
-          hint: "Full name",        // appears below text field
-          label: "Customer Name",   // appears above text field
-          parsed: false,            // was field parsed from .json?
-          parsed_value: null,          // value parsed from .json
-          rules: nameRules,         // validation rules for text field
-          value: null,                // value entered in text field
-        },
-        prime: { 
-          counter: 8,
-          disabled: false,
-          label: "Prime",
-          parsed: false,
-          parsed_value: null,
-          rules: alphanumericRules,
-          value: null,
-        },
-        submissionDate: { 
-          disabled: false,
-          hint: "YYYY-MM",
-          label: "Pay Period Month and Year",
-          parsed: false,
-          parsed_value: null,
-          rules: monthyearRules,
-          value: null,
-        },
-        providerName: { 
-          counter: 25,
-          disabled: false,
-          hint: "Full name",
-          label: "Provider Name",
-          parsed: false,
-          parsed_value: null,
-          rules: nameRules,
-          value: null,
-        },
-        providerNumber: { 
-          counter: 6,
-          disabled: false,
-          label: "Provider Number",
-          parsed: false,
-          parsed_value: null,
-          rules: numericRules,
-          value: null,
-        },
-        'SC/PA Name': { 
-          counter: 25,
-          disabled: false,
-          label: "SC/PA Name",
-          parsed: false,
-          parsed_value: null,
-          rules: nameRules,
-          value: null,
-        },
-        CMOrg: { 
-          counter: 50,
-          disabled: false,
-          label: "CM Organization",
-          parsed: false,
-          parsed_value: null,
-          rules: nameRules,
-          value: null,
-        },
-        service: {
-          counter: 100,
-          disabled: false,
-          label: "Service",
-          parsed: false,
-          parsed_value: null,
-          rules: nameRules,
-          value: null,
-        },
-        serviceDeliveredOn: {
-          disabled: false,
-          parsed: false,
-          parsed_value: null,
-          value: null,
-        },
-        totalHours: { 
-          counter: 5,
-          disabled: false,
-          // HH:mm
-          hint: "HH:mm",
-          label: "Total Hours",
-          parsed: false,
-          parsed_value: null,
-          //mask: "##:##", // I dont know why, but this doesn't work
-          value: "",
-        },
-        
-        // Back side of form
-        serviceGoal: { 
-          auto_grow: true,
-          counter: 250,
-          disabled: false,
-          label: "Service Goal",
-          parsed: false,
-          parsed_value: null,
-          rows: 1,
-          rules: nameRules,
-          value: "",
-        },
-        progressNotes: { 
-          auto_grow: true,
-          counter: 500,
-          disabled: false,
-          label: "Progress Notes",
-          parsed: false,
-          parsed_value: null,
-          rows: 5,
-          rules: nameRules,
-          value: "",
-        },
-        employerSignDate: { 
-          disabled: false,
-          hint: "YYYY-MM-DD",
-          label: "Date",
-          parsed: false,
-          parsed_value: null,
-          rules: dateRules,
-          value: null,
-        },
-        employerSignature: { 
-          disabled: false,
-          field_type: 1,
-          label: "Customer Employer or Employer Rep Signature",
-          parsed: false,
-          parsed_value: null,
-          value: false,
-        },
-        providerSignDate: { 
-          disabled: false,
-          label: "Date",
-          modified: true,
-          parsed: false,
-          parsed_value: null,
-          rules: dateRules,
-          value: null,
-        },
-        providerSignature: { 
-          disabled: false,
-          field_type: 1,
-          label: "Provider/Employee Signature",
-          parsed: false,
-          parsed_value: null,
-          value: false,
-        },
-        authorization: { 
-          disabled: false,
-          field_type: 1,
-          label: "I authorize the CDDP/Brokerage/CIIS staff to enter the\
-          data reported on this form into eXPRS on my behalf for claims\
-          creation and payment.",
-          parsed: false,
-          parsed_value: null,
-          value: false,
-        },
-        providerInitials: { 
-          disabled: false,
-          label: "Provider Initials",
-          parsed: false,
-          parsed_value: null,
-          rules: nameRules,
-          value: null,
-        },
-      },
-      
       // The amount of parsed fields that were edited
-      amtEdited: 0,
+      totalEdited: 0,
       
       // Hide form validation error messages by default
       valid: true,
     }
   },
+
   computed: {
       resetChild () {
         return this.resetChildField
       }
   },
+
   methods: {
     initialize() {
+      // Initialize some fields
+      this.totalEdited = 0;
+
       // Bind data from a .json IDD timesheet to form fields
       if (this.entries !== null) {
         Object.entries(this.parsedFileData).forEach(([key, value]) => {
@@ -459,7 +231,6 @@ export default {
             this.formFields[key]['parsed_value'] = value;
             this.formFields[key]['value'] = value;
             this.formFields[key]['disabled'] = true;
-            this.formFields[key]['parsed'] = true;
           } else {
             console.log("Unrecognized parsed form field from server: " +
             `${key} - ${value}`);
@@ -478,9 +249,13 @@ export default {
     },
 
     reset () {
+      // re-initialize values
       this.initialize()
+      this.resetValidation()
+
+      // Change the value of this watched prop to force
+      // FormField components to reset
       this.resetChildField = !this.resetChildField
-      this.$refs.form.resetValidation()
     },
 
     resetValidation () {
@@ -490,19 +265,24 @@ export default {
     // For a parsed field, send a warning if being edited
     // Else, reset value to parsed value & disable field
     resetParsed (field) {
-      if (this.formFields[field].parsed === true) {
-        if (this.formFields[field].disabled === true) {
-          this.amtEdited -= 1
-        } else {
-          this.amtEdited += 1 
+      if (this.formFields[field].parsed_value !== undefined) {
+        if (this.formFields[field].disabled !== true) {
           this.formFields[field].value = this.formFields[field].parsed_value
+          this.formFields[field].disabled = true
         }
-        this.formFields[field].disabled = !this.formFields[field].disabled
       }
     },
-    // Update the amount of parsed fields edited
-    handleFieldChange (amt) {
-      this.amtEdited += amt
+    
+    // Update this component's disabled property
+    // Then, update the amount of parsed fields edited
+    handleDisableChange (fieldName, amtEdited) {
+      if (amtEdited > 0) {
+        this.formFields[fieldName].disabled = true 
+      } else {
+        this.formFields[fieldName].disabled = false
+      }
+      this.totalEdited += amtEdited
+      console.log(fieldName, amtEdited, "->", this.totalEdited)
     }
   },
 }

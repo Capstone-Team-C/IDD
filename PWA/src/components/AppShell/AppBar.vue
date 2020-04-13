@@ -32,6 +32,12 @@
 <script>
 export default {
   name: 'AppBar',
+  props: {
+    open: {
+      type: Boolean,
+      default: true,
+    }
+  },
   data: function () {
     return {
       // Display toggle; if true, display navigation drawer, else hide

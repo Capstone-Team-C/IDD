@@ -1,9 +1,8 @@
 <template>
   <v-data-table
-    class="elevation-1"
+    class="elevation-2"
     :headers="headers"
     :items="allEntries"
-    @formtable-change="validateFormTable"
   >
     <!-- Table toolbar -->
     <template v-slot:top>
@@ -13,12 +12,11 @@
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
-       
 
         <!-- Warning dialog upon editing a parsed field -->
         <v-dialog
           max-width="500px"
-          v-model="editDialog"
+          v-model="displayWarning"
         >
           <v-card>
             <v-card-title class="headline">Do you want to edit this parsed field?</v-card-title>
@@ -36,7 +34,7 @@
               <v-btn
                 color="red darken-1"
                 text
-                @click="editDialog = false;"
+                @click="closeWarning()"
               >
                Cancel edit
               </v-btn>
@@ -44,7 +42,7 @@
               <v-btn
                 color="green darken-1"
                 text
-                @click="editDialog = false; resetParsed()"
+                @click="warnContinue()"
               >
                 Edit field
               </v-btn>
@@ -56,46 +54,45 @@
         <!-- Appears upon adding/editing an item -->
         <v-dialog 
           max-width="500px"
-          v-model="dialog" 
+          v-model="displayEditDialog" 
         >
 
-          <!-- Display this button, even though parent is hidden -->
+          <!-- Button group, visible even though dialogue is hidden -->
           <template 
             class="d-flex flex-row-reverse"  
             v-slot:activator="{ on }"
           > 
-
             <v-btn-toggle
               dense
               multiple
             >
-            <!-- Lock/unlock addding a row to the table -->
-            <v-btn
-              @click="askTableEdit()"
-            >
-              <v-icon color="primary" v-if="tableEdited === true">mdi-lock</v-icon>
-              <v-icon v-else>mdi-lock-open</v-icon>
-            </v-btn>
+              <!-- Lock/unlock addding a row to the table -->
+              <v-btn 
+                @click="askTableEdit($event)"
+              >
+                <v-icon color="primary" v-if="amtEdited < 1">mdi-lock</v-icon>
+                <v-icon v-else>mdi-lock-open</v-icon>
+              </v-btn>
 
-            <!-- Add a row button -->
-            <v-btn 
-              color="success"
-              v-on="on"
-              :disabled="tableEdited"
-            >
-              <v-icon color="white">mdi-plus</v-icon>
-            </v-btn>
-            
-            <!-- Reset table button -->
-            <v-btn
-              color="error"
-              :disabled="tableEdited"
-              @click="initialize"
-            >
-              <v-icon color="white">mdi-refresh</v-icon>
-            </v-btn>
-
-</v-btn-toggle>
+              <!-- Add a row button -->
+              <v-btn 
+                color="success"
+                v-on="on"
+                :disabled="amtEdited < 1"
+                @click="editingTable = true; focusedElement = $event.target"
+              >
+                <v-icon color="white">mdi-plus</v-icon>
+              </v-btn>
+              
+              <!-- Reset table button -->
+              <v-btn
+                color="error"
+                :disabled="amtEdited < 1"
+                @click="focusedElement = $event.target; initialize()"
+              >
+                <v-icon color="white">mdi-refresh</v-icon>
+              </v-btn>
+            </v-btn-toggle>
           </template>
 
           <!-- The dialog box title --> 
@@ -107,138 +104,30 @@
             <!-- The form area -->
             <v-card-text>
               <v-container>
-
-                <!-- Date selector -->
-                <v-menu
-                  min-width="290px"
-                  offset-y
-                  transition="scale-transition"
-                  v-model="openDate"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
+                <v-row 
+                  class="py-0 my-0"
+                  v-for="field in [
+                    'date', 
+                    'startTime', 
+                    'endTime', 
+                    'totalHours',
+                  ]"
+                  :key="field"
                 >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="editedItem.date"
-                      label="Date"
-                      prepend-icon="event"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker 
-                    v-model="editedItem.date" 
-                    @input="openDate = false"
-                  ></v-date-picker>
-                </v-menu>
-                <!-- END Date selector -->
-                
-                <!-- Time IN selector -->
-                <v-menu
-                  ref="refStartTime"
-                  v-model="openStartTime"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="editedItem.startTime"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      label="Start/Time IN"
-                      prepend-icon="access_time"
-                      readonly
-                      v-model="editedItem.startTime"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    full-width
-                    v-if="openStartTime"
-                    v-model="editedItem.startTime"
-                  >
-
-                    <!-- Cancel/Save panel -->
-                    <v-spacer></v-spacer>
-                    <v-btn 
-                      text 
-                      color="primary" 
-                      @click="openStartTime = false"
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn 
-                      text 
-                      color="primary" 
-                      @click="$refs.refStartTime.save(editedItem.startTime)"
-                    >
-                      OK
-                    </v-btn>
-                  </v-time-picker>
-                </v-menu>
-                <!-- END Time IN selector -->
-                
-                <!-- Time OUT selector -->
-                <v-menu
-                  max-width="290px"
-                  min-width="290px"
-                  offset-y
-                  ref="refEndTime"
-                  transition="scale-transition"
-                  v-model="openEndTime"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="editedItem.endTime"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      label="End/Time OUT"
-                      prepend-icon="access_time"
-                      readonly
-                      v-model="editedItem.endTime"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    v-if="openEndTime"
-                    v-model="editedItem.endTime"
-                    full-width
-                  >
-
-                    <!-- Cancel/Save Panel -->
-                    <v-spacer></v-spacer>
-                    <v-btn 
-                      text 
-                      color="primary" 
-                      @click="openEndTime = false"
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn 
-                      text 
-                      color="primary" 
-                      @click="$refs.refEndTime.save(editedItem.endTime)"
-                    >
-                      OK
-                    </v-btn>
-                  </v-time-picker>
-                </v-menu>
-                <!-- END Time OUT selector -->
-                
-                <v-text-field 
-                  v-model="editedItem.totalHours" 
-                    label="Total Hours"
-                ></v-text-field>
+                  <FormField 
+                    v-bind="colValidation[field]"
+                    v-model="editedItem[field]"
+                  />
+                </v-row>
 
                 <v-checkbox
                   label="Group? (y/n)"
                   true-value="Yes"
                   false-value="No"
-                  v-model="editedItem.group"
-                >
-                </v-checkbox>
+                  :input-value="editedItem.group"
+                  @change="flipGroup(editedItem)"
+                  @keyup.native.enter.stop="flipGroup(editedItem)"
+                ></v-checkbox>
               </v-container>
             </v-card-text>
             <!-- END form area -->
@@ -268,45 +157,59 @@
     </template>
     <!-- END table toolbar -->
 
+    <!-- Table content defined in props of v-data-table -->
+
     <!-- The action column of the table -->
     <template 
       v-slot:item.actions="{ item }"
     >
-      <v-row>
-        <!-- Unlock editing a row of the table --> 
-        <v-simple-checkbox 
+      <v-container
+        class="d-flex align-center pa-0"
+      >
+        <!-- Unlock editing for a row of the table -->
+        <!-- Rather than true/false values, use "Yes"/"No" -->
+        <v-checkbox
+          class="ma-0 ma-0"
           color="primary"
+          hide-details
           off-icon="lock_open"
           on-icon="lock"
+          tabindex="0"
+          v-if="item.parsed === true"
           v-model="item.disabled"
-          :ripple="false"
-          @input="askEdit(item)"
-        ></v-simple-checkbox>
-
+          @click.stop="warnEdit($event, item)"
+          @keyup.native.enter.stop="warnEdit($event, item)"
+        ></v-checkbox>
+        
+        <!-- Edit a row of the table -->
         <v-icon
-          class="mr-2"
-          small
           :disabled="item.disabled"
-          @click="editItem(item)"
+          @click="editItem($event, item)"
         >
           mdi-pencil
         </v-icon>
-
+        
+        <!-- Delete a row of the table -->
         <v-icon
-          small
           :disabled="item.disabled"
           @click="deleteItem(item)"
         >
           mdi-delete
         </v-icon>
-      </v-row>
+      </v-container>
     </template>
   </v-data-table>
 </template>
 
 <script>
+import FormField from '@/components/Timesheet/FormField'
+import rules from '@/components/Timesheet/FormRules.js'
+
 export default {
   name: 'FormTable',
+  components: {
+    FormField
+  },
   props: {
     // A .json file that is a section from the parsed uploaded IDD timesheet data
     value: {
@@ -325,6 +228,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    parsed_value: {
+      type: Array,
+      default: null,
+    },
     // Reset to default props or no
     reset: {
       type: Boolean,
@@ -333,9 +240,41 @@ export default {
   },
   data: function () {
     return {
-      colNames: [
-        'date', 'startTime', 'endTime', 'totalHours', 'group'
-      ],
+      // Specify rules and hints for adding a new row to the table
+      colValidation: {
+        date: {
+          disabled: false,
+          hint: "YYYY-MM-DD",
+          label: "Date",
+          rules: rules['dateRules'],
+        },
+        startTime: {
+          counter: 8,
+          disabled: false,
+          hint: "HH:mm AM/PM",
+          label: "Start/Time IN",
+          rules: rules['timeRules'],
+        },
+        endTime: {
+          counter: 8,
+          disabled: false,
+          hint: "HH:mm AM/PM",
+          label: "End/Time OUT",
+          rules: rules['timeRules'],
+        },
+        totalHours: {
+          counter: 8,
+          disabled: false,
+          hint: "HH:mm AM/PM",
+          label: "Total Hours",
+          rules: rules['timeRules'],
+        },
+        group: {
+          disabled: false,
+        },
+      },
+      
+      // Column headers and associated values for the table
       headers: [
         { text: 'Date', align: 'start', value: 'date', sortable: false },
         { text: 'Start/Time IN', value: 'startTime', sortable: false  },
@@ -344,27 +283,25 @@ export default {
         { text: 'Group?', value: 'group', sortable: false  },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-
-      // Record if table added new rows or was reset
-      tableEdited: false,
-      editTableDialog: false,
-
-      // Hide add/edit entry dialog box
-      dialog: false,
-      editDialog: false,
-      formTitle: 'Edit Row',
+    
+      // Record the amount of edited parsed fields and added rows
+      amtEdited: false,
       
-      // Date, Time IN, Time OUT
-      openDate: false,
-      refStartTime: false,
-      openStartTime: false,
-      refEndTime: false,
-      openEndTime: false,
+      // Hide the warning popup for unlocking a parsed row or adding a row
+      editingTable: false,
+      displayWarning: false,
+
+      // Hide the dialog popup for adding/editing a row
+      displayEditDialog: false,
+      formTitle: 'Add/Edit Row',
       
-      // All entries and entry currently being added/edited
+      // All entries of the data table
       allEntries: [],
+
+      // Index of the row that is currently being added/edited
       editedIndex: -1,
- 
+      
+      // Default values for a new row in the table
       defaultItem: {
         date: '',
         timeIn: '',
@@ -372,48 +309,56 @@ export default {
         timeTotal: '',
         group: "No",
         disabled: false,
-        modified: true,
         parsed: false,
       },
 
-      // Holds the new/edited entry
+      // Helper object for holding changes to a row in the table before 
+      // saving changes to that row
       editedItem: {
-        date: new Date().toISOString().substr(0, 10),
+        date: '',
         startTime: '',
         endTime: '',
         totalHours: '',
         group: "No",
         disabled: false,
-        modified: true,
         parsed: false,
       },
+      
+      // The last focused element before a dialog/popup appears
+      // This allows for resuming tabbing after the dialog/popup closes
+      focusedElement: null,
     }
   },
   
   watch: {
+    // Reset table if parent component sends a reset signal
     reset () {
       this.initialize()
     }
   },
 
-  created: function () {
+  created: function () { 
     this.initialize()
   },
-
+  
   methods: {
+    // Parse .json from props into rows for the data table
     initialize () {
-      // Reset the current entries in the table
+      // Reset the entries in the table & notify parent of change
       this.allEntries = [];
-      this.tableEdited = false;
-      // TODO - Notify parent of reset
-
-      if (this.value !== null) {
+      this.$emit('disable-change', this.amtEdited * -1);
+      this.amtEdited = 0;
+      this.editingTable = false;
+      
+      // For each parsed entry from props, create a new table row
+      if (this.parsed_value !== null) {
         // For each timesheet table entry, create a new set 'obj'
-        this.value.forEach(row => {
+        this.parsed_value.forEach(row => {
           let obj = {};
-          // If the attributes in the .json are expected, add them to 'obj'
+
+          // Only add attributes that fit an existing column header
           Object.entries(row).forEach(([key,value]) => {
-            if (this.colNames.includes(key)) {
+            if (key in this.colValidation) {
               obj[key] = value;
               if (!('parsedValue' in obj)) {
                 obj['parsedValue'] = {}
@@ -424,112 +369,171 @@ export default {
               `${key} - ${value}`);
             }
           });
-          // Finally, add obj to an array if it is not empty
-          if (Object.keys(obj).length > 0) {
-            obj['parsed'] = this.parsed;
-            obj['disabled'] = this.disabled;
-            this.allEntries.push(obj);
 
-            // Disable the add row and reset table button
-            this.tableEdited = true;
+          // If the parsed row was not empty, add it to the table 
+          if (Object.keys(obj).length > 0) {
+            obj['parsed'] = true;
+            obj['disabled'] = true;
+            this.allEntries.push(obj);
           }
         });
       }
+
+      // Update parent 
+      this.$emit('input', this.allEntries);
     },
 
-    editItem (item) {
+    // Add/edit a single row of the table
+    editItem (event, item) {
+      // Save the row's data into a helper obj
       this.editedIndex = this.allEntries.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      this.dialog = true
-    },
+      
+      // Save the add/edit button to allow for continuation of tabbing
+      // after closing the add/edit dialog popup
+      this.focusedElement = event.target
 
+      // Open the add/edit dialog popup
+      this.displayEditDialog = true
+    },
+    
+    // Flip the true/false value of the 'group' for a given item
+    flipGroup(item) {
+      if (item.group === "Yes") {
+        item.group = "No"
+      } else {
+        item.group = "Yes"
+      }
+    },
+    
+    // Delete a single row of the table
     deleteItem (item) {
       const index = this.allEntries.indexOf(item)
       confirm('Are you sure you want to delete this item?') && this.allEntries.splice(index, 1)
+      
+      // No need to notify parent, because an item can only be deleted if
+      // the 'add row' button was unlocked or if a parsed row was unlocked
     },
-
+    
+    // Close the add/edit dialog popup
     close () {
-      this.dialog = false
+      this.displayEditDialog = false
+      
+      // Timeout to wait for dialog to fully close
       setTimeout(() => {
+        // Re-initialize the helper object
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
+
+        // resume tabbing to the previously active element
+        this.focusedElement.focus()
       }, 300)
     },
 
+    // Close the warning dialog
+    closeWarning() {
+      this.displayWarning = false
+      setTimeout(() => {
+        this.focusedElement.focus()
+      }, 300)
+    },
+     
+    // Save changes to an existing or new row
     save () {
       if (this.editedIndex > -1) {
         Object.assign(this.allEntries[this.editedIndex], this.editedItem)
       } else {
+        // Added a new item, so notify parent of change
         this.allEntries.push(this.editedItem)
+        this.amtEdited += 1
+        this.$emit('disable-change', 1);
+        this.$emit('input', this.allEntries);
       }
       this.close()
-      this.validateFormTable()
+    },    
+
+    // If the parsed row is locked, unlock it and notify parent
+    // Else, reset row to parsed value and notify parent
+    toggleParsed () { 
+      if (this.editedItem.disabled === true) { 
+        this.amtEdited += 1
+        this.$emit('disable-change', 1);
+      } else {
+        // For each field in this row, reset the field to its parsed value
+        Object.entries(this.editedItem.parsedValue).forEach( ([key, value]) => {
+          this.editedItem[key] = value 
+        })
+
+        this.amtEdited -= 1
+        this.$emit('disable-change', -1);
+      }
+      
+      // Flip lock/unlock of parsed row & save
+      this.editedItem.disabled = !this.editedItem.disabled 
+      this.save()
+    }, 
+
+    // If the add row/reset table buttons are disabled, enable them
+    // Else, reset the entire table
+    toggleEditTable  () {
+      if (this.amtEdited > 0) {
+        this.initialize()
+      } else {
+        this.amtEdited += 1;
+        this.$emit('disable-change', 1);
+      }
     },
 
-    validateFormTable () { 
-      // TODO - this is just here for testing 
-      var totalHours = -1
-      this.$emit('formtable-change', totalHours)
-    },
-    
     // Ask before adding a row to the table
-    // Or, reset table to parsed vals
-    askTableEdit() {
-      this.editTableDialog = true
-      if (this.tableEdited === true) {
-        this.editDialog = true
+    // Or, reset table to the parsed vals
+    askTableEdit(event) {
+      this.focusedElement = event.target
+      if (this.amtEdited < 1) {
+        this.editingTable = true
+        this.displayWarning = true
       } else {
-        this.resetParsed()
+        this.toggleEditTable()
       }
     }, 
     
-    // Ask before editing a single parsed table row
-    // Or, reset & lock a parsed table row
-    askEdit(item) {
-      // v-simple-checkbox is specially made for v-data-table, but it
-      // does not have a @click.stop; only a @input
-      // Disabling right here mocks the @click.stop behavior
-      item.disabled = !item.disabled
+    // Warn before editing a single parsed table row
+    // Or, reset & lock the parsed table row
+    warnEdit(event, item) {
+      // Save the lock/unlock button to allow for continuation of tabbing
+      // after closing the warning
+      this.focusedElement = event.target      
 
-      // Globally select this row in the table, so other methods
-      // can access it without needing 'item' as an arg
+      // Select this row in the table and initialize the helper obj
       this.editedIndex = this.allEntries.indexOf(item)
       this.editedItem = Object.assign({}, item)
-
-      // Trying to unlock a parsed row -- show warning
-      // Else, reset row to parsed value & lock
+     
+      // If editting a parsed row, show warning
+      // Else, reset the row to its parsed value and lock it
       if (item.disabled === true) {
-        this.editDialog = true
+        this.displayWarning = true
       } else {
-        this.initialize()
+        this.toggleParsed()
+      }
+
+      // If adding a new row, tell parent of change
+      if (this.editingTable === true) {
+        this.amtEdited += 1;
+        this.$emit('disable-change', 1);
+        this.editingTable = false
       }
     },
-
-    resetParsed () { 
-      // Check if entire table/adding row or editing a single row 
-      if (this.editTableDialog === true) {
-        if (this.tableEdited !== true) {
-          this.initialize()
-        } else {
-          this.tableEdited = !this.tableEdited
-        }
-        this.editTableDialog = false
+    
+    // Runs after pressing the continue button on the warning dialog
+    warnContinue() {
+      if (this.editingTable === true) {
+        this.toggleEditTable()
       } else {
-        // If item was disabled, just enable editing
-        // else reset row to parsed value & disable editing 
-        if (this.editedItem.disabled !== true) {
-          // For each field in this row, reset field to parsed value
-          Object.entries(this.editedItem.parsedValue).forEach( ([key, value]) => {
-          this.editedItem[key] = value 
-          })
-        }
-        
-        // Flip lock/unlock of parsed row & save
-        this.editedItem.disabled = !this.editedItem.disabled 
-        this.save()
+        this.toggleParsed()
       }
+      
+      this.closeWarning()
+      this.editingTable = false
     },
-
   },
 }
 </script>

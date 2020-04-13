@@ -6,10 +6,12 @@
     >
       <!-- Lock/Unlock icon to enable editing or reset & lock a parsed field -->
       <v-checkbox 
+        hide-details
         off-icon="lock_open"
         on-icon="lock"
-        v-model="fieldDisabled"
-        @click.stop="askEdit()"
+        v-model.lazy="disabled"
+        @click.stop="askEdit($event)"
+        @keyup.native.enter.stop="askEdit($event)"
       ></v-checkbox>
       
       <!-- Warning dialog upon editing a parsed field -->
@@ -33,7 +35,7 @@
             <v-btn
               color="red darken-1"
               text
-              @click="editDialog = false"
+              @click="closeDialog()"
             >
              Cancel edit
             </v-btn>
@@ -41,7 +43,7 @@
             <v-btn
               color="green darken-1"
               text
-              @click="editDialog = false; resetParsed()"
+              @click.stop="changeDisable(); closeDialog()"
             >
               Edit field
             </v-btn>
@@ -55,10 +57,12 @@
     <!-- Check if field is a checkbox -->
     <v-col v-if="this.field_type === 1">
       <v-checkbox
-        v-model="fieldValue"
-        :disabled="fieldDisabled"
+        :disabled="disabled"
         :label="label"
         :rules="rules"
+        :input-value="value"
+        @change="$emit('input', !value)"
+        @keyup.native.enter="$emit('input', !value)"
       ></v-checkbox>
     </v-col>
 
@@ -67,14 +71,15 @@
       <v-textarea
         clearable
         outlined
-        v-model="fieldValue"
         :auto-grow="auto_grow"
         :counter="counter"
-        :disabled="fieldDisabled"
+        :disabled="disabled"
         :hint="hint"
         :label="label"
         :rows="rows"
         :rules="rules"
+        :value="value"
+        @input="$emit('input', $event)"
       ></v-textarea>
     </v-col>
 
@@ -83,12 +88,13 @@
       <v-text-field
         clearable
         outlined
-        v-model="fieldValue"
         :counter="counter"
-        :disabled="fieldDisabled"
+        :disabled="disabled"
         :hint="hint"
         :label="label"
         :rules="rules"
+        :value="value"
+        @input="$emit('input', $event)"
       ></v-text-field>
     </v-col>
     <!-- End form Field -->
@@ -108,11 +114,6 @@ export default {
     counter: {
       default: 25,
     },
-    // is field blocked from being edited?
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
     // 0 - text-field/textarea
     // 1 - checkbox
     field_type: {
@@ -128,11 +129,6 @@ export default {
     label: {
       type: String,
       default: "",
-    },
-    // was field parsed from .json?
-    parsed: {
-      type: Boolean,
-      default: false,  
     },
     // value parsed from .json
     parsed_value: {
@@ -154,32 +150,30 @@ export default {
     // value entered in text field
     value: {
       type: [String, Boolean, Number],
-      Default: "",
+      Default: null,
     },
   },
 
-  // Initialize component upon being first loaded onto the page
   created: function () {
-    this.fieldDisabled = this.disabled;
-    this.fieldValue = this.value;
+    // If there is a parsed_value, disable this field from editing
+    this.disabled = this.parsed_value !== null;
   },
   
   // Manage fields that change on this page
   data: function () {
     return {
-      fieldDisabled: false,
-      fieldValue: '',
+      disabled: false,
       editDialog: false,
+      focusedElement: null,
     }
   },
 
   watch: {
     reset () {
       if (this.parsed_value !== null) {
-        this.fieldDisabled = true 
-        this.fieldValue = this.parsed_value
+        this.disabled = true 
       } else {
-        this.fieldValue = null
+        this.$emit('input', null)
       }
     }
   },
@@ -187,26 +181,36 @@ export default {
   // Do an action or communicate info to parent component upon a certain
   // event
   methods: {
+    // For a parsed field only:
     // Display warning message before unlocking field for editing 
-    // Will not display warning if re-locking field
-    askEdit() {
-      if (this.fieldDisabled === true) {
+    // Do not display warning if re-locking field
+    askEdit(event) {
+      this.focusedElement = event.target
+      if (this.disabled === true) {
         this.editDialog = true
       } else {
-        this.resetParsed()
+        this.changeDisable()
       }
     },
+    
+    // 300 because click on button enter, so no infinite
+    closeDialog() {
+      this.editDialog = false
+      setTimeout(() => {
+        this.focusedElement.focus()
+      }, 300)
+    },
 
-    // For a parsed field, send a warning if being edited
-    // Else, reset value to parsed value & disable field
-    resetParsed () {
-      // Unlock field and notify parent
-      this.fieldDisabled = !this.fieldDisabled
-      if (this.fieldDisabled === true) {
-        this.fieldValue = this.parsed_value
-        this.$emit('field-change', -1)
+    // For a parsed field only:
+    // Unlock a disabled parsed field
+    // Else, reset field to its parsed value & disable the field
+    changeDisable () {
+      this.disabled = !this.disabled
+      if (this.disabled === true) {
+        this.$emit('input', this.parsed_value)
+        this.$emit('disable-change', -1)
       } else {
-        this.$emit('field-change', 1)
+        this.$emit('disable-change', 1)
       }
     },
     
