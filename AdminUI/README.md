@@ -3,9 +3,12 @@
 ## Project Setup
 
 Open AdminUI.sln in Visual Studio
+
 In the Package Manager Console, run the following commands:
-	"EntityFrameworkCore\Update-Database -Context AdminAccountContext"
-	"EntityFrameworkCore\Update-Database -Context TimesheetContext"
+
+	EntityFrameworkCore\Update-Database -Context AdminAccountContext
+	
+	EntityFrameworkCore\Update-Database -Context TimesheetContext
 
 If you see an error along the lines of "Database xxx already exists, pick a different name",
 then go to view -> Server Object Explorer, find the database in question, right click, then delete.
