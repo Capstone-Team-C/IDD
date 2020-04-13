@@ -1,8 +1,12 @@
 <template>
-  <v-data-table class="elevation-2" :headers="headers" :items="allEntries">
-    <!-- Table toolbar -->
+  <v-data-table
+    class="elevation-1"
+    :headers="headers"
+    :items="allEntries"
+  >
+    <!-- The header of the table -->
     <template v-slot:top>
-      <v-toolbar flat>
+      <v-toolbar flat >
         <v-toolbar-title>
           Service Delivered On:
         </v-toolbar-title>
@@ -112,14 +116,22 @@
               </v-container>
             </v-card-text>
             <!-- END form area -->
-
+          
             <!-- Cancel/Save edited item panel -->
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="red darken-1" text @click="close">
+              <v-btn 
+                color="red darken-1" 
+                text 
+                @click="close"
+              >
                 Cancel
               </v-btn>
-              <v-btn color="green darken-1" text @click="save">
+              <v-btn 
+                color="green darken-1" 
+                text 
+                @click="save"
+              >
                 Save
               </v-btn>
             </v-card-actions>

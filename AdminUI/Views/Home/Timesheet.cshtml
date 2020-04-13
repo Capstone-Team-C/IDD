@@ -1,3 +1,5 @@
+@model AdminUI.Models.Timesheet
+
 @{
     ViewData["Title"] = "Timesheet";
     var sheet = ViewData["Sheet"] as Timesheet;
@@ -8,6 +10,9 @@
     <div class="row">
         <div class="column">
             <label for="client-name">Timesheet ID:</label> @sheet.TimesheetID
+        </div>
+        <div class="column">
+            <label asp-for="Status">Status of Timesheet:</label> @sheet.Status
         </div>
     </div>
     <div class="row">
@@ -48,33 +53,33 @@
         <table class="table table-striped table-bordered table-hover">
             <caption>Service Log for Timesheet ID @sheet.TimesheetID</caption>
             <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Start/Time IN</th>
-                    <th scope="col">End/Time OUT</th>
-                    <th scope="col">Total Hours for Entry</th>
-                    <th scope="col">Group? (yes/no)</th>
-                </tr>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Start/Time IN</th>
+                <th scope="col">End/Time OUT</th>
+                <th scope="col">Total Hours for Entry</th>
+                <th scope="col">Group? (yes/no)</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var t in sheet.Shifts)
-                {
-                    <tr itemscope="row">
-                        <td>@t.Date.ToString("d")</td>
-                        <td>@t.In.ToString("h:mm tt")</td>
-                        <td>@t.Out.ToString("h:mm tt")</td>
-                        <td>@t.Hours</td>
-                        @if (t.Group)
-                        {
-                            <td>Yes</td>
-                        }
-                        else
-                        {
-                            <td>No</td>
+            @foreach (var t in sheet.Shifts)
+            {
+                <tr itemscope="row">
+                    <td>@t.Date.ToString("d")</td>
+                    <td>@t.In.ToString("h:mm tt")</td>
+                    <td>@t.Out.ToString("h:mm tt")</td>
+                    <td>@t.Hours</td>
+                    @if (t.Group)
+                    {
+                        <td>Yes</td>
+                    }
+                    else
+                    {
+                        <td>No</td>
 
-                        }
-                    </tr>
-                }
+                    }
+                </tr>
+            }
             </tbody>
         </table>
     </div>
@@ -125,9 +130,17 @@
     </div>
     <div class="row">
         <div class="column">
-            <label>Timesheet Submitted on:</label> @sheet.Submitted.ToString("MM-dd-yyyy") 
+            <label>Timesheet Submitted on:</label> @sheet.Submitted.ToString("MM-dd-yyyy")
         </div>
     </div>
     <img src="~/images/timesheet-front.png" alt="Sample Front" />
     <img src="~/images/timesheet-back.png" alt="Sample Front" />
+    <form asp-action="Process">
+        <div class="row">
+            <input type="hidden" name="id" value="@sheet.TimesheetID"/>
+            <input onclick="handleRejected" class="btn btn-danger" name="Status" value="Rejected" type="submit">
+            <input type="text" name="RejectionReason"/>
+            <input onclick="handleAccepted" class="btn btn-primary" name="Status" value="Accepted" type="submit">
+        </div>
+    </form>
 </div>

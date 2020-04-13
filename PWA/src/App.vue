@@ -7,7 +7,10 @@
     />
 
     <!-- Bar at the top of the webpage -->
-    <AppBar :open="openNavigationDrawer" @drawer-change="handleDrawerChange" />
+    <AppBar 
+      :open="openNavigationDrawer" 
+      @drawer-change="handleDrawerChange" 
+    />
 
     <!-- Main content of the page, controlled by the Vue Router -->
     <v-content>

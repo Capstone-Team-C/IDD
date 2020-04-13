@@ -65,6 +65,9 @@ namespace AdminUI.Migrations
                     b.Property<DateTime?>("ProviderSigned")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SCPAName")
                         .HasColumnType("nvarchar(max)");
 
@@ -72,6 +75,9 @@ namespace AdminUI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceGoal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Submitted")

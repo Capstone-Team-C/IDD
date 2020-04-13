@@ -156,5 +156,39 @@ namespace AdminUI.Controllers
             ViewData["sheet"] = timesheet;
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Process(int id, string Status, string RejectionReason)
+        {
+            var timesheet = await _context.Timesheet
+                .FirstOrDefaultAsync(m => m.TimesheetID == id);
+            if (timesheet == null)
+                return NotFound();
+            timesheet.Status = Status;
+            timesheet.RejectionReason = RejectionReason;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(timesheet);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+
+                    Console.WriteLine("There was an error");
+                    if (!_context.Timesheet.Any(e => e.TimesheetID == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

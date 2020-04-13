@@ -31,7 +31,9 @@
       </v-col>
 
       <v-col v-else-if="variant === 'Fill out a form'">
-        <IDDForm :parsedFileData="parsedFileData" />
+        <IDDForm 
+          :parsedFileData="parsedFileData"
+        /> 
       </v-col>
     </v-row>
   </div>
@@ -52,9 +54,12 @@ export default {
   },
   data: () => ({
     // Choices for the select component
-    items: ["Upload an image", "Fill out a form"],
-    variant: "default",
-    parsedFileData: mock_json,
-  }),
-};
+    items: [
+      'Upload an image',
+      'Fill out a form',
+    ],
+    variant: 'default',
+    parsedFileData: mock_json
+  })
+}
 </script>

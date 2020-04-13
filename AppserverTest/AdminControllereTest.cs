@@ -1,17 +1,17 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 using mvc_trial.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace mvc_trialTest
+namespace Appserver.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class AdminControllereTests
     {
         
 
-        [TestMethod]
+        [Test]
         public void AdminDashboardTest()
         {
             AdminController adc = new AdminController();
@@ -19,7 +19,7 @@ namespace mvc_trialTest
             Assert.IsNotNull(result.ViewData);
         }
 
-        [TestMethod]
+        [Test]
         public void AdminFilterDateTest()
         {
             AdminController adc = new AdminController();
@@ -27,7 +27,7 @@ namespace mvc_trialTest
             Assert.IsTrue(result.ToString() != "");
         }
 
-        [TestMethod]
+        [Test]
         public void AdminFilterNameTest()
         {
             AdminController adc = new AdminController();

@@ -40,7 +40,9 @@ namespace AdminUI.Models
                         ProviderSignature = true,
                         ProviderSigned = DateTime.Parse("3/25/20"),
                         Type = "OR526 Attendant Care",
-                        Submitted = DateTime.Parse("4/2/20 2:03PM")
+                        Submitted = DateTime.Parse("4/2/20 2:03PM"),
+                        RejectionReason = "",
+                        Status = "Pending"
                     },
                     new Timesheet
                     {
@@ -59,7 +61,9 @@ namespace AdminUI.Models
                         ProviderSignature = true,
                         ProviderSigned = DateTime.Parse("3/25/20"),
                         Type = "OR526 Attendant Care",
-                        Submitted = DateTime.Parse("4/1/20 1:45PM")
+                        Submitted = DateTime.Parse("4/1/20 1:45PM"),
+                        RejectionReason = "",
+                        Status = "Pending"
                     },
                     new Timesheet
                     {
@@ -78,7 +82,9 @@ namespace AdminUI.Models
                         ProviderSignature = true,
                         ProviderSigned = DateTime.Parse("3/28/20"),
                         Type = "OR526 Attendant Care",
-                        Submitted = DateTime.Parse("3/29/20 8:06AM")
+                        Submitted = DateTime.Parse("3/29/20 8:06AM"),
+                        RejectionReason = "",
+                        Status = "Pending"
                     },
                     new Timesheet
                     {
@@ -96,7 +102,9 @@ namespace AdminUI.Models
                         ProviderSignature = true,
                         ProviderSigned = DateTime.Parse("3/25/20"),
                         Type = "OR526 Attendant Care",
-                        Submitted = DateTime.Parse("4/1/20 5:13PM")
+                        Submitted = DateTime.Parse("4/1/20 5:13PM"),
+                        RejectionReason = "",
+                        Status = "Pending"
                     },
                     new Timesheet
                     { 
@@ -114,7 +122,9 @@ namespace AdminUI.Models
                         ClientSigned = DateTime.Parse("03/27/2020"),
                         ProviderSignature = false,
                         Type = "OR526 Attendant Care",
-                        Submitted = DateTime.Parse("4/2/20 10:20AM")
+                        Submitted = DateTime.Parse("4/2/20 10:20AM"),
+                        RejectionReason = "",
+                        Status = "Pending"
                     }
                 );
                 context.SaveChanges();

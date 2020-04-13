@@ -1,5 +1,11 @@
 <template>
-  <v-form class="mx-9" lazy-validation ref="form" v-model="valid">
+  <v-form
+    class="mx-9"
+    lazy-validation
+    ref="form"
+    v-model="valid"
+  >
+
     <p class="title">
       Front side of the form
     </p>
@@ -24,7 +30,6 @@
 
     <!-- Table containing timesheet  -->
     <v-card-text>
-      <!-- TODO connect child data to parent data -->
       <FormTable
         v-model="formFields.serviceDeliveredOn.value"
         v-bind="formFields.serviceDeliveredOn"

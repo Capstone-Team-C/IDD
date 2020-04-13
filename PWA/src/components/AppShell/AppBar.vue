@@ -7,7 +7,7 @@
     <v-toolbar-title>
       IDD Timesheet Submission
     </v-toolbar-title>
-
+    
     <v-spacer></v-spacer>
 
     <!-- Link to user help manuals -->
