@@ -192,7 +192,7 @@ namespace AdminUI.Controllers
                 foreach (var p in properties)
                 {
                     if (p.GetValue(s) != null)
-                        csv += "\"" + p.GetValue(s) + "\"";
+                        csv += "\"" + p.GetValue(s).ToString().Replace('"','\'') + "\"";
                     csv += ',';
                 }
             }
