@@ -157,6 +157,50 @@ namespace AdminUI.Controllers
             return View();
         }
 
+        public FileContentResult DownloadCSV(string pName, string cName, string dateFrom, string dateTo, string prime, string id)
+        {
+            var sheets = GetSheets();
+
+            
+            //filter the timesheets 
+            if (!string.IsNullOrEmpty(pName))
+                sheets = sheets.Where(t => t.ProviderName.ToLower().Contains(pName.ToLower()));
+
+            if (!string.IsNullOrEmpty(cName))
+                sheets = sheets.Where(t => t.ClientName.ToLower().Contains(cName.ToLower()));
+
+            if (!string.IsNullOrEmpty(dateFrom))
+                sheets = sheets.Where(t => t.Submitted >= DateTime.Parse(dateFrom));
+
+            if (!string.IsNullOrEmpty(dateTo))
+                sheets = sheets.Where(t => t.Submitted <= DateTime.Parse(dateTo));
+
+            if (!string.IsNullOrEmpty(prime))
+                sheets = sheets.Where(t => t.ClientPrime == prime);
+
+            if (!string.IsNullOrEmpty(id))
+                sheets = sheets.Where(t => t.TimesheetID == int.Parse(id));
+
+            //the following loops through every property in a timesheet, first saving the names of the properties to 
+            //act as a header. Then, it loops through every timesheet, adding every individual property of the timesheet
+            //to the csv, then returning it for download.
+            var properties = typeof(Timesheet).GetProperties();
+            var csv = properties.Aggregate("", (current, f) => current + (f.Name + ','));
+            foreach (var s in sheets)
+            {
+                csv += '\n';
+                foreach (var p in properties)
+                {
+                    if (p.GetValue(s) != null)
+                        csv += "\"" + p.GetValue(s) + "\"";
+                    csv += ',';
+                }
+            }
+
+            var name = "Submissions_summary_" + DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss") + ".csv";
+            return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", name);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Process(int id, string Status, string RejectionReason)
         {

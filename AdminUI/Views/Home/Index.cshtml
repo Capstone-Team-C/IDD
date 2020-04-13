@@ -35,26 +35,40 @@
     <form>
         <label for="id">ID:</label>
         <input type="number" name="id" id="id" value="@Model.Id" />
-        
+
         <label for="pName">Provider Name:</label>
-        <input type="text" name="pName" id="pName" value ="@Model.PName">
-        
+        <input type="text" name="pName" id="pName" value="@Model.PName">
+
         <label for="prime">Prime:</label>
-        <input type="number" name="prime" id="prime" value ="@Model.Prime"><br/>
-        
+        <input type="number" name="prime" id="prime" value="@Model.Prime"><br />
+
         <label for="cName">Client Name:</label>
         <input type="text" name="cName" id="cName" value="@Model.CName">
-        
+
         <label for="dateFrom">From:</label>
         <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom">
-        
-        <label for="dateTo">To:</label>
-        <input type="date" name="dateTo" id="dateTo" value ="@Model.DateTo"><br/>
 
-        <input type="submit" value ="Apply Filters"/>
-        <br/><br/>
+        <label for="dateTo">To:</label>
+        <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo"><br />
+
+        <input role="button" class="btn btn-primary" type="submit" value="Apply Filters" />
+                @Html.ActionLink("Download CSV", "DownloadCSV", new
+                {
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo,
+                }, new
+                {
+                    @class = "btn btn-dark "
+                })
+        <br /><br />
     </form>
-    <dir id="check-the-css-file">
+
+
+<dir id="check-the-css-file">
         <table width="100%">
             <tr class="color-div" style="background-color: #0294B5">
                 <!--This ugly block of code can probably be fixed, but I'm not sure how tbh. Right now each 
