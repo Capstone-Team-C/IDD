@@ -1,6 +1,8 @@
 <template>
   <div>
-    <br/><hr/><br/>
+    <br />
+    <hr />
+    <br />
     <!--
     <span class="md-display-3">Vue Material UI Examples</span>
     <span class="md-headline">Here are some different components from the Vue Material UI library</span>
@@ -31,51 +33,48 @@
     </md-toolbar>
     <CameraExample />
     -->
-	<md-toolbar>
+    <md-toolbar>
       <h3 class="md-title">File Upload</h3>
     </md-toolbar>
     <FileUploader />
-
-
-
   </div>
 </template>
 
 <script>
-  /**import FormExample from './FormExample.vue'
+/**import FormExample from './FormExample.vue'
   import TableExample from './TableExample.vue'
   import DateExample from './DateExample.vue'
   import CameraExample from './CameraExample.vue'
   **/
-  import FileUploader from './FileUploader.vue'
-  
-  import Vue from 'vue'
-  import { MdToolbar, MdLayout } from 'vue-material/dist/components'
-  import 'vue-material/dist/vue-material.min.css'
-  import 'vue-material/dist/theme/default.css'
+import FileUploader from "./FileUploader.vue";
 
-  Vue.use(MdToolbar)
-  Vue.use(MdLayout)
+import Vue from "vue";
+import { MdToolbar, MdLayout } from "vue-material/dist/components";
+import "vue-material/dist/vue-material.min.css";
+import "vue-material/dist/theme/default.css";
 
-  export default {
-    name: 'ComponentsExample',
-    components: {
-      /**FormExample,
+Vue.use(MdToolbar);
+Vue.use(MdLayout);
+
+export default {
+  name: "ComponentsExample",
+  components: {
+    /**FormExample,
       TableExample,
       DateExample,
       CameraExample,
       **/
-      FileUploader
-	}
-}
+    FileUploader,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-  span {
-    margin: .5em 0;
-    display: block;
-  }
-  .md-toolbar + .md-toolbar {
-      margin-top: 16px;
-    }
+span {
+  margin: 0.5em 0;
+  display: block;
+}
+.md-toolbar + .md-toolbar {
+  margin-top: 16px;
+}
 </style>

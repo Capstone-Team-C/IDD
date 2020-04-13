@@ -5,51 +5,45 @@
       :open="openNavigationDrawer"
       @drawer-change="handleDrawerChange"
     />
-    
+
     <!-- Bar at the top of the webpage -->
-    <AppBar
-      :open="openNavigationDrawer"
-      @drawer-change="handleDrawerChange"
-    />
-    
+    <AppBar :open="openNavigationDrawer" @drawer-change="handleDrawerChange" />
+
     <!-- Main content of the page, controlled by the Vue Router -->
     <v-content>
       <!-- Fade-in/Fade-out for smooth navigation transitions -->
-      <transition 
-        mode="out-in" 
-        name="fade"
-      >
+      <transition mode="out-in" name="fade">
         <router-view />
       </transition>
     </v-content>
-    
+
     <!-- Footer, appears at the bottom of the page -->
     <AppFooter />
   </v-app>
 </template>
 
 <script>
-import AppBar from '@/components/AppShell/AppBar'
-import AppFooter from '@/components/AppShell/AppFooter'
-import NavigationDrawer from '@/components/AppShell/NavigationDrawer'
+import AppBar from "@/components/AppShell/AppBar";
+import AppFooter from "@/components/AppShell/AppFooter";
+import NavigationDrawer from "@/components/AppShell/NavigationDrawer";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     AppBar,
     AppFooter,
-    NavigationDrawer
+    NavigationDrawer,
   },
   data: () => ({
     // Stores the value for if the navigation drawer is open or not
-    openNavigationDrawer: false
+    openNavigationDrawer: false,
   }),
   methods: {
     // Toggle displaying the navigation drawer
     handleDrawerChange(isOpen) {
-      this.openNavigationDrawer = isOpen
-    }
-  }
+      this.openNavigationDrawer = isOpen;
+    },
+  },
 };
 </script>
 
@@ -63,6 +57,6 @@ export default {
 
 .fade-enter,
 .fade-leave-active {
-  opacity: 0
+  opacity: 0;
 }
 </style>

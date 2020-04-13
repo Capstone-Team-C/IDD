@@ -1,13 +1,13 @@
 {
   "customerName": {
-    "counter": 25,             
-    "disabled": false,         
-    "hint": "Full name",       
-    "label": "Customer Name",  
+    "counter": 25,
+    "disabled": false,
+    "hint": "Full name",
+    "label": "Customer Name",
     "rules": "nameRules",
     "value": null
   },
-  "prime": { 
+  "prime": {
     "counter": 8,
     "disabled": false,
     "label": "Prime",
@@ -21,7 +21,7 @@
     "rules": "monthyearRules",
     "value": null
   },
-  "providerName": { 
+  "providerName": {
     "counter": 25,
     "disabled": false,
     "hint": "Full name",
@@ -36,14 +36,14 @@
     "rules": "numericRules",
     "value": null
   },
-  "SC/PA Name": { 
+  "SC/PA Name": {
     "counter": 25,
     "disabled": false,
     "label": "SC/PA Name",
     "rules": "nameRules",
     "value": null
   },
-  "CMOrg": { 
+  "CMOrg": {
     "counter": 50,
     "disabled": false,
     "label": "CM Organization",
@@ -61,15 +61,15 @@
     "disabled": false,
     "value": null
   },
-  "totalHours": { 
+  "totalHours": {
     "counter": 8,
     "disabled": false,
     "hint": "HH:mm AM/PM",
     "label": "Total Hours",
     "rules": "timeRules",
     "value": ""
-  }, 
-  "serviceGoal": { 
+  },
+  "serviceGoal": {
     "auto_grow": true,
     "counter": 250,
     "disabled": false,
@@ -78,7 +78,7 @@
     "rules": "nameRules",
     "value": ""
   },
-  "progressNotes": { 
+  "progressNotes": {
     "auto_grow": true,
     "counter": 500,
     "disabled": false,
@@ -87,38 +87,38 @@
     "rules": "nameRules",
     "value": ""
   },
-  "employerSignDate": { 
+  "employerSignDate": {
     "disabled": false,
     "hint": "YYYY-MM-DD",
     "label": "Date",
     "rules": "dateRules",
     "value": null
   },
-  "employerSignature": { 
+  "employerSignature": {
     "disabled": false,
     "field_type": 1,
     "label": "Customer Employer or Employer Rep Signature",
     "value": null
   },
-  "providerSignDate": { 
+  "providerSignDate": {
     "disabled": false,
     "label": "Date",
     "rules": "dateRules",
     "value": null
   },
-  "providerSignature": { 
+  "providerSignature": {
     "disabled": false,
     "field_type": 1,
     "label": "Provider/Employee Signature",
     "value": null
   },
-  "authorization": { 
+  "authorization": {
     "disabled": false,
     "field_type": 1,
     "label": "I authorize the CDDP/Brokerage/CIIS staff to enter the data reported on this form into eXPRS on my behalf for claims creation and payment.",
     "value": null
   },
-  "providerInitials": { 
+  "providerInitials": {
     "disabled": false,
     "label": "Provider Initials",
     "rules": "nameRules",

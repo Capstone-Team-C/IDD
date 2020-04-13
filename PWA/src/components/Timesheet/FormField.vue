@@ -1,11 +1,8 @@
 <template>
   <v-row>
-    <v-col 
-      cols="1"
-      v-if="this.parsed_value !== null"
-    >
+    <v-col cols="1" v-if="this.parsed_value !== null">
       <!-- Lock/Unlock icon to enable editing or reset & lock a parsed field -->
-      <v-checkbox 
+      <v-checkbox
         hide-details
         off-icon="lock_open"
         on-icon="lock"
@@ -13,37 +10,34 @@
         @click.stop="askEdit($event)"
         @keyup.native.enter.stop="askEdit($event)"
       ></v-checkbox>
-      
+
       <!-- Warning dialog upon editing a parsed field -->
-      <v-dialog
-        v-model="editDialog"
-          max-width="500px"
-      >
+      <v-dialog v-model="editDialog" max-width="500px">
         <v-card>
-          <v-card-title class="headline">Do you want to edit this parsed field?</v-card-title>
+          <v-card-title class="headline"
+            >Do you want to edit this parsed field?</v-card-title
+          >
 
           <v-card-text>
-            This field was parsed by AWS Textrack, based on the IDD
-            timesheet that was uploaded. If you edit this field, the
-            employer and provider <em>must</em> re-sign this form
-            at the bottom before submission.
+            This field was parsed by AWS Textrack, based on the IDD timesheet
+            that was uploaded. If you edit this field, the employer and provider
+            <em>must</em> re-sign this form at the bottom before submission.
           </v-card-text>
 
           <v-card-actions>
             <v-spacer></v-spacer>
 
-            <v-btn
-              color="red darken-1"
-              text
-              @click="closeDialog()"
-            >
-             Cancel edit
+            <v-btn color="red darken-1" text @click="closeDialog()">
+              Cancel edit
             </v-btn>
 
             <v-btn
               color="green darken-1"
               text
-              @click.stop="changeDisable(); closeDialog()"
+              @click.stop="
+                changeDisable();
+                closeDialog();
+              "
             >
               Edit field
             </v-btn>
@@ -103,7 +97,7 @@
 
 <script>
 export default {
-  name: 'FormField',
+  name: "FormField",
   props: {
     // does the text field grow in size as more text is entered
     auto_grow: {
@@ -145,8 +139,7 @@ export default {
       Default: 1,
     },
     // validation rules for text field
-    rules: {
-    },
+    rules: {},
     // value entered in text field
     value: {
       type: [String, Boolean, Number],
@@ -158,62 +151,61 @@ export default {
     // If there is a parsed_value, disable this field from editing
     this.disabled = this.parsed_value !== null;
   },
-  
+
   // Manage fields that change on this page
   data: function () {
     return {
       disabled: false,
       editDialog: false,
       focusedElement: null,
-    }
+    };
   },
 
   watch: {
-    reset () {
+    reset() {
       if (this.parsed_value !== null) {
-        this.disabled = true 
+        this.disabled = true;
       } else {
-        this.$emit('input', null)
+        this.$emit("input", null);
       }
-    }
+    },
   },
 
   // Do an action or communicate info to parent component upon a certain
   // event
   methods: {
     // For a parsed field only:
-    // Display warning message before unlocking field for editing 
+    // Display warning message before unlocking field for editing
     // Do not display warning if re-locking field
     askEdit(event) {
-      this.focusedElement = event.target
+      this.focusedElement = event.target;
       if (this.disabled === true) {
-        this.editDialog = true
+        this.editDialog = true;
       } else {
-        this.changeDisable()
+        this.changeDisable();
       }
     },
-    
+
     // 300 because click on button enter, so no infinite
     closeDialog() {
-      this.editDialog = false
+      this.editDialog = false;
       setTimeout(() => {
-        this.focusedElement.focus()
-      }, 300)
+        this.focusedElement.focus();
+      }, 300);
     },
 
     // For a parsed field only:
     // Unlock a disabled parsed field
     // Else, reset field to its parsed value & disable the field
-    changeDisable () {
-      this.disabled = !this.disabled
+    changeDisable() {
+      this.disabled = !this.disabled;
       if (this.disabled === true) {
-        this.$emit('input', this.parsed_value)
-        this.$emit('disable-change', -1)
+        this.$emit("input", this.parsed_value);
+        this.$emit("disable-change", -1);
       } else {
-        this.$emit('disable-change', 1)
+        this.$emit("disable-change", 1);
       }
     },
-    
-  }
-}
+  },
+};
 </script>
