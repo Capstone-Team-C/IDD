@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Amazon.Textract;
 using Amazon.Textract.Model;
 
-namespace mvc_trial.Controllers
+namespace Appserver.Controllers
 {
     public class TextractHandler
     {

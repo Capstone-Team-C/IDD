@@ -11,7 +11,7 @@ using System.Data.SqlClient;
 using Amazon.Textract;
 
 
-namespace mvc_trial.Controllers
+namespace Appserver.Controllers
 {
     public class ImageUploadController : Controller
     {
