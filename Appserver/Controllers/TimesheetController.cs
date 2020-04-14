@@ -17,7 +17,26 @@ namespace Appserver.Controllers
         public IActionResult Ready()
         {
             TimesheetForm model = new TimesheetForm();
-            
+            model.prime = "A1234";
+            model.providerName = "Donald Duck";
+            model.providerNum = "N6543";
+            model.providerSignature = true;
+            model.providerSignDate = DateTime.Now.ToString();
+            model.progressNotes = "Looking good for a retired hero.\nNeeds a new hobby.";
+            model.scpaName = "SCPA";
+            model.serviceAuthorized = "Feeding";
+            model.serviceGoal = "Feed fish";
+            model.authorization = true;
+            model.type = "House call";
+            model.brokerage = "Daffy";
+            model.approval = true;
+            model.clientName = "Darkwing Duck";
+            model.employerSignature = true;
+            model.employerSignDate = DateTime.Now.ToString();
+            model.frequency = "Daily";
+            model.addTimeRow("2020-04-02", "09:00", "10:00", 1.0f, 1);
+            model.addTimeRow("2020-04-03", "09:00", "10:00", 1.0f, 1);
+            model.addTimeRow("2020-04-04", "09:00", "10:00", 1.0f, 1);
             return Json(model);
         }
 
