@@ -198,12 +198,12 @@ namespace AdminUI.Controllers
                 csv += '\n';
                 foreach (var p in properties)
                 {
+                    
                     if (p.GetValue(s) != null)
-                        csv += "\"" + p.GetValue(s).ToString().Replace('"','\'') + "\"";
+                        csv += "\"" + p.GetValue(s).ToString().Replace("\"","\"\"") + "\"";
                     csv += ',';
                 }
             }
-
             var name = "Submissions_summary_" + DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss") + ".csv";
             return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", name);
         }
