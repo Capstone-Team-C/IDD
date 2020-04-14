@@ -44,16 +44,24 @@ namespace Appserver.Controllers
         {
             public string response = "ok";
         }
+
+        [Route("Timesheet/Validate")]
+        [HttpPost("Validate")]
         [Produces("application/json")]
-        public IActionResult Validate()
+        public IActionResult Validate(TimesheetForm ?form )
         {
+            // Do something with form
+
             JsonResponse model = new JsonResponse();
             return Json(model);
         }
 
+        [Route("Timesheet/Validate")]
+        [HttpPost("Submit")]
         [Produces("application/json")]
-        public IActionResult Submit()
+        public IActionResult Submit(TimesheetForm ?form)
         {
+            // Do something with form
             JsonResponse model = new JsonResponse();
             return Json(model);
         }
