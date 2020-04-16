@@ -29,8 +29,7 @@
       <div class="example-btn">
         <file-upload
           class="btn btn-primary"
-					post-action="https://clownedpineapple.azurewebsites.net/api/
-					HttpTrigger1?code=amZ51qGYCfuLgelHpVFn1oyB3M/iEwHpunUAaTc5JOo/z6QUHNKWkQ=="
+					post-action="https://iddappserver.azurewebsites.net/ImageUpload/DocAsForm"
           :multiple="true"
           :drop="true"
           :drop-directory="true"
