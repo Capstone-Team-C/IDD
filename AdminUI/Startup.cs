@@ -29,6 +29,7 @@ namespace AdminUI
         {
             services.AddControllersWithViews();
             services.AddProgressiveWebApp();
+
             services.AddDbContext<TimesheetContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AzureDB")));
             services.AddDbContext<AdminAccountContext>(options =>
