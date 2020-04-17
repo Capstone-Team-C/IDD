@@ -9,21 +9,25 @@ using Microsoft.Extensions.Logging;
 using AdminUI.Models;
 using Amazon.DeviceFarm.Model;
 using Amazon.DirectConnect.Model;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using SQLitePCL;
+
 
 namespace AdminUI.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly TimesheetContext _context;
+        private readonly TimesheetContext _Tcontext;
+        private readonly LockTableContext _Lcontext;
 
-        public HomeController(ILogger<HomeController> logger, TimesheetContext context)
+        public HomeController(ILogger<HomeController> logger, TimesheetContext Tcontext, LockTableContext Lcontext)
         {
-            _context = context;
+            _Tcontext = Tcontext;
             _logger = logger;
+            _Lcontext = Lcontext;
         }
 
         public IActionResult Index(string sortOrder, string pName, string cName, string dateFrom, string dateTo, string prime, string id, string providerId)
@@ -133,13 +137,13 @@ namespace AdminUI.Controllers
 
         private IEnumerable<Timesheet> GetSheets()
         {
-            return  _context.Timesheet.AsEnumerable();
+            return  _Tcontext.Timesheet.AsEnumerable();
         }
 
         //should return a Timesheet View
-        public IActionResult Timesheet(int ID)
+        public async Task<IActionResult> Timesheet(int ID)
         {
-            Timesheet timesheet =  _context.Timesheet.Find(ID);
+            var timesheet =  _Tcontext.Timesheet.Find(ID);
             timesheet.Shifts = new List<Shift>
             {
                 new Shift
@@ -159,9 +163,23 @@ namespace AdminUI.Controllers
                     Group = false
                 }
             };
+                
+            timesheet.Lock = _Lcontext.LockTableRow.FirstOrDefault(r => r.TimesheetID == ID);
 
-            ViewData["sheet"] = timesheet;
-            return View();
+            if (timesheet.Lock != null) return View(timesheet);
+
+            timesheet.Lock = new LockTableRow
+                {
+                    TimesheetID = ID,
+                    LastInteraction = DateTime.Now,
+                    TimeLocked = DateTime.Now,
+                    User = User.Identity.Name
+                };
+
+            _Lcontext.Add(timesheet.Lock);
+            await _Lcontext.SaveChangesAsync();
+
+            return View(timesheet);
         }
 
         public FileContentResult DownloadCSV(string pName, string cName, string dateFrom, string dateTo, string prime, string id)
@@ -208,37 +226,5 @@ namespace AdminUI.Controllers
             return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", name);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Process(int id, string Status, string RejectionReason)
-        {
-            var timesheet = await _context.Timesheet
-                .FirstOrDefaultAsync(m => m.TimesheetID == id);
-            if (timesheet == null)
-                return NotFound();
-            timesheet.Status = Status;
-            timesheet.RejectionReason = RejectionReason;
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(timesheet);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-
-                    if (!_context.Timesheet.Any(e => e.TimesheetID == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return RedirectToAction(nameof(Index));
-        }
     }
 }
