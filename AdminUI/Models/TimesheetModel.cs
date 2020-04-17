@@ -42,6 +42,7 @@ namespace AdminUI.Models
         public string Status { get; set; }
         public string RejectionReason { get; set; }
 
+        public LockTableRow Lock { get; set; }
     }
 
     public class Shift

@@ -33,6 +33,8 @@ namespace AdminUI
                 options.UseSqlServer(Configuration.GetConnectionString("localdb")));
             services.AddDbContext<AdminAccountContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("localdb")));
+            services.AddDbContext<LockTableContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("localdb")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AdminAccountContext>();
             services.AddRazorPages();
