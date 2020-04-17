@@ -19,12 +19,42 @@ namespace AdminUI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("AdminUI.Models.LockTableRow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("LastInteraction")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TimeLocked")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TimesheetID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("User")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TimesheetID")
+                        .IsUnique();
+
+                    b.ToTable("LockTableRow");
+                });
+
             modelBuilder.Entity("AdminUI.Models.Timesheet", b =>
                 {
                     b.Property<int>("TimesheetID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminActivity")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CMOrg")
                         .HasColumnType("nvarchar(max)");
@@ -92,6 +122,15 @@ namespace AdminUI.Migrations
                     b.HasKey("TimesheetID");
 
                     b.ToTable("Timesheet");
+                });
+
+            modelBuilder.Entity("AdminUI.Models.LockTableRow", b =>
+                {
+                    b.HasOne("AdminUI.Models.Timesheet", null)
+                        .WithOne("Lock")
+                        .HasForeignKey("AdminUI.Models.LockTableRow", "TimesheetID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
