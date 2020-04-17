@@ -190,7 +190,6 @@ body {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    align-items: left;
 }
 
 .flex-container.row {

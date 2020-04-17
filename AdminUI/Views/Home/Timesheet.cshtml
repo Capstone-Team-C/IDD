@@ -69,7 +69,7 @@
             <tbody>
             @foreach (var t in Model.Shifts)
             {
-                <tr itemscope="row">
+                <tr>
                     <td>@t.Date.ToString("d")</td>
                     <td>@t.In.ToString("h:mm tt")</td>
                     <td>@t.Out.ToString("h:mm tt")</td>
@@ -142,13 +142,15 @@
     <img src="~/images/timesheet-back.png" alt="Sample Front" />
     @if (permission)
     {
-        <form asp-controller="Timesheet" asp-action="Process">
-            <div class="row">
-                <input type="hidden" name="id" value="@Model.TimesheetID"/>
-                <input onclick="handleRejected" class="btn btn-danger" name="Status" value="Rejected" type="submit">
-                <input type="text" name="RejectionReason"/>
-                <input onclick="handleAccepted" class="btn btn-primary" name="Status" value="Accepted" type="submit">
-            </div>
-        </form>
+        <div class="container">
+            <form asp-controller="Timesheet" asp-action="Process" class="fixed-bottom">
+                <div class="row">
+                    <input type="hidden" name="id" value="@Model.TimesheetID"/>
+                    <input onclick="handleRejected" class="btn btn-danger" name="Status" value="Rejected" type="submit">
+                    <input type="text" name="RejectionReason"/>
+                    <input onclick="handleAccepted" class="btn btn-primary" name="Status" value="Accepted" type="submit">
+                </div>
+            </form>
+        </div>
     }
 </div>
