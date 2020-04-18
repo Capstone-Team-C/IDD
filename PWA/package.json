@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "express": "^4.17.1",
     "jest-junit": "^10.0.0",

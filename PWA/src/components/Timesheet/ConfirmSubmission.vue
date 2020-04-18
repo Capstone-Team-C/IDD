@@ -152,6 +152,8 @@ export default {
 						if(response["data"]["response"] == "ok") {
 							console.log('Finished posting!')
 							self.submissionStatus = true
+
+							//Return to home here?
 							self.returnHome = true
 						}
 					})
