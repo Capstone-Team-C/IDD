@@ -61,7 +61,8 @@ namespace Appserver.Controllers
                     // Process PDF upload
                     else if ("application/pdf".Equals(file.ContentType))
                     {
-                        process_image(file.OpenReadStream());
+                        // Need to use S3 Bucket for pdf
+                        //process_image(file.OpenReadStream());
 
                         //Time how long it takes to upload pdf
                         Stopwatch stopwatch = new Stopwatch();
@@ -94,10 +95,11 @@ namespace Appserver.Controllers
         {
             var handle = new TextractHandler();
             var response = handle.HandleAsyncJob(file);
-            foreach( var block in response.Blocks)
-            {
-                Console.WriteLine(block.ToString());
-            }
+            // Do something with the response here
+            //foreach( var block in response.Blocks)
+            //{
+            //    Console.WriteLine(block.ToString());
+            //}
         }
 
         // Method to generate the connection string to remote SQL Server
@@ -120,25 +122,6 @@ namespace Appserver.Controllers
             SqlConnection dbcon = new SqlConnection(connection_string);
             return dbcon;
         }
-
-
-        // TODO make this work
-        /*
-        private void TextractPOC(byte[] doc_as_bytes)
-        {
-            // Convert bytes to base64
-            string b64 = Convert.ToBase64String(doc_as_bytes);
-            // Create request JSON
-            var jsondoc = Json(new { Blob = doc_as_bytes });
-            var features = new List<string>();
-            features.Add("TABLES");
-            features.Add("FORMS");
-            var request_json = Json(new { Document = jsondoc, FeatureTypes = features });
-
-
-            Amazon.Textract.Model.Document document = new Amazon.Textract.Model.Document();
-            AmazonTextractClient client = new AmazonTextractClient();
-        }*/
 
         // FIXME: In the current implementation, this only works when the
         // INBOUND port rules for the applicable security group are set to
