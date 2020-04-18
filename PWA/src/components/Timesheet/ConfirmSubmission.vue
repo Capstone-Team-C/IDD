@@ -99,6 +99,7 @@
 <script>
   import axios from "axios";
   const url = "https://localhost:5004/Submit";
+	//const url = "https://iddappserver.azurewebsites.net/Submit";
 
   export default {
     name: "ConfirmSubmission",
@@ -119,6 +120,7 @@
         loading: false,
         submissionStatus: false,
         returnHome: false,
+				submitData: null,
       };
     },
 
@@ -129,15 +131,44 @@
         }
       },
 
+      formatData() {
+        var submitData = {};
+        Object.entries(this.formFields).forEach(([key, value]) => {
+          submitData[key] = {};
+          submitData[key]["value"] = value["value"];
+          submitData[key]["wasEdited"] = !value["disabled"];
+        });
+        submitData["serviceDeliveredOn"]["value"] = [];
+        submitData["serviceDeliveredOn"]["wasEdited"] = false; // TODO
+        Object.entries(this.formFields["serviceDeliveredOn"]["value"]).forEach(
+          ([key, value]) => {
+            key;
+            var row = {};
+            var cols = ["date", "startTime", "endTime", "totalHours", "group"];
+            cols.forEach((col) => {
+              var c = {};
+              c["value"] = value[col]; // TODO value[col]['value']
+              c["wasEdited"] = false; // TODO
+              row[col] = c;
+            });
+            submitData["serviceDeliveredOn"]["value"].push(row);
+          }
+        );
+        console.log(submitData);
+				this.submitData=submitData;
+      },
+
       //Submits form to AppServer.
       submit() {
         //After form is validated, post timesheet.
         this.loading = true;
         var self = this;
+				//Prepare the data to send.
+				this.formatData();
 
         if (this.valid) {
           axios
-            .post(url, this.formFields, {
+            .post(url, this.submitData, {
               headers: {
                 "content-type": "text/plain",
               },
