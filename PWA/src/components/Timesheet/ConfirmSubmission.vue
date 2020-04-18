@@ -1,0 +1,164 @@
+<template>
+	<v-row justify="center">
+		<v-btn
+			color="success"
+			dark
+			@click.stop="dialog = true"
+			@click="validate"
+			>
+			Submit
+		</v-btn>
+
+			<v-dialog
+				v-model="dialog"
+				max-width="300"
+				>
+
+				<div v-if="valid">
+					<v-card>
+						<div v-if="!loading">
+							<v-card-title class="headline">Are you sure want to submit the form?</v-card-title>
+
+							<v-card-text>
+								Some text talking about how this submission is final unless something is wrong with it.
+							</v-card-text>
+
+							<v-card-actions>
+								<v-spacer></v-spacer>
+
+								<v-btn
+									color="red"
+									text
+									@click="dialog = false"
+									>
+									Cancel
+								</v-btn>
+									<v-btn
+										color="green darken-1"
+										text
+										@click="submit"
+										>
+										Submit
+									</v-btn>
+							</v-card-actions>
+						</div>
+
+						<div v-else>
+							<div v-if="!returnHome">
+								<div class="text-center">
+									<v-progress-circular
+										:size="50"
+										color="primary"
+										indeterminate
+										></v-progress-circular>
+									<p class="text--disabled">Submitting form</p>
+						</div>
+							</div>
+								<div v-else>
+									<div v-if="submissionStatus">
+										<v-card-title class="headline text-center">Your form has been submitted!</v-card-title>
+
+										<v-card-text class="text-center">
+											Some text on what will come next for the employee.
+										</v-card-text>
+									</div>
+									<div v-else>
+										<v-card-title class="headline">Something has gone wrong</v-card-title>
+
+										<v-card-text>
+											Please try again.
+										</v-card-text>
+									</div>
+								</div>
+							</div>
+					</v-card>
+					</div>
+
+				<div v-else>
+					<v-card>
+						<v-card-title class="headline text-danger">Your form is not valid.</v-card-title>
+
+						<v-card-text>
+							Please fix the invalid parts of the form and then retry submitting your form.
+						</v-card-text>
+					</v-card>
+				</div>
+			</v-dialog>
+	</v-row>
+</template>
+
+<style>
+.v-card__text, .v-card__title {
+	word-break: normal; /* maybe !important  */
+}
+.v-progress-circular {
+	margin: 1rem;
+}
+.p {
+	margin-bottom: 0 !important
+}
+.v-application p {
+	margin-bottom: 0 !important
+}
+</style>
+
+<script>
+import axios from 'axios';
+const url = 'https://localhost:5004/Submit';
+
+
+export default {
+	name: "ConfirmSubmission",
+	props: {
+		valid: {
+			type: Boolean,
+			default: false,
+		},
+		formFields: {
+			type: Object,
+			default: null,
+		},
+	},
+
+	data () {
+		return {
+			dialog: false,
+			loading: false,
+			submissionStatus: false,
+			returnHome: false,
+		}
+	},
+
+	methods: {
+		validate() {
+			if(this.valid){
+				console.log("Valid form")
+			}
+		},
+
+		//Submits form to AppServer.
+		submit() {
+			//After form is validated, post timesheet.
+			this.loading = true
+			var self=this
+
+			if(this.valid){
+				axios.post(url, this.formFields, {
+					headers: {
+						'content-type': 'text/plain',
+					}
+				})
+					.then(function(response) {
+						if(response["data"]["response"] == "ok") {
+							console.log('Finished posting!')
+							self.submissionStatus = true
+							self.returnHome = true
+						}
+					})
+					.catch(function (error) {
+						console.log(error)
+					})}
+		},
+	},
+}
+</script>
