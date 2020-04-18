@@ -27,6 +27,7 @@
     <Content Remove="AppserverTest\obj\project.assets.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="TextractDocument\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="uploaded_docs\" />
   </ItemGroup>

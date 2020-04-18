@@ -1,5 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
+using Amazon.Textract.Model;
+using Appserver.Controllers;
 
 namespace Appserver.Tests
 {
@@ -9,6 +11,12 @@ namespace Appserver.Tests
         [Test]
         public void ImageUploadControllerTestMethod()
         {
+        }
+
+        [Test]
+        public void LoadTextractModelFromJsonTest()
+        {
+                
         }
     }
 }
