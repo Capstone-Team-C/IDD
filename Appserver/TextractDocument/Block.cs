@@ -7,10 +7,10 @@ namespace Appserver.TextractDocument
 {
     public abstract class Block
     {
-        public abstract string GetBlockType();
+        public abstract Appserver.TextractDocument.BlockType GetBlockType();
         public abstract Geometry GetGeometry();
-        public string Id;
-        public List<Block> Relationships;
-        public int Page;
+        public abstract string GetId();
+        public abstract List<Block> GetRelationships();
+        public abstract int GetPage();
     }
 }
