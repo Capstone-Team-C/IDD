@@ -51,5 +51,17 @@ namespace Appserver.TextractDocument
         private Dictionary<string, Block> _childMap = new Dictionary<string, Block>();
         private List<string> _childIds = new List<string>();
 
+        private Page _parent;
+        public override void SetPage(Page page)
+        {
+            _parent = page;
+        }
+        public override void CreateStructure()
+        {
+        }
+        public override void PrintSummary()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

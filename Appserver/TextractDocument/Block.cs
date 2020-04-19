@@ -12,5 +12,8 @@ namespace Appserver.TextractDocument
         public abstract string GetId();
         public abstract List<Block> GetRelationships();
         public abstract int GetPage();
+        public abstract void SetPage(Page page);
+        public abstract void CreateStructure();
+        public abstract void PrintSummary();
     }
 }

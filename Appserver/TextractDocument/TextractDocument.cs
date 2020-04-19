@@ -31,10 +31,18 @@ namespace Appserver.TextractDocument
         }
         public override void FromJson(JToken token)
         {
-            // Start reading
-            Console.WriteLine(String.Format("Token: {0}, Type: {1}",token.First().ToString(),token.First().Type));
+            // Read in all the blocks
+            ParseJson(token);
 
-            Console.WriteLine(String.Format("Pages: {0}", token["DocumentMetadata"]["Pages"]));
+            // Construct the structure
+            foreach( var p in Pages)
+            {
+                p.CreateStructure();
+            }
+        }
+        public void ParseJson(JToken token) 
+        { 
+            // Start reading
             JToken blocks;
             try
             {
@@ -103,12 +111,7 @@ namespace Appserver.TextractDocument
         {
             foreach( var p in Pages)
             {
-                Console.WriteLine("Page: {0}", p.GetPage());
-                Console.WriteLine("Page Id: {0}", p.GetId());
-                foreach ( var b in p.GetRelationships())
-                {
-                    Console.WriteLine("Child-id: {0}", b.GetId());
-                }
+                p.PrintSummary();
             }
         }
     }
