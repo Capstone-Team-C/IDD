@@ -1,4 +1,5 @@
 # Node.js with Vue
+
 # Build a Node.js project that uses Vue.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
@@ -20,15 +21,14 @@ steps:
   inputs:
     versionSpec: '12.x'
   displayName: 'Install Node.js'
-  
-- task: PublishTestResults@2
+
+- task: Npm@1
   inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/TEST-*.xml'
-    failTaskOnFailedTests: true
-    testRunTitle: 'JUnit test run'
+    command: 'install'
+    workingDir: 'PWA'
 
 - script: |
+    cd PWA
     npm install
     npm run build
     npm run test
