@@ -8,7 +8,7 @@
       <div v-if="valid">
         <v-card>
           <div v-if="!loading">
-            <v-card-title class="headline"
+            <v-card-title class="headline" id="confirm"
               >Are you sure want to submit the form?</v-card-title
             >
 
@@ -36,22 +36,23 @@
                   :size="50"
                   color="primary"
                   indeterminate
+									id="progress"
                 ></v-progress-circular>
                 <p class="text--disabled">Submitting form</p>
               </div>
             </div>
             <div v-else>
               <div v-if="submissionStatus">
-                <v-card-title class="headline text-center"
+                <v-card-title class="headline text-center" id="submited"
                   >Your form has been submitted!</v-card-title
                 >
 
-                <v-card-text class="text-center">
+                <v-card-text class="text-center" id="submissionError">
                   Some text on what will come next for the employee.
                 </v-card-text>
               </div>
               <div v-else>
-                <v-card-title class="headline"
+                <v-card-title class="headline" id="failure"
                   >Something has gone wrong</v-card-title
                 >
 
@@ -66,8 +67,8 @@
 
       <div v-else>
         <v-card>
-          <v-card-title class="headline text-danger"
-            >Your form is not valid.</v-card-title
+          <v-card-title class="headline text-danger" id="invalid">
+						Your form is not valid.</v-card-title
           >
 
           <v-card-text>
