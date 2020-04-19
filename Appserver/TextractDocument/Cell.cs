@@ -37,7 +37,8 @@ namespace Appserver.TextractDocument
         public override string GetId() => _Id;
         public override List<Block> GetRelationships() => _children;
         public override int GetPage() => _page;
-
+        public int GetRow() => RowIndex;
+        public int GetCol() => ColumnIndex;
         ////////////////////////
         /// Properties of a Cell
         ////////////////////////
@@ -54,7 +55,7 @@ namespace Appserver.TextractDocument
         private string _Id;
 
         private List<Block> _children = new List<Block>();
-        private Dictionary<string, Block> _childMap = new Dictionary<string, Block>();
+        private Dictionary<string, Word> _childMap = new Dictionary<string, Word>();
         private List<string> _childIds = new List<string>();
 
         private Page _parent;
@@ -64,11 +65,26 @@ namespace Appserver.TextractDocument
         }
         public override void CreateStructure()
         {
-            throw new NotImplementedException();
+            foreach (var child in _childIds)
+            {
+                 _childMap[child] = (Word)_parent.GetChildById(child);
+                _children.Add(_childMap[child]);
+            }
         }
         public override void PrintSummary()
         {
-            throw new NotImplementedException();
+            Console.WriteLine(String.Format("[{0}][{1}]: {2}", RowIndex, ColumnIndex, ToString()));
+        }
+
+        public override string ToString()
+        {
+            string words = "";
+            foreach( var word in _children)
+            {
+                words = words + word.ToString() + " ";
+            }
+            words.Trim();
+            return words;
         }
     }
 }

@@ -63,5 +63,10 @@ namespace Appserver.TextractDocument
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return Text;
+        }
     }
 }

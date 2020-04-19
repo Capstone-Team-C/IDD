@@ -91,7 +91,7 @@ namespace Appserver.TextractDocument
             Console.WriteLine(String.Format("Child count: {0}", _childMap.Count));
             foreach( var line in _lines)
             {
-                line.PrintSummary();
+                //line.PrintSummary();
             }
             foreach( var table in _tables)
             {
