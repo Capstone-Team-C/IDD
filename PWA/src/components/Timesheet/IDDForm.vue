@@ -207,6 +207,7 @@ export default {
 
       // Hide form validation error messages by default
       valid: true,
+
     };
   },
 

@@ -20,6 +20,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
 
+							<!-- Confirm if user is ready to submit -->
               <v-btn color="red" text @click="dialog = false">
                 Cancel
               </v-btn>
@@ -31,6 +32,8 @@
 
           <div v-else>
             <div v-if="!returnHome">
+
+							<!-- Submitting the form -->
               <div class="text-center">
                 <v-progress-circular
                   :size="50"
@@ -41,7 +44,9 @@
                 <p class="text--disabled">Submitting form</p>
               </div>
             </div>
+
             <div v-else>
+						<!-- Display submission status -->
               <div v-if="submissionStatus">
                 <v-card-title class="headline text-center" id="submited"
                   >Your form has been submitted!</v-card-title
@@ -64,18 +69,19 @@
           </div>
         </v-card>
       </div>
-
-      <div v-else>
-        <v-card>
-          <v-card-title class="headline text-danger" id="invalid">
+				
+			<!-- The form is not valid -->
+			<div v-else>
+				<v-card>
+					<v-card-title class="headline text-danger" id="invalid">
 						Your form is not valid.</v-card-title
-          >
-
-          <v-card-text>
-            Please fix the invalid parts of the form and then retry submitting
-            your form.
-          </v-card-text>
-        </v-card>
+					>
+	
+					<v-card-text>
+						Please fix the invalid parts of the form and then retry submitting
+						your form.
+					</v-card-text>
+				</v-card>
       </div>
     </v-dialog>
   </v-row>
@@ -99,16 +105,17 @@
 
 <script>
   import axios from "axios";
-  const url = "https://localhost:5004/Submit";
-	//const url = "https://iddappserver.azurewebsites.net/Submit";
 
   export default {
     name: "ConfirmSubmission",
     props: {
+			//If the information is valid.
       valid: {
         type: Boolean,
         default: false,
       },
+
+			//User (edited) information.
       formFields: {
         type: Object,
         default: null,
@@ -117,11 +124,24 @@
 
     data() {
       return {
+				//If the dialog is still up.
         dialog: false,
+
+				//Log of POST connection.
         loading: false,
+
+				//Track when the POST completes
         submissionStatus: false,
+
+				//Flag for once POST has been successful/failed
         returnHome: false,
+
+				//Data to be submitted 
 				submitData: null,
+
+				//URL for the AppServer
+				url: process.env.VUE_APP_SERVER_URL.concat('Submit'),
+
       };
     },
 
@@ -131,7 +151,8 @@
           console.log("Valid form");
         }
       },
-
+			
+			//Formats the data to be posted
       formatData() {
         var submitData = {};
         Object.entries(this.formFields).forEach(([key, value]) => {
@@ -155,38 +176,37 @@
             submitData["serviceDeliveredOn"]["value"].push(row);
           }
         );
-        console.log(submitData);
 				this.submitData=submitData;
       },
 
       //Submits form to AppServer.
       submit() {
-        //After form is validated, post timesheet.
-        this.loading = true;
-        var self = this;
-				//Prepare the data to send.
-				this.formatData();
+			//After form is validated, post timesheet.
+			this.loading = true;
+			var self = this;
+			//Prepare the data to send.
+			this.formatData();
 
-        if (this.valid) {
-          axios
-            .post(url, this.submitData, {
-              headers: {
-                "content-type": "text/plain",
-              },
-            })
-            .then(function (response) {
-              if (response["data"]["response"] == "ok") {
-                console.log("Finished posting!");
-                self.submissionStatus = true;
+			if (this.valid) {
+				axios
+					.post(this.url, this.submitData, {
+						headers: {
+							"content-type": "text/plain",
+						},
+					})
+					.then(function (response) {
+						if (response["data"]["response"] == "ok") {
+							console.log("Finished posting!");
+							self.submissionStatus = true;
 
-                //Return to home here?
-                self.returnHome = true;
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        }
+							//Return to home here?
+							self.returnHome = true;
+						}
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
+			}
       },
     },
   };
