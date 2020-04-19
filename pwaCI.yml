@@ -21,14 +21,9 @@ steps:
     versionSpec: '12.x'
   displayName: 'Install Node.js'
   
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/TEST-*.xml'
-    failTaskOnFailedTests: true
-    testRunTitle: 'JUnit test run'
 
 - script: |
+    cd PWA
     npm install
     npm run build
     npm run test
