@@ -4,11 +4,15 @@
       Submit
     </v-btn>
 
-    <v-dialog v-model="dialog" max-width="300">
+    <v-dialog 
+		v-model="dialog" 
+		max-width="300">
       <div v-if="valid">
         <v-card>
           <div v-if="!loading">
-            <v-card-title class="headline" id="confirm"
+            <v-card-title 
+						class="headline" 
+						id="confirm"
               >Are you sure want to submit the form?</v-card-title
             >
 
@@ -21,10 +25,14 @@
               <v-spacer></v-spacer>
 
 							<!-- Confirm if user is ready to submit -->
-              <v-btn color="red" text @click="dialog = false">
+              <v-btn color="red" 
+							text 
+							@click="dialog = false">
                 Cancel
               </v-btn>
-              <v-btn color="green darken-1" text @click="submit">
+              <v-btn color="green 
+							darken-1" text
+							@click="submit">
                 Submit
               </v-btn>
             </v-card-actions>
@@ -48,7 +56,10 @@
             <div v-else>
 						<!-- Display submission status -->
               <div v-if="submissionStatus">
-                <v-card-title class="headline text-center" id="submited"
+                <v-card-title 
+								class="headline 
+								text-center" 
+								id="submited"
                   >Your form has been submitted!</v-card-title
                 >
 
@@ -57,7 +68,9 @@
                 </v-card-text>
               </div>
               <div v-else>
-                <v-card-title class="headline" id="failure"
+                <v-card-title 
+								class="headline" 
+								id="failure"
                   >Something has gone wrong</v-card-title
                 >
 
@@ -73,7 +86,10 @@
 			<!-- The form is not valid -->
 			<div v-else>
 				<v-card>
-					<v-card-title class="headline text-danger" id="invalid">
+					<v-card-title 
+					class="headline 
+					text-danger" 
+					id="invalid">
 						Your form is not valid.</v-card-title
 					>
 	
