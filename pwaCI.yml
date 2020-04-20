@@ -29,7 +29,7 @@ steps:
 
 - task: VariableSetTask@1
   inputs:
-    VariableName: 'VUE_APP_SERVER'
+    VariableName: 'VUE_APP_SERVER_URL'
     Value: 'https://localhost:5004/'
     IsSecret: false
 
