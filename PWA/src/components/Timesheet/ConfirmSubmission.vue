@@ -1,6 +1,9 @@
 <template>
   <v-row justify="center">
-    <v-btn color="success" dark @click.stop="dialog = true" @click="validate">
+    <v-btn color="success" 
+		dark 
+		@click.stop="dialog = true" 
+		@click="validate">
       Submit
     </v-btn>
 
