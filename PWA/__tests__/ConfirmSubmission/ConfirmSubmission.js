@@ -45,8 +45,8 @@ describe('ConfirmSubmission', () => {
 		})
 
 //Given an valid form, and submit has been clicked, and confirmation, progress should be shown for
-	//the post.
-	/*
+//the post.
+/*
 	it('Should ask if user is sure they want to submit given valid form', () => {
 		const wrapper = mount(ConfirmSubmission, {
 			propsData: {

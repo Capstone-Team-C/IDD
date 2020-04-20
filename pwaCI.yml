@@ -27,6 +27,12 @@ steps:
     command: 'install'
     workingDir: 'PWA'
 
+- task: VariableSetTask@1
+  inputs:
+    VariableName: 'VUE_APP_SERVER_URL'
+    Value: 'https://localhost:5004/'
+    IsSecret: false
+
 - script: |
     cd PWA
     npm install
@@ -34,3 +40,4 @@ steps:
     npm run test
   displayName: 'npm install, build, and test'
   workingDirectory: 'PWA/'
+
