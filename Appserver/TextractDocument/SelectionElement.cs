@@ -13,6 +13,7 @@ namespace Appserver.TextractDocument
             _geometry = new Geometry(block["Geometry"]);
             _Id = block["Id"].ToString();
             Confidence = block["Confidence"].ToObject<float>();
+            _page = block["Page"].ToObject<int>();
 
             switch(block["SelectionStatus"].ToString())
             {
@@ -44,14 +45,15 @@ namespace Appserver.TextractDocument
         public override string GetId() => _Id;
         public override List<Block> GetRelationships() => _children;
         public override int GetPage() => _page;
+        public override float GetConfidence() => Confidence;
 
         ////////////////////////
         /// Properties of a Word
         ////////////////////////
         ///
 
-        public float Confidence;
-        public bool SelectionStatus;
+        private float Confidence;
+        private bool SelectionStatus;
 
 
         private Geometry _geometry;

@@ -15,6 +15,7 @@ namespace Appserver.TextractDocument
             _geometry = new Geometry(block["Geometry"]);
             _Id = block["Id"].ToString();
             Confidence = block["Confidence"].ToObject<float>();
+            _page = block["Page"].ToObject<int>();
             Text = block["Text"].ToString();
             try
             {
@@ -36,21 +37,27 @@ namespace Appserver.TextractDocument
         public override string GetId() => _Id;
         public override List<Block> GetRelationships() => _children;
         public override int GetPage() => _page;
+        public override float GetConfidence() => Confidence;
 
         ////////////////////////
         /// Properties of a Line
         ////////////////////////
         ///
 
-        float Confidence;
-        string Text;
+        private float Confidence;
+        private string Text;
 
         private Geometry _geometry;
         private int _page;
         private string _Id;
 
+        // Here the children represent individual words listed in document order
         private List<Block> _children = new List<Block>();
+
+        // Quick lookup of children by id
         private Dictionary<string, Block> _childMap = new Dictionary<string, Block>();
+
+        // List of child ids used in building the structure once everything has been parsed
         private List<string> _childIds = new List<string>();
 
 
@@ -68,7 +75,9 @@ namespace Appserver.TextractDocument
             }
             foreach( var child in _childIds)
             {
-                _childMap[child] = _parent.GetChildById(child);
+                var b = _parent.GetChildById(child);
+                _childMap[child] = b;
+                _children.Add(b);
             }
         }
         public override void PrintSummary()
@@ -79,6 +88,12 @@ namespace Appserver.TextractDocument
                 Console.WriteLine(String.Format("Child-type: {0}", child.GetBlockType()));
             }
             Console.WriteLine(String.Format("Child count: {0}", _childMap.Count));
+        }
+
+        // Just returning the text, no need to reconstruct from children
+        public override string ToString()
+        {
+            return Text;
         }
     }
 }

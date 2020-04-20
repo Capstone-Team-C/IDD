@@ -15,5 +15,6 @@ namespace Appserver.TextractDocument
         public abstract void SetPage(Page page);
         public abstract void CreateStructure();
         public abstract void PrintSummary();
+        public abstract float GetConfidence();
     }
 }

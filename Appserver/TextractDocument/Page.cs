@@ -21,6 +21,9 @@ namespace Appserver.TextractDocument
         public override string GetId() => _Id;
         public override List<Block> GetRelationships() => _children;
 
+        // We are always confident this is a page
+        public override float GetConfidence() => 1;
+
         ///////////////////////////////////////////////
         /// Properties
         ///////////////////////////////////////////////

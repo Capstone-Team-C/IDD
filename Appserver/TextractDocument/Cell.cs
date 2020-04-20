@@ -13,6 +13,7 @@ namespace Appserver.TextractDocument
             _geometry = new Geometry(block["Geometry"]);
             _Id = block["Id"].ToString();
             Confidence = block["Confidence"].ToObject<float>();
+            _page = block["Page"].ToObject<int>();
             RowIndex = block["RowIndex"].ToObject<int>();
             ColumnIndex = block["ColumnIndex"].ToObject<int>();
             RowSpan = block["RowSpan"].ToObject<int>();
@@ -37,6 +38,7 @@ namespace Appserver.TextractDocument
         public override string GetId() => _Id;
         public override List<Block> GetRelationships() => _children;
         public override int GetPage() => _page;
+        public override float GetConfidence() => Confidence;
         public int GetRow() => RowIndex;
         public int GetCol() => ColumnIndex;
         ////////////////////////
