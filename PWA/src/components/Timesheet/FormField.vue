@@ -51,8 +51,8 @@
     <!-- Check if field is a checkbox -->
     <v-col v-if="this.field_type === 1">
       <v-checkbox
-        :disabled="disabled"
         :label="label"
+        :disabled="disabled"
         :rules="rules"
         :input-value="value"
         @change="$emit('input', !value)"
@@ -63,13 +63,13 @@
     <!-- Is not a checkbox, check if this field is a textarea -->
     <v-col v-else-if="this.rows > 1 || this.auto_grow">
       <v-textarea
-        clearable
-        outlined
         :auto-grow="auto_grow"
         :counter="counter"
-        :disabled="disabled"
+        :filled="disabled"
+        :outlined="!disabled"
         :hint="hint"
         :label="label"
+        :readonly="disabled"
         :rows="rows"
         :rules="rules"
         :value="value"
@@ -80,12 +80,12 @@
     <!-- Is not a textarea, so it is a text-field -->
     <v-col v-else>
       <v-text-field
-        clearable
-        outlined
         :counter="counter"
-        :disabled="disabled"
+        :filled="disabled"
+        :outlined="!disabled"
         :hint="hint"
         :label="label"
+        :readonly="disabled"
         :rules="rules"
         :value="value"
         @input="$emit('input', $event)"
@@ -139,7 +139,10 @@ export default {
       Default: 1,
     },
     // validation rules for text field
-    rules: {},
+    rules: {
+      type: Array,
+      Default: null,
+    },
     // value entered in text field
     value: {
       type: [String, Boolean, Number],

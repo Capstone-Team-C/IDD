@@ -128,6 +128,10 @@
     </strong>
 
     <hr />
+    
+    <v-card v-for="(error, index) in errors" :key="index">
+      {{ error }}
+    </v-card>
 
     <v-btn color="success" class="mr-4" :disabled="!valid" @click="submit">
       Submit
@@ -144,6 +148,7 @@ import FormTable from "@/components/Timesheet/FormTable";
 import FormField from "@/components/Timesheet/FormField";
 import fieldData from "@/components/Timesheet/IDDFormFields.json";
 import rules from "@/components/Timesheet/FormRules.js";
+import time_functions from "@/components/Timesheet/TimeFunctions.js";
 
 export default {
   name: "IDDForm",
@@ -169,7 +174,16 @@ export default {
     // specified
     Object.entries(fieldData).forEach(([key, value]) => {
       if ("rules" in value) {
-        fieldData[key].rules = rules[fieldData[key].rules];
+        var _rules = value.rules;
+        fieldData[key].rules = [];
+        _rules.forEach((fieldRule) => {
+          // Not using the spread operator for IE compatibility
+          fieldData[key].rules.push.apply(fieldData[key].rules, rules[fieldRule]);
+        });
+        
+        if (fieldData[key].counter) {
+          fieldData[key].rules.push(rules.maxLength(fieldData[key].counter));
+        }
       }
     });
   },
@@ -187,6 +201,9 @@ export default {
 
       // Hide form validation error messages by default
       valid: true,
+      
+      // All the errors of this form
+      errors: [],
     };
   },
 
@@ -216,15 +233,156 @@ export default {
           }
         });
       }
+
+      // Consider the amount of non-parsed fields
+      // The provider and employer must resign the form
+      Object.entries(this.formFields).forEach(([key, value]) => {
+        key;
+        if (!("parsed_value" in value)) {
+          this.totalEdited += 1; 
+        }
+      });
     },
 
-    validateFormTable(hours) {
-      // TODO - Compare form table total hours with parsed total hours
-      hours;
+    // Compute the sum of all serviceDeliveredOn totalHours with the totalHours field
+    sumTableHours() {
+      var sumHours = 0; 
+      var sumMinutes = 0;
+
+      // For each row in the array of entries...
+      this.formFields["serviceDeliveredOn"]["value"].forEach((entry) => {
+        // Check that the totalHours field is valid
+        if (entry['errors']['totalHours'].length == 0) {
+          sumHours += parseInt(entry['totalHours'].substr(0, 2));
+          sumMinutes += parseInt(entry['totalHours'].substr(3, 2));
+        }
+      });
+      sumHours += (sumMinutes - sumMinutes%60) / 60;
+      sumMinutes %= 60;
+
+      return sumHours.toString() + ":" + sumMinutes.toString();
+    },
+    
+    // Count the number of errors in the serviceDeliveredOn table
+    getTableErrors() {
+      var numErrors = 0;
+
+      // For each row in the array of entries...
+      this.formFields["serviceDeliveredOn"]["value"].forEach((entry, index) => {
+        
+        // For each error col in an entry, check the amount of errors
+        Object.entries(entry['errors']).forEach(([col, errors]) => {
+          var colErrors = errors.length;
+          if (colErrors > 0) {
+            this.errors.push(`ERROR: in row ${index+1} of the serviceDeliveredOn table, '${col}' has the following errors:`, errors);
+            numErrors += colErrors;
+          }
+        });
+      });
+      return numErrors;
     },
 
+    // Validate the form
+    validate() {
+      var numErrors = 0;
+
+      // Check each input field for valid input
+      if (!this.$refs.form.validate()) {
+        numErrors += 1;
+        this.errors.push("ERROR: Invalid input in some form fields!"); 
+      }
+      
+      // Check the validity of the serviceDeliveredOn table
+      numErrors += this.getTableErrors();
+
+      // Ensure that the serviceDeliveredOn table sum == totalHours field
+      if (this.formFields.totalHours.value !== null) {
+        var sumHours = this.sumTableHours();
+        if (sumHours !== this.formFields.totalHours.value) {
+          numErrors += 1; 
+          this.errors.push(`ERROR: serviceDeliveredOn table sums up to ${sumHours} hours, but the totalHours field reports ${this.formFields.totalHours.value} hours!`);
+        }
+      }
+
+      // If there were no edited fields, ensure that the provider and
+      // employer signature date are after the last service date
+      if (this.totalEdited <= 0) {
+        // Only compare the earlier date
+        var comparisonDate = this.formFields.providerSignDate.value;
+        if (time_functions.dateCompare(comparisonDate, this.formFields.employerSignDate.value) > 0) {
+          comparisonDate = this.formFields.employerSignDate.value;
+        }
+
+        // Compare signage dates with the pay period
+        // Note, only comparing the YYYY-mm part
+        var submissionDate = this.formFields.submissionDate.value;
+        if (time_functions.dateCompare(comparisonDate.substr(0,7), submissionDate) < 0) {
+          numErrors += 1;
+          this.errors.push(`ERROR: the employer or provider sign date is before the pay period.`);
+        }
+
+        // Get the last date from the serviceDeliveredOn table
+        var latestDateIdx = this.formFields.serviceDeliveredOn.value.length;
+        if (latestDateIdx > 0) {
+          var latestDate = this.formFields.serviceDeliveredOn.value[latestDateIdx - 1]['date']; 
+          if (time_functions.dateCompare(comparisonDate, latestDate) < 0) {
+            numErrors += 1;
+            this.errors.push(`ERROR: the employer or provider sign date is before the latest service delivery date.`);
+          }
+        }
+      }
+      return numErrors;
+    },
+    
+    // Upon pressing the submit button,
+    // Check that the form has no errors
     submit() {
-      this.$refs.form.validate();
+      // Reset all error messages
+      this.errors = [];
+
+      // First, ensure that the timesheet is valid
+      var numErrors = this.validate();
+      if (numErrors > 0) {
+        this.errors.push(`There were ${numErrors} errors, please fix before submitting.`);
+        return false;
+      }
+      
+      // If there was an edited field, re-acquire provider and employer
+      // signatures
+      if (this.numEdited > 0) {
+        console.log(`There were ${this.numEdited} edited fields. Provider and employer must resign the timesheet form.`);
+      }
+
+      // Finally, package up the form data and send to the backend 
+      var submitData = this.createSubmission();
+      
+      console.log(submitData);
+      return true;
+    },
+
+    createSubmission() {
+      var submitData = {}; 
+      Object.entries(this.formFields).forEach(([key, value]) => {
+          submitData[key] = {};
+          submitData[key]["value"] = value["value"];
+          submitData[key]["wasEdited"] = !value["disabled"]; 
+      });
+      
+      submitData["serviceDeliveredOn"]["value"] = [];
+      Object.entries(this.formFields["serviceDeliveredOn"]["value"]).forEach (([key, value]) => {
+        key;
+        var row = {};
+
+        var cols = ['date', 'startTime', 'endTime', 'totalHours', 'group'];
+        cols.forEach((col) => {
+          row[col] = value[col];
+        });
+        row['wasEdited'] = !value['disabled'];
+
+        submitData["serviceDeliveredOn"]["value"].push(row);
+      });
+
+      return submitData;
     },
 
     reset() {
@@ -238,6 +396,7 @@ export default {
     },
 
     resetValidation() {
+      this.errors = [];
       this.$refs.form.resetValidation();
     },
 

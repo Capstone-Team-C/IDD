@@ -73,6 +73,7 @@
                 @click="
                   focusedElement = $event.target;
                   initialize();
+                  validate();
                 "
               >
                 <v-icon color="white">mdi-refresh</v-icon>
@@ -143,6 +144,31 @@
     <!-- END table toolbar -->
 
     <!-- Table content defined in props of v-data-table -->
+    
+    <!-- Layout specification for cols that can be invalid -->
+    <template v-slot:item.date="{ item }">
+      <v-container flat :class="getColor(item.errors, 'date')">
+        {{ item.date }}
+      </v-container>
+    </template>
+    
+    <template v-slot:item.startTime="{ item }">
+      <v-container flat :class="getColor(item.errors, 'startTime')">
+        {{ item.startTime}}
+      </v-container>
+    </template>
+    
+    <template v-slot:item.endTime="{ item }">
+      <v-container flat :class="getColor(item.errors, 'endTime')">
+        {{ item.endTime }}
+      </v-container>
+    </template>
+
+    <template v-slot:item.totalHours="{ item }">
+      <v-container flat :class="getColor(item.errors, 'totalHours')">
+        {{ item.totalHours }}
+      </v-container>
+    </template>
 
     <!-- The action column of the table -->
     <template v-slot:item.actions="{ item }">
@@ -179,6 +205,7 @@
 <script>
 import FormField from "@/components/Timesheet/FormField";
 import rules from "@/components/Timesheet/FormRules.js";
+import time_functions from "@/components/Timesheet/TimeFunctions.js";
 
 export default {
   name: "FormTable",
@@ -218,31 +245,32 @@ export default {
       // Specify rules and hints for adding a new row to the table
       colValidation: {
         date: {
+          counter: 10,
           disabled: false,
           hint: "YYYY-MM-DD",
           label: "Date",
-          rules: rules["dateRules"],
+          rules: rules["required"].concat(rules["date"], rules.maxLength(10))
         },
         startTime: {
           counter: 8,
           disabled: false,
           hint: "HH:mm AM/PM",
           label: "Start/Time IN",
-          rules: rules["timeRules"],
+          rules: rules["required"].concat(rules["timeOfDay"], rules.maxLength(8))
         },
         endTime: {
           counter: 8,
           disabled: false,
           hint: "HH:mm AM/PM",
           label: "End/Time OUT",
-          rules: rules["timeRules"],
+          rules: rules["required"].concat(rules["timeOfDay"], rules.maxLength(8))
         },
         totalHours: {
-          counter: 8,
+          counter: 5,
           disabled: false,
-          hint: "HH:mm AM/PM",
+          hint: "HH:mm",
           label: "Total Hours",
-          rules: rules["timeRules"],
+          rules: rules["required"].concat(rules["time"], rules.maxLength(5))
         },
         group: {
           disabled: false,
@@ -253,7 +281,7 @@ export default {
       headers: [
         { text: "Date", align: "start", value: "date", sortable: false },
         { text: "Start/Time IN", value: "startTime", sortable: false },
-        { text: "Start/Time OUT", value: "endTime", sortable: false },
+        { text: "End/Time OUT", value: "endTime", sortable: false },
         { text: "Total Hours", value: "totalHours", sortable: false },
         { text: "Group?", value: "group", sortable: false },
         { text: "Actions", value: "actions", sortable: false },
@@ -285,6 +313,7 @@ export default {
         group: "No",
         disabled: false,
         parsed: false,
+        errors: {},
       },
 
       // Helper object for holding changes to a row in the table before
@@ -297,6 +326,7 @@ export default {
         group: "No",
         disabled: false,
         parsed: false,
+        errors: {},
       },
 
       // The last focused element before a dialog/popup appears
@@ -309,11 +339,13 @@ export default {
     // Reset table if parent component sends a reset signal
     reset() {
       this.initialize();
+      this.validate();
     },
   },
 
   created: function () {
     this.initialize();
+    this.validate();
   },
 
   methods: {
@@ -351,6 +383,7 @@ export default {
           if (Object.keys(obj).length > 0) {
             obj["parsed"] = true;
             obj["disabled"] = true;
+            obj["errors"] = {};
             this.allEntries.push(obj);
           }
         });
@@ -405,7 +438,7 @@ export default {
 
         // resume tabbing to the previously active element
         this.focusedElement.focus();
-      }, 300);
+      }, 200);
     },
 
     // Close the warning dialog
@@ -413,7 +446,7 @@ export default {
       this.displayWarning = false;
       setTimeout(() => {
         this.focusedElement.focus();
-      }, 300);
+      }, 200);
     },
 
     // Save changes to an existing or new row
@@ -427,6 +460,7 @@ export default {
         this.$emit("disable-change", 1);
         this.$emit("input", this.allEntries);
       }
+      this.validate();
       this.close();
     },
 
@@ -456,6 +490,7 @@ export default {
     toggleEditTable() {
       if (this.amtEdited > 0) {
         this.initialize();
+        this.validate();
       } else {
         this.amtEdited += 1;
         this.$emit("disable-change", 1);
@@ -512,6 +547,130 @@ export default {
       this.closeWarning();
       this.editingTable = false;
     },
-  },
+
+    // Validate the table entries
+    validate() {
+      var ret = 0;
+      //var latestDate = null;
+      
+      // The columns to check for validation (ex. exclude action, group)
+      var cols = ["date", "startTime", "endTime", "totalHours"];
+      
+      // First check that each field has a valid value
+      this.allEntries.forEach((entry) => { 
+        cols.forEach((col) => {
+        
+        // Reset the list of validation errors for this field for this row
+        entry['errors'][col] = [];
+
+          // Run the validation functions associated w/ this field
+          if ('rules' in this.colValidation[col]) {
+            this.colValidation[col]['rules'].forEach((rule) => {
+
+              // If the validation function fails, add an error to field
+              if (rule(entry[col]) !== true) {
+                entry['errors'][col].push("Invalid input");
+              }
+            });
+          }
+        });
+      });
+
+      // Next, check that the end time is after the start time
+      this.allEntries.forEach((entry) => {
+
+        // If the start and end times are valid, begin parsing
+        if (!('startTime' in entry['errors']) &&
+            !('endTime' in entry['errors'])) {
+
+          var timeDifference = [0, 0]; // HH:mm
+          var err = [0, 0]; // start & end; totalHours
+          
+          // Parse the times into a comparable format
+          var start = time_functions.parseTime(entry['startTime']);
+          var end = time_functions.parseTime(entry['endTime']);
+          var total = time_functions.parseTime(entry['totalHours']);
+           
+          // Check that the total hours field is correctly calculated
+          /// Calculate total hours
+          timeDifference = time_functions.subtractTime(start, end);
+          
+          if (timeDifference[0] < 0 || timeDifference[1] < 0 )
+            err[0] = 1;
+
+          //// Compare the computed total hours with the user inputted hours
+          if (timeDifference[0] !== total[0] || 
+              timeDifference[1] !== total[1]) {
+            err[1] = 1;
+          }
+
+          // Create error messages
+          if (err[0]) {
+            entry['errors']['startTime'].push("Invalid time interval");
+            entry['errors']['endTime'].push("Invalid time interval");
+          }
+          if (err[1]) {
+            entry['errors']['totalHours'].push("Incorrect calculation");
+          }
+        }
+      });
+      
+      // Sort by date & time to check for overlapping time entries
+      this.allEntries.sort(this.sortDateTime);
+      
+      return ret;
+    },
+
+    // Sort an entry by date and time
+    // Adds errors to rows with overlapping date time entries 
+    sortDateTime(a, b) {
+      // The columns to check for validation (ex. exclude action, group)
+      var cols = ["date", "startTime", "endTime", "totalHours"];
+      
+      // Sort by date
+      var dateComparison = time_functions.dateCompare(a.date, b.date);
+      if (dateComparison !== 0) return dateComparison;
+      
+      // Dates are the same, sort by time such that a < b
+      var aStart = time_functions.parseTime(a.startTime);
+      var aEnd = time_functions.parseTime(a.endTime);
+      var bStart = time_functions.parseTime(b.startTime);
+      var timeDiff = [0, 0];
+      
+      // If a starts after b, return
+      timeDiff = time_functions.subtractTime(aStart, bStart);
+      if (timeDiff[0] < 0 || timeDiff[1] < 0) return -1;
+      // If a and b start or end at the same time, error
+      if (a.startTime === b.startTime ||
+          a.endTime === b.endTime) {
+        cols.forEach((col) => {
+          a['errors'][col].push("Start or end time already exists!");
+          b['errors'][col].push("Start or end time already exists!");
+        });
+      }
+
+      // Check that a ends before b begins, if not -> error
+      timeDiff = time_functions.subtractTime(aEnd, bStart);
+
+      if (timeDiff[0] < 0 || timeDiff[1] < 0) { 
+        cols.forEach((col) => {
+            a['errors'][col].push("End time conflicts with another row!");
+            b['errors'][col].push("Start time conflicts with another row!");
+        });
+      }
+      return 1;
+    },
+
+    // Get the color of a cell in the table
+    getColor(errors, field) {
+      var ret = "";
+      if (field in errors) {
+        if (errors[field].length > 0) {
+          ret = "red--text red lighten-5 font-weight-bold";
+        }
+      }
+      return ret;
+    }
+  }
 };
 </script>
