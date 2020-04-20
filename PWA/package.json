@@ -67,6 +67,12 @@
       "^@/(.*)$": "<rootDir>/src/$1"
     }
   },
+	"prettier": {
+		"jsxBracketSameLine": false,
+		"tabWidth": 2,
+		"vueIndentScriptAndStyle": true,
+		"useTabs": false
+	},
   "eslintConfig": {
     "root": true,
     "env": {
