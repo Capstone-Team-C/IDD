@@ -1,17 +1,9 @@
 <template>
   <v-row justify="center">
-<<<<<<< HEAD
-    <v-btn 
-    color="success" 
-    dark 
-    @click.stop="dialog = true" 
-    @click="validate">
-=======
     <v-btn color="success" 
 		dark 
 		@click.stop="dialog = true" 
 		@click="validate">
->>>>>>> b43346d01e1b39789c9ce3e49b3782c3d0407da6
       Submit
     </v-btn>
 
@@ -35,19 +27,6 @@
             <v-card-actions>
               <v-spacer></v-spacer>
 
-<<<<<<< HEAD
-              <!-- Confirm if user is ready to submit -->
-              <v-btn 
-              color="red" 
-              text 
-              @click="dialog = false">
-                Cancel
-              </v-btn>
-              <v-btn 
-              color="green darken-1" 
-              text 
-              @click="submit">
-=======
 							<!-- Confirm if user is ready to submit -->
               <v-btn color="red" 
 							text 
@@ -57,7 +36,6 @@
               <v-btn color="green 
 							darken-1" text
 							@click="submit">
->>>>>>> b43346d01e1b39789c9ce3e49b3782c3d0407da6
                 Submit
               </v-btn>
             </v-card-actions>
@@ -106,21 +84,6 @@
           </div>
         </v-card>
       </div>
-<<<<<<< HEAD
-
-      <!-- The form is not valid -->
-      <div v-else>
-        <v-card>
-          <v-card-title class="headline text-danger" id="invalid">
-            Your form is not valid.</v-card-title
-          >
-
-          <v-card-text>
-            Please fix the invalid parts of the form and then retry submitting
-            your form.
-          </v-card-text>
-        </v-card>
-=======
 				
 			<!-- The form is not valid -->
 			<div v-else>
@@ -137,7 +100,6 @@
 						your form.
 					</v-card-text>
 				</v-card>
->>>>>>> b43346d01e1b39789c9ce3e49b3782c3d0407da6
       </div>
     </v-dialog>
   </v-row>
