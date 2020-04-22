@@ -4,7 +4,7 @@ pr:
       - develop
   paths:
     include:
-      - Appserver*/*
+      - AppserverTest/*
 
 pool:
   vmImage: 'windows-latest'
