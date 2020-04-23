@@ -218,11 +218,14 @@ label {
 #bottom-sticky {
     background-color: white;
     opacity: 0.7;
-    align-items: center;
 }
 
 #bottom-sticky input {
     margin: 5px;
+}
+
+#bottom-sticky label {
+    align-self: center;
 }
 
 #bottom-sticky:hover {
