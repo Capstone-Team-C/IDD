@@ -214,3 +214,17 @@ label {
 .column {
     flex: 50%;
 }
+
+#bottom-sticky {
+    background-color: white;
+    opacity: 0.6;
+    align-items: center;
+}
+
+#bottom-sticky input {
+    margin: 5px;
+}
+
+#bottom-sticky:hover {
+    opacity: 1;
+}
