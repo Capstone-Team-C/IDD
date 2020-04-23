@@ -88,7 +88,7 @@
     border-width: 2px;
     border-radius: 10px;
     border-color: var(--dark-grey);
-    border-style: dotted;
+   /* border-style: dotted;*/
     margin: 0 5vw 0 5vw;
     overflow: hidden auto;
     padding: 0;
@@ -104,6 +104,7 @@
 .color-div:hover {
     filter: brightness(90%);
     transition: .3s;
+    text-decoration: underline;
 }
 
 .color-div a {
@@ -121,6 +122,10 @@ a.navbar-brand {
 /* Provide sufficient contrast against white background */
 a {
   color: #0366d6;
+}
+
+td a {
+    display: block;
 }
 
 .btn-primary {
