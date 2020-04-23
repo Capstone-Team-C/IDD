@@ -1,0 +1,43 @@
+# Node.js with Vue
+
+# Build a Node.js project that uses Vue.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+pr:
+  branches:
+    include:
+      - develop
+  paths:
+    include:
+      - PWA/*
+
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  displayName: 'Install Node.js'
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'PWA'
+
+- task: VariableSetTask@1
+  inputs:
+    VariableName: 'VUE_APP_SERVER_URL'
+    Value: 'https://localhost:5004/'
+    IsSecret: false
+
+- script: |
+    cd PWA
+    npm install
+    npm run build
+    npm run test
+  displayName: 'npm install, build, and test'
+  workingDirectory: 'PWA/'
+

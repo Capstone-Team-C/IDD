@@ -5,7 +5,7 @@ import sinon from 'sinon'
 
 describe('FileUpload', () => {
 
-	//checks that DOM isn't rendering html since siles are empty
+	/*checks that DOM isn't rendering html since siles are empty
 	it('should\'t render since files are empty', () => {
 		const propsData = { files: [] }
 		const wrapper = shallowMount(FileUpload, {propsData})
@@ -20,7 +20,7 @@ describe('FileUpload', () => {
 			{propsData})
 		expect(wrapper.element).toMatchSnapshot()
 })
-
+*/
 	//Chekcs if the upload status is not active since no files to upload
 	it('upload status should be zero since no files', () => {
 		const spy = sinon.spy(FileUpload.methods, 'types')

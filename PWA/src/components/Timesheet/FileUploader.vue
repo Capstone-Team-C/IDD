@@ -29,8 +29,7 @@
       <div class="example-btn">
         <file-upload
           class="btn btn-primary"
-					post-action="https://clownedpineapple.azurewebsites.net/api/
-					HttpTrigger1?code=amZ51qGYCfuLgelHpVFn1oyB3M/iEwHpunUAaTc5JOo/z6QUHNKWkQ=="
+					:post-action= 'url'
           :multiple="true"
           :drop="true"
           :drop-directory="true"
@@ -134,7 +133,9 @@ export default {
   data() {
     return {
       files: [],
-			uploadStatus: 0
+			uploadStatus: 0,
+			url: process.env.VUE_APP_SERVER_URL.concat('ImageUpload/DocAsForm'),
+
     }
   },
 }

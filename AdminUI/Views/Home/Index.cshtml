@@ -1,5 +1,8 @@
 ﻿@using System.Collections
 @using Amazon.CodeDeploy
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @model HomeModel
 @{
     ViewData["Title"] = "Home Page";
@@ -14,281 +17,418 @@
 <link rel="manifest" href="~/manifest.json">
 <!-- Note: Avoid using inline styles as much as possible. Instead, use classes or ids & .css files -->
 
-<div class="leftnav">
-    <p>This space could be use for saved filters, like so:</p>
-    <p>@Html.ActionLink("Submitted by Donald Duck", "Index", new {pname="Donald Duck"})</p>
-    <p>@Html.ActionLink("Submitted in the last two days", "Index", new {datefrom=@DateTime.Today.AddDays(-2).ToString("yyyy-MM-dd")}) </p>
-    <p>@Html.ActionLink("All unprocessed Timesheets", "Index", new { })</p>
-    <p>Filters themselves can be down below the saved filters</p>
-</div>
-
-<div class="rightnav">
-    <p>This space could be used to preview a timesheet instead of opening it up a new tab</p>
-    <p>Definitely not a part of the MVP</p>
-    <p>Could be a fun stretch goal tho</p>
-    <p>Regardless, both sidebars should be collapsible/adjustable</p>
-</div>
-
+@if (SignInManager.IsSignedIn(User))
+{
+        <div class ="text-center">
+            <div class="leftnav">
+                <p>Saved filters</p>
+                @Html.ActionLink("Submitted by Mickey Mouse", "Index", new {pname = "Mickey Mouse", status="all"})
+                @Html.ActionLink("Submitted since 4/2/2020", "Index", new {datefrom = "2020-04-02", status = "all"})
+                @Html.ActionLink("All unprocessed Timesheets", "Index", new {status="pending"})
+            </div>
+        </div>
+}
+<div class="main">
 <div class="text-center" 
      style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 25px; padding-bottom: 25px;
                                       left: 0; border-radius: 10px;">
-    <form>
-        <label for="id">ID:</label>
-        <input type="number" name="id" id="id" value="@Model.Id" />
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="container-fluid">
+        <form>
+            <div class="row text-right">
+                <div class="col-md-3">
+                    <label for="pName">Provider Name:</label>
+                    <input type="text" name="pName" id="pName" value="@Model.PName">
+                </div>
 
-        <label for="pName">Provider Name:</label>
-        <input type="text" name="pName" id="pName" value ="@Model.PName">
-        
-        <label for="pName">Provider ID:</label>
-        <input type="text" name="providerId" id="providerId" value ="@Model.ProviderId">
+                <div class="col-md-3">
+                    <label for="cName">Client Name:</label>
+                    <input type="text" name="cName" id="cName" value="@Model.CName">
+                </div>
+                <div class="col-md-3">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom">
+                </div>
+                <div class="col-md-3">
+                    <label for="status">Status:</label>
+                    <select name="status" id="status">
+                        @if (Model.Status.Equals("all", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            <option value="all" selected>All</option>
+                        }
+                        else
+                        {
+                            <option value="all">All</option>
+                        }
+                        @if (Model.Status.Equals("pending", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            <option value="pending" selected>Pending</option>
+                        }
+                        else
+                        {
+                            <option value="pending">Pending</option>
+                        }
+                        @if (Model.Status.Equals("approved", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            <option value="approved" selected>Approved</option>
+                        }
+                        else
+                        {
+                            <option value="approved">Approved</option>
+                        }
+                        @if (Model.Status.Equals("rejected", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            <option value="rejected" selected>Rejected</option>
+                        }
+                        else
+                        {
+                            <option value="rejected">Rejected</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row text-right">
+                <div class="col-md-3">
+                    <label for="pName">Provider ID:</label>
+                    <input type="select" name="providerId" id="providerId" value="@Model.ProviderId">
+                </div>
+                <div class="col-md-3">
+                    <label for="prime">Client Prime:</label>
+                    <input type="text" name="prime" id="prime" value="@Model.Prime">
+                </div>
+                <div class="col-md-3">
+                    <label for="dateTo">To:</label>
+                    <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo"><br/>
+                </div>
+                <div class="col-md-3">
+                    <label for="id">ID:</label>
+                    <input type="number" name="id" id="id" value="@Model.Id"/>
+                </div>
+            </div>
+            <br/>
+            <input role="button" class="btn btn-info" type="submit" value="Apply Filters"/>
+            @Html.ActionLink("Download CSV", "DownloadCSV", new
+            {
+                id = Model.Id,
+                pname = Model.PName,
+                prime = Model.Prime,
+                cname = Model.CName,
+                datefrom = Model.DateFrom,
+                dateto = Model.DateTo,
+                status = Model.Status
+            }, new
+            {
+                @class = "btn btn-secondary "
+            })
+            <br/><br/>
+        </form>
+    </div>
 
-        <label for="cName">Client Name:</label>
-        <input type="text" name="cName" id="cName" value="@Model.CName">
-        
-        <label for="prime">Client Prime:</label>
-        <input type="text" name="prime" id="prime" value ="@Model.Prime">
 
-        <label for="dateFrom">From:</label>
-        <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom">
-
-        <label for="dateTo">To:</label>
-        <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo"><br />
-
-        <input role="button" class="btn btn-primary" type="submit" value="Apply Filters" />
-                @Html.ActionLink("Download CSV", "DownloadCSV", new
+    <dir id="check-the-css-file">
+    <table width="100%">
+    <tr class="color-div" style="background-color: #0294B5">
+        <!--This ugly block of code can probably be fixed, but I'm not sure how tbh. Right now each 
+        HTML ActionLink sorts the data in the table and having 2 sets for each column allows the 
+        user to toggle back and forth between descending and ascending-->
+        @if (Model.SortOrder == "id")
+        {
+            <th>@Html.ActionLink("ID", "Index", new
                 {
+                    sortOrder = "id_desc",
                     id = Model.Id,
                     pname = Model.PName,
                     prime = Model.Prime,
                     cname = Model.CName,
                     datefrom = Model.DateFrom,
-                    dateto = Model.DateTo,
-                }, new
-                {
-                    @class = "btn btn-dark "
-                })
-        <br /><br />
-    </form>
-
-
-<dir id="check-the-css-file">
-        <table width="100%">
-            <tr class="color-div" style="background-color: #0294B5">
-                <!--This ugly block of code can probably be fixed, but I'm not sure how tbh. Right now each 
-                HTML ActionLink sorts the data in the table and having 2 sets for each column allows the 
-                user to toggle back and forth between descending and ascending-->
-                @if (Model.SortOrder == "id")
-                {
-                    <th>@Html.ActionLink("ID", "Index", new
-                        {
-                            sortOrder = "id_desc",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                else
-                {
-
-                    <th>@Html.ActionLink("ID", "Index", new
-                        {
-                            sortOrder = "id",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-
-                        })</th>
-                }
-
-                @if (Model.SortOrder == "pname")
-                {
-                    <th>@Html.ActionLink("Provider Name", "Index", new
-                        {
-                            sortOrder = "pname_desc",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-
-                        })</th>
-                }
-                else
-                {
-                    <th>@Html.ActionLink("Provider Name", "Index", new
-                        {
-                            sortOrder = "pname",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-
-                        })</th>
-                }
-                @if (Model.SortOrder == "providerid")
-                {
-                    <th>@Html.ActionLink("Provider ID", "Index", new
-                        {
-                            sortOrder = "providerid_desc",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                else
-                {
-                    <th>@Html.ActionLink("Provider ID", "Index", new
-                        {
-                            sortOrder = "providerid",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                @if (Model.SortOrder == "cname")
-                {
-                    <th>@Html.ActionLink("Client Name", "Index", new
-                        {
-                            sortOrder = "cname_desc",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                else
-                {
-
-                    <th>@Html.ActionLink("Client Name", "Index", new
-                        {
-                            sortOrder = "cname",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                @if (Model.SortOrder == "prime")
-                {
-                    <th>@Html.ActionLink("Client Prime", "Index", new
-                        {
-                            sortOrder = "prime_desc",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                else
-                {
-                    <th>@Html.ActionLink("Client Prime", "Index", new
-                        {
-                            sortOrder = "prime",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                @if (Model.SortOrder == "hours")
-                {
-                    <th>@Html.ActionLink("Hours", "Index", new
-                        {
-                            sortOrder = "hours_desc",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                else
-                {
-
-                    <th>@Html.ActionLink("Hours", "Index", new
-                        {
-                            sortOrder = "hours",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                @if (Model.SortOrder == "date")
-                {
-                    <th>@Html.ActionLink("Date Submitted", "Index", new
-                        {
-                            sortOrder = "date_desc",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-                else
-                {
-
-                    <th>@Html.ActionLink("Date Submitted", "Index", new
-                        {
-                            sortOrder = "date",
-                            id = Model.Id,
-                            pname = Model.PName,
-                            prime = Model.Prime,
-                            cname = Model.CName,
-                            datefrom = Model.DateFrom,
-                            dateto = Model.DateTo
-                        })</th>
-                }
-            </tr>
-            @foreach (var t in Model.Sheets)
-            {
-                {
-                    //I guess this is how you do zebra print tables in CSHTML? n-thchild CSS doesn't work in IE
-                    color = color == "#8FDDE6" ? "#E6EFF3" : "#8FDDE6";
-                }
-                <tr class ="color-div" style="background-color: @color">
-                    <td>@Html.ActionLink(@t.TimesheetID.ToString(), "Timesheet", new {ID = @t.TimesheetID})</td>
-                    <td>@t.ProviderName</td>
-                    <td>@t.ProviderID</td>
-                    <td>@t.ClientName</td>
-                    <td>@t.ClientPrime</td>
-                    <td>@t.Hours</td>
-                    <td>@t.Submitted</td>
-                </tr>
-            }
-        </table>
-        @if (Model.Sheets.Count == 0)
-        {
-            <br /><p>No Timesheets found matching parameters</p>
+                    dateto = Model.DateTo
+                })</th>
         }
+        else
+        {
+
+            <th>@Html.ActionLink("ID", "Index", new
+                {
+                    sortOrder = "id",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+
+                })</th>
+        }
+
+        @if (Model.SortOrder == "pname")
+        {
+            <th>@Html.ActionLink("Provider Name", "Index", new
+                {
+                    sortOrder = "pname_desc",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+
+                })</th>
+        }
+        else
+        {
+            <th>@Html.ActionLink("Provider Name", "Index", new
+                {
+                    sortOrder = "pname",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+
+                })</th>
+        }
+        @if (Model.SortOrder == "providerid")
+        {
+            <th>@Html.ActionLink("Provider ID", "Index", new
+                {
+                    sortOrder = "providerid_desc",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        else
+        {
+            <th>@Html.ActionLink("Provider ID", "Index", new
+                {
+                    sortOrder = "providerid",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        @if (Model.SortOrder == "cname")
+        {
+            <th>@Html.ActionLink("Client Name", "Index", new
+                {
+                    sortOrder = "cname_desc",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        else
+        {
+
+            <th>@Html.ActionLink("Client Name", "Index", new
+                {
+                    sortOrder = "cname",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        @if (Model.SortOrder == "prime")
+        {
+            <th>@Html.ActionLink("Client Prime", "Index", new
+                {
+                    sortOrder = "prime_desc",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        else
+        {
+            <th>@Html.ActionLink("Client Prime", "Index", new
+                {
+                    sortOrder = "prime",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        @if (Model.SortOrder == "hours")
+        {
+            <th>@Html.ActionLink("Hours", "Index", new
+                {
+                    sortOrder = "hours_desc",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        else
+        {
+
+            <th>@Html.ActionLink("Hours", "Index", new
+                {
+                    sortOrder = "hours",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        @if (Model.SortOrder == "date")
+        {
+            <th>@Html.ActionLink("Date Submitted", "Index", new
+                {
+                    sortOrder = "date_desc",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+        else
+        {
+
+            <th>@Html.ActionLink("Date Submitted", "Index", new
+                {
+                    sortOrder = "date",
+                    id = Model.Id,
+                    pname = Model.PName,
+                    prime = Model.Prime,
+                    cname = Model.CName,
+                    datefrom = Model.DateFrom,
+                    dateto = Model.DateTo
+                })</th>
+        }
+    </tr>
+    @foreach (var t in Model.Sheets)
+    {
+        {
+            //I guess this is how you do zebra print tables in CSHTML? n-thchild CSS doesn't work in IE
+            color = color == "#8FDDE6" ? "#E6EFF3" : "#8FDDE6";
+        }
+        <tr class="color-div" style="background-color: @color">
+            <td><a data-toggle="modal" data-target="#@("sheet" + t.TimesheetID)" asp-action="Timesheet" asp-route-id="@t.TimesheetID">@t.TimesheetID</a></td>
+            <td><a data-toggle="modal" data-target="#@("sheet" + t.TimesheetID)" asp-action="Timesheet" asp-route-id="@t.TimesheetID">@t.ProviderName</a></td>
+            <td><a data-toggle="modal" data-target="#@("sheet" + t.TimesheetID)" asp-action="Timesheet" asp-route-id="@t.TimesheetID">@t.ProviderID</a></td>
+            <td><a data-toggle="modal" data-target="#@("sheet" + t.TimesheetID)" asp-action="Timesheet" asp-route-id="@t.TimesheetID">@t.ClientName</a></td>
+            <td><a data-toggle="modal" data-target="#@("sheet" + t.TimesheetID)" asp-action="Timesheet" asp-route-id="@t.TimesheetID">@t.ClientPrime</a></td>
+            <td><a data-toggle="modal" data-target="#@("sheet" + t.TimesheetID)" asp-action="Timesheet" asp-route-id="@t.TimesheetID">@t.Hours</a></td>
+            <td><a data-toggle="modal" data-target="#@("sheet" + t.TimesheetID)" asp-action="Timesheet" asp-route-id="@t.TimesheetID">@t.Submitted</a></td>
+        </tr>
+        <div class="modal fade" id="@("sheet" + t.TimesheetID)" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">@t.ProviderName (@t.ProviderID)</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="flex-container column">
+                            <div class="row">
+                                <div class="column">
+                                    @if (String.IsNullOrEmpty(t.Status) || t.Status.Equals("Pending", StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        <label asp-for="Status">Status:</label> <span>Pending</span>
+                                    }
+                                    else
+                                    {
+                                        <label asp-for="Status">Status:</label> @t.AdminActivity
+                                    }
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column">
+                                    <label for="client-name">Client Name:</label> @t.ClientName
+                                </div>
+                                <div class="column">
+                                    <label for="prime">Client Prime:</label> @t.ClientPrime
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column">
+                                    <label>Total Hours:</label>  @t.Hours
+                                </div>
+                                <div class="column">
+                                    <label>Timesheet Submitted on:</label> @t.Submitted.ToString("MM-dd-yyyy")
+                                </div>
+                            </div>
+                                <div class="table">
+                                    <div class ="row" style="background-color: #0294B5">
+                                        <div class="col"><b>Date</b></div>
+                                        <div class="col"><b>Start/Time IN</b></div>
+                                        <div class="col"><b>End/Time OUT</b></div>
+                                        <div class="col"><b>Hours</b></div>
+                                        <div class="col"><b>Group? (yes/no)</b></div>
+                                    </div>
+                                    @foreach (var s in t.Shifts)
+                                    {
+
+                                        color = color == "#8FDDE6" ? "#E6EFF3" : "#8FDDE6";
+                                        <div class="row" style="background-color:@color">
+                                            <div class="col">@s.Date.ToString("d")</div>
+                                            <div class="col">@s.In.ToString("h:mm tt")</div>
+                                            <div class="col">@s.Out.ToString("h:mm tt")</div>
+                                            <div class="col">@s.Hours</div>
+                                            @if (s.Group)
+                                            {
+                                                <div class="col">Yes</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col">No</div>
+
+                                            }
+                                        </div>
+                                    }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-secondary" asp-action="Timesheet" asp-route-id="@t.TimesheetID">More Details</a>
+                        <form asp-controller="Timesheet" asp-action="Process">
+                            <input type="hidden" name="id" value="@t.TimesheetID"/>
+                            <input class="btn btn-primary" name="Status" value="Approved" type="submit">
+                            <input class="btn btn-danger" name="Status" value="Rejected" type="submit">
+                            <input type="text" name="RejectionReason" placeholder="Rejection Reason"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    </table>
+    @if (Model.Sheets.Count == 0)
+    {
+        <br/>
+        <p>No Timesheets found matching parameters</p>
+    }
     </dir>
-    <br/><button type="submit">Process selected timesheets</button>
+}else { <h1>Please <a asp-area="Identity" asp-page="/Account/Login">login</a> or <a asp-area="Identity" asp-page="/Account/Register">register</a> to continue</h1>}
+    </div>
 </div>
