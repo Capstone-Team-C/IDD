@@ -14,7 +14,7 @@ namespace FormSubmit.Tests
         public void EmptyTimesheet()
         {
             
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\FormSubmit\emptyTimesheet.json";
+            string path = TestContext.CurrentContext.TestDirectory + @"\FormSubmit\emptyTimesheet.json";
 
             if (!File.Exists(path))
             {
@@ -29,14 +29,21 @@ namespace FormSubmit.Tests
             // Due to Windows adding \r for newlines we remove these, and for whatever reason Windows
             // Also adds a newline at the end of the file even if it doesn't exist, so we add that.
             string j = JsonConvert.SerializeObject(obj, Formatting.Indented).Replace("\r","") + "\n";
-            
+
+            for( var i = 0; i < j.Length && i < k.Length; ++i)
+            {
+                if( j[i] != k[i])
+                {
+                    Console.WriteLine(String.Format("j and k differ at {0}: j {1}: k {2}"), i, j[i], k[i]);
+                }
+            }
             Assert.IsTrue(String.Equals(j, k));
         }
 
         [Test]
         public void TenRowTimesheet()
         {
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\FormSubmit\TenRowTimesheet.json";
+            string path = TestContext.CurrentContext.TestDirectory + @"\FormSubmit\TenRowTimesheet.json";
 
             if (!File.Exists(path))
             {
