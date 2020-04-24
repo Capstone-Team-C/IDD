@@ -22,7 +22,7 @@ namespace FormSubmit.Tests
                 Assert.IsTrue(false);
             }
 
-            string k = File.ReadAllText(path);
+            string k = File.ReadAllText(path).Replace("\r", "");
             TimesheetForm obj;
             obj = new TimesheetForm();
 
@@ -30,11 +30,12 @@ namespace FormSubmit.Tests
             // Also adds a newline at the end of the file even if it doesn't exist, so we add that.
             string j = JsonConvert.SerializeObject(obj, Formatting.Indented).Replace("\r","") + "\n";
 
+            if(!String.Equals(j,k))
             for( var i = 0; i < j.Length && i < k.Length; ++i)
             {
                 if( j[i] != k[i])
                 {
-                    Console.WriteLine(String.Format("j and k differ at {0}: j {1}: k {2}"), i, j[i], k[i]);
+                    Console.WriteLine(String.Format("j and k differ at {0}: j {1}: k {2}", i, j[i], k[i]));
                 }
             }
             Assert.IsTrue(String.Equals(j, k));
