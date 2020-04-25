@@ -1,11 +1,5 @@
 <template>
-  <v-form
-    class="mx-9"
-    lazy-validation
-    ref="form"
-    v-model="valid"
-  >
-
+  <v-form class="mx-9" lazy-validation ref="form" v-model="valid">
     <p class="title">
       Front side of the form
     </p>
@@ -127,321 +121,169 @@
       Program that authorized the service delivered.
     </strong>
 
-    <hr />
-    
-    <v-card v-for="(error, index) in errors" :key="index">
-      {{ error }}
-    </v-card>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-btn color="error" class="mr-4" @click="reset">
+            Reset Form
+          </v-btn>
+        </v-col>
 
-		<v-container>
-			<v-row>
-				<v-col>
-					<v-btn
-						color="error"
-						class="mr-4"
-						@click="reset"
-					>
-						Reset Form
-					</v-btn>
-				</v-col>
-
-				<v-col>
-					<ConfirmSubmission
-						v-bind:valid="valid"
-						v-bind:formFields="formFields"/>
-				</v-col>
-			</v-row>
-		</v-container>
-
-		<!--
-    <v-btn color="success" class="mr-4" :disabled="!valid" @click="submit">
-      Submit
-    </v-btn>
-		-->
+        <v-col>
+          <ConfirmSubmission
+            :valid="valid"
+            :formFields="formFields"
+            :totalEdited="totalEdited"
+            @click="validateInputs"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
   </v-form>
 </template>
 
 <script>
-import FormTable from "@/components/Timesheet/FormTable";
-import FormField from "@/components/Timesheet/FormField";
-import ConfirmSubmission from "@/components/Timesheet/ConfirmSubmission";
-import fieldData from "@/components/Timesheet/IDDFormFields.json";
-import rules from "@/components/Timesheet/FormRules.js";
-import time_functions from "@/components/Timesheet/TimeFunctions.js";
+  import FormTable from "@/components/Timesheet/FormTable";
+  import FormField from "@/components/Timesheet/FormField";
+  import ConfirmSubmission from "@/components/Timesheet/ConfirmSubmission";
+  import fieldData from "@/components/Timesheet/IDDFormFields.json";
+  import rules from "@/components/Timesheet/FormRules.js";
 
-export default {
-  name: "IDDForm",
-  components: {
-    FormTable,
-    FormField,
-		ConfirmSubmission,
-  },
-
-  props: {
-    // A .json file that is the parsed uploaded IDD timesheet data
-    parsedFileData: {
-      type: Object,
-      default: null,
-    },
-  },
-
-  // Upon first loading on the page, bind parsed form data to each
-  // IDD Timesheet form field
-  created: function () {
-    this.initialize();
-
-    // Bind validation rules to each field that has a 'rules' string
-    // specified
-    Object.entries(fieldData).forEach(([key, value]) => {
-      if ("rules" in value) {
-        var _rules = value.rules;
-        fieldData[key].rules = [];
-        _rules.forEach((fieldRule) => {
-          // Not using the spread operator for IE compatibility
-          fieldData[key].rules.push.apply(fieldData[key].rules, rules[fieldRule]);
-        });
-        
-        if (fieldData[key].counter) {
-          fieldData[key].rules.push(rules.maxLength(fieldData[key].counter));
-        }
-      }
-    });
-  },
-
-  data: function () {
-    return {
-      // Import form field structure data and store into local variable
-      formFields: fieldData,
-
-      // Reset form of arbitrary value
-      resetChildField: false,
-
-      // The amount of parsed fields that were edited
-      totalEdited: 0,
-
-      // Hide form validation error messages by default
-      valid: true,
-      
-      // All the errors of this form
-      errors: [],
-    };
-  },
-
-  computed: {
-    resetChild() {
-      return this.resetChildField;
-    },
-  },
-
-  methods: {
-    initialize() {
-      // Initialize some fields
-      this.totalEdited = 0;
-
-      // Bind data from a .json IDD timesheet to form fields
-      if (this.entries !== null) {
-        Object.entries(this.parsedFileData).forEach(([key, value]) => {
-          if (key in this.formFields) {
-            this.formFields[key]["parsed_value"] = value;
-            this.formFields[key]["value"] = value;
-            this.formFields[key]["disabled"] = true;
-          } else {
-            console.log(
-              "Unrecognized parsed form field from server: " +
-                `${key} - ${value}`
-            );
-          }
-        });
-      }
-
-      // Consider the amount of non-parsed fields
-      // The provider and employer must resign the form
-      Object.entries(this.formFields).forEach(([key, value]) => {
-        key;
-        if (!("parsed_value" in value)) {
-          this.totalEdited += 1; 
-        }
-      });
+  export default {
+    name: "IDDForm",
+    components: {
+      FormTable,
+      FormField,
+      ConfirmSubmission,
     },
 
-    // Compute the sum of all serviceDeliveredOn totalHours with the totalHours field
-    sumTableHours() {
-      var sumHours = 0; 
-      var sumMinutes = 0;
-
-      // For each row in the array of entries...
-      this.formFields["serviceDeliveredOn"]["value"].forEach((entry) => {
-        // Check that the totalHours field is valid
-        if (entry['errors']['totalHours'].length == 0) {
-          sumHours += parseInt(entry['totalHours'].substr(0, 2));
-          sumMinutes += parseInt(entry['totalHours'].substr(3, 2));
-        }
-      });
-      sumHours += (sumMinutes - sumMinutes%60) / 60;
-      sumMinutes %= 60;
-
-      return sumHours.toString() + ":" + sumMinutes.toString();
-    },
-    
-    // Count the number of errors in the serviceDeliveredOn table
-    getTableErrors() {
-      var numErrors = 0;
-
-      // For each row in the array of entries...
-      this.formFields["serviceDeliveredOn"]["value"].forEach((entry, index) => {
-        
-        // For each error col in an entry, check the amount of errors
-        Object.entries(entry['errors']).forEach(([col, errors]) => {
-          var colErrors = errors.length;
-          if (colErrors > 0) {
-            this.errors.push(`ERROR: in row ${index+1} of the serviceDeliveredOn table, '${col}' has the following errors:`, errors);
-            numErrors += colErrors;
-          }
-        });
-      });
-      return numErrors;
+    props: {
+      // A .json file that is the parsed uploaded IDD timesheet data
+      parsedFileData: {
+        type: Object,
+        default: null,
+      },
     },
 
-    // Validate the form
-    validate() {
-      var numErrors = 0;
-
-      // Check each input field for valid input
-      if (!this.$refs.form.validate()) {
-        numErrors += 1;
-        this.errors.push("ERROR: Invalid input in some form fields!"); 
-      }
-      
-      // Check the validity of the serviceDeliveredOn table
-      numErrors += this.getTableErrors();
-
-      // Ensure that the serviceDeliveredOn table sum == totalHours field
-      if (this.formFields.totalHours.value !== null) {
-        var sumHours = this.sumTableHours();
-        if (sumHours !== this.formFields.totalHours.value) {
-          numErrors += 1; 
-          this.errors.push(`ERROR: serviceDeliveredOn table sums up to ${sumHours} hours, but the totalHours field reports ${this.formFields.totalHours.value} hours!`);
-        }
-      }
-
-      // If there were no edited fields, ensure that the provider and
-      // employer signature date are after the last service date
-      if (this.totalEdited <= 0) {
-        // Only compare the earlier date
-        var comparisonDate = this.formFields.providerSignDate.value;
-        if (time_functions.dateCompare(comparisonDate, this.formFields.employerSignDate.value) > 0) {
-          comparisonDate = this.formFields.employerSignDate.value;
-        }
-
-        // Compare signage dates with the pay period
-        // Note, only comparing the YYYY-mm part
-        var submissionDate = this.formFields.submissionDate.value;
-        if (time_functions.dateCompare(comparisonDate.substr(0,7), submissionDate) < 0) {
-          numErrors += 1;
-          this.errors.push(`ERROR: the employer or provider sign date is before the pay period.`);
-        }
-
-        // Get the last date from the serviceDeliveredOn table
-        var latestDateIdx = this.formFields.serviceDeliveredOn.value.length;
-        if (latestDateIdx > 0) {
-          var latestDate = this.formFields.serviceDeliveredOn.value[latestDateIdx - 1]['date']; 
-          if (time_functions.dateCompare(comparisonDate, latestDate) < 0) {
-            numErrors += 1;
-            this.errors.push(`ERROR: the employer or provider sign date is before the latest service delivery date.`);
-          }
-        }
-      }
-      return numErrors;
-    },
-    
-    // Upon pressing the submit button,
-    // Check that the form has no errors
-    submit() {
-      // Reset all error messages
-      this.errors = [];
-
-      // First, ensure that the timesheet is valid
-      var numErrors = this.validate();
-      if (numErrors > 0) {
-        this.errors.push(`There were ${numErrors} errors, please fix before submitting.`);
-        return false;
-      }
-      
-      // If there was an edited field, re-acquire provider and employer
-      // signatures
-      if (this.numEdited > 0) {
-        console.log(`There were ${this.numEdited} edited fields. Provider and employer must resign the timesheet form.`);
-      }
-
-      // Finally, package up the form data and send to the backend 
-      var submitData = this.createSubmission();
-      
-      console.log(submitData);
-      return true;
-    },
-
-    createSubmission() {
-      var submitData = {}; 
-      Object.entries(this.formFields).forEach(([key, value]) => {
-          submitData[key] = {};
-          submitData[key]["value"] = value["value"];
-          submitData[key]["wasEdited"] = !value["disabled"]; 
-      });
-      
-      submitData["serviceDeliveredOn"]["value"] = [];
-      Object.entries(this.formFields["serviceDeliveredOn"]["value"]).forEach (([key, value]) => {
-        key;
-        var row = {};
-
-        var cols = ['date', 'startTime', 'endTime', 'totalHours', 'group'];
-        cols.forEach((col) => {
-          row[col] = value[col];
-        });
-        row['wasEdited'] = !value['disabled'];
-
-        submitData["serviceDeliveredOn"]["value"].push(row);
-      });
-
-      return submitData;
-    },
-
-    reset() {
-      // re-initialize values
+    // Upon first loading on the page, bind parsed form data to each
+    // IDD Timesheet form field
+    created: function () {
       this.initialize();
-      this.resetValidation();
 
-      // Change the value of this watched prop to force
-      // FormField components to reset
-      this.resetChildField = !this.resetChildField;
-    },
+      // Bind validation rules to each field that has a 'rules' string
+      // specified
+      Object.entries(fieldData).forEach(([key, value]) => {
+        if ("rules" in value) {
+          var _rules = value.rules;
+          this.$set(fieldData[key], "rules", []);
+          _rules.forEach((fieldRule) => {
+            // Not using the spread operator for IE compatibility
+            fieldData[key].rules.push.apply(
+              fieldData[key].rules,
+              rules[fieldRule]
+            );
+          });
 
-    resetValidation() {
-      this.errors = [];
-      this.$refs.form.resetValidation();
-    },
-
-    // For a parsed field, send a warning if being edited
-    // Else, reset value to parsed value & disable field
-    resetParsed(field) {
-      if (this.formFields[field].parsed_value !== undefined) {
-        if (this.formFields[field].disabled !== true) {
-          this.formFields[field].value = this.formFields[field].parsed_value;
-          this.formFields[field].disabled = true;
+          if (fieldData[key].counter) {
+            fieldData[key].rules.push(rules.maxLength(fieldData[key].counter));
+          }
         }
-      }
+      });
     },
 
-    // Update this component's disabled property
-    // Then, update the amount of parsed fields edited
-    handleDisableChange(fieldName, amtEdited) {
-      if (amtEdited > 0) {
-        this.formFields[fieldName].disabled = true;
-      } else {
-        this.formFields[fieldName].disabled = false;
-      }
-      this.totalEdited += amtEdited;
-      console.log(fieldName, amtEdited, "->", this.totalEdited);
+    data: function () {
+      return {
+        // Import form field structure data and store into local variable
+        formFields: fieldData,
+
+        // Reset form of arbitrary value
+        resetChildField: false,
+
+        // The amount of parsed fields that were edited
+        totalEdited: 0,
+
+        // Hide form validation error messages by default
+        valid: true,
+      };
     },
-  },
-};
+
+    computed: {
+      resetChild() {
+        return this.resetChildField;
+      },
+    },
+
+    methods: {
+      initialize() {
+        // Initialize some fields
+        this.totalEdited = 0;
+
+        // Bind data from a .json IDD timesheet to form fields
+        if (this.entries !== null) {
+          Object.entries(this.parsedFileData).forEach(([key, value]) => {
+            if (key in this.formFields) {
+              this.formFields[key]["parsed_value"] = value;
+              this.formFields[key]["value"] = value;
+              this.formFields[key]["disabled"] = true;
+            } else {
+              console.log(
+                "Unrecognized parsed form field from server: " +
+                  `${key} - ${value}`
+              );
+            }
+          });
+        }
+
+        // Consider the amount of non-parsed fields
+        // The provider and employer must resign the form
+        Object.entries(this.formFields).forEach(([key, value]) => {
+          key;
+          if (!("parsed_value" in value)) {
+            this.totalEdited += 1;
+          }
+        });
+      },
+
+      // Check if the form fields have valid input
+      validateInputs() {
+        this.$refs.form.validate();
+      },
+
+      reset() {
+        // re-initialize values
+        this.initialize();
+        this.resetValidation();
+
+        // Change the value of this watched prop to force
+        // FormField components to reset
+        this.resetChildField = !this.resetChildField;
+      },
+
+      resetValidation() {
+        this.$refs.form.resetValidation();
+      },
+
+      // For a parsed field, send a warning if being edited
+      // Else, reset value to parsed value & disable field
+      resetParsed(field) {
+        if (this.formFields[field].parsed_value !== undefined) {
+          if (this.formFields[field].disabled !== true) {
+            this.formFields[field].value = this.formFields[field].parsed_value;
+            this.formFields[field].disabled = true;
+          }
+        }
+      },
+
+      // Update this component's disabled property
+      // Then, update the amount of parsed fields edited
+      handleDisableChange(fieldName, amtEdited) {
+        if (amtEdited > 0) {
+          this.formFields[fieldName].disabled = true;
+        } else {
+          this.formFields[fieldName].disabled = false;
+        }
+        this.totalEdited += amtEdited;
+      },
+    },
+  };
 </script>

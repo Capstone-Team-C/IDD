@@ -1,8 +1,8 @@
-let time_functions = { 
+let time_functions = {
   // Parses a time field like HH:mm AM/PM into an array of time sections
   parseTime(time) {
     var ret = [];
-    
+
     // Check that time is long enough
     if (!time) return null;
     if (time.length < 5) return null;
@@ -10,7 +10,7 @@ let time_functions = {
     // Separate the HH:mm part
     ret.push(parseInt(time.substr(0, 2)));
     ret.push(parseInt(time.substr(3, 2)));
-    
+
     // Separate the AM/PM part if it exists
     if (time.length > 5) {
       ret.push(time.substr(6, 2));
@@ -47,34 +47,32 @@ let time_functions = {
 
     // Calculate the time difference
     ret[0] = end[0] - start[0];
-    
+
     if (ret[0] > 0) {
       // start is earlier than end; start->end minutes
       ret[1] = 60 - start[1] + end[1];
       if (ret[1] < 60) {
         ret[0] -= 1;
-      } else if (ret[1] > 60)  {
+      } else if (ret[1] > 60) {
         ret[0] += 1;
         ret[1] -= 60;
       } else ret[1] = 0;
-
     } else if (ret[0] < 0) {
       // start is later than end; end->start minutes
       ret[1] = 60 - end[1] + start[1];
       if (ret[1] < 60) {
         ret[0] -= 1;
-      } else if (ret[1] > 60)  {
+      } else if (ret[1] > 60) {
         ret[0] += 1;
         ret[1] -= 60;
       } else ret[1] = 0;
       ret[1] *= -1;
-
     } else {
       // start and end are in the same hour
       ret[1] = end[1] - start[1];
     }
     return ret;
-  }
-}
+  },
+};
 
 export default time_functions;
