@@ -119,7 +119,7 @@
         type: Boolean,
         default: false,
       },
-      
+
       // Signal that parent form has completed validation
       validationSignal: {
         type: Boolean,
@@ -324,12 +324,12 @@
 
         return submitData;
       },
-      
-      // Send signal to parent component to validate 
+
+      // Send signal to parent component to validate
       signalParentValidate() {
         // Set flag to wait on parent
         this.waitingOnParent = true;
-        
+
         // Send signal to parent component to validate input fields
         this.$emit("click");
       },

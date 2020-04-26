@@ -251,7 +251,7 @@
       // Check if the form fields have valid input
       validateInputs() {
         this.$refs.form.validate();
-         
+
         // Change this field to validation signal ConfirmSubmission
         this.validationSignal = !this.validationSignal;
       },
