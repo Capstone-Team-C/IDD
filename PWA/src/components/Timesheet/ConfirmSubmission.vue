@@ -174,7 +174,7 @@
       validationSignal() {
         if (this.waitingOnParent === true) {
           this.waitingOnParent = false;
-          this.submit();
+          this.displaySubmit = true;
         }
       },
     },
@@ -329,6 +329,7 @@
       signalParentValidate() {
         // Set flag to wait on parent
         this.waitingOnParent = true;
+        this.isValid = true;
 
         // Send signal to parent component to validate input fields
         this.$emit("click");
