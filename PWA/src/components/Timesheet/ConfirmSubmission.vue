@@ -161,7 +161,6 @@
 
     watch: {
       valid(newVal) {
-console.log("isValid changed! before:", this.isValid, "; after:", newVal);
         this.isValid = newVal;
       },
     },
@@ -279,7 +278,6 @@ console.log("isValid changed! before:", this.isValid, "; after:", newVal);
         }
 
         // Check parent's response on validity of input fields
-console.log("checking isValid...");
         if (!this.isValid) {
           numErrors += 1;
           this.errors.push("ERROR: Invalid input in some form fields!");
