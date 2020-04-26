@@ -246,7 +246,9 @@
 
       // Check if the form fields have valid input
       validateInputs() {
+console.log("Parent was told to validate! valid:", this.valid);
         this.$refs.form.validate();
+  console.log("valid:", this.valid);
       },
 
       reset() {

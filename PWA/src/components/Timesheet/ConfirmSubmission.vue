@@ -161,6 +161,7 @@
 
     watch: {
       valid(newVal) {
+console.log("isValid changed! before:", this.isValid, "; after:", newVal);
         this.isValid = newVal;
       },
     },
@@ -228,7 +229,7 @@
           if (sumHours.localeCompare(this.formFields.totalHours.value) !== 0) {
             numErrors += 1;
             this.errors.push(
-              `ERROR: serviceDeliveredOn table sums up to ${sumHours} hours, but the totalHours field reports ${this.formFields.totalHours.value} hours!`
+              `ERROR: valid rows in the serviceDeliveredOn table sums up to ${sumHours} hours, but the totalHours field reports ${this.formFields.totalHours.value} hours!`
             );
           }
         }
@@ -278,6 +279,7 @@
         }
 
         // Check parent's response on validity of input fields
+console.log("checking isValid...");
         if (!this.isValid) {
           numErrors += 1;
           this.errors.push("ERROR: Invalid input in some form fields!");
