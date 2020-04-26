@@ -1,5 +1,6 @@
 ﻿using Amazon.Textract.Model;
 using Newtonsoft.Json;
+using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Appserver.TextractDocument
         public string JobStatus;
         public List<Page> Pages = new List<Page>();
 
-        private Dictionary<string, Block> _blockMap;
+        private Dictionary<string, Block> _blockMap = new Dictionary<string, Block>();
         public TextractDocument()
         {
 
@@ -102,8 +103,14 @@ namespace Appserver.TextractDocument
                         currentPage.addBlock(block);
                         break;
                 }
-                
+
+                _blockMap.Add(block.GetId(), block);
             }
+        }
+
+        public void FromTextractResponse( Amazon.Textract.Response response)
+        {
+            ParseJson(JsonSerializer.Serialize(res));
         }
 
         public int PageCount() => Pages.Count();
