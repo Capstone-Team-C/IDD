@@ -134,6 +134,7 @@
             :valid="valid"
             :formFields="formFields"
             :totalEdited="totalEdited"
+            :validationSignal="validationSignal"
             @click="validateInputs"
           />
         </v-col>
@@ -204,6 +205,9 @@
 
         // Hide form validation error messages by default
         valid: true,
+
+        // Signal denoting completion of validation for form fields
+        validationSignal: false,
       };
     },
 
@@ -247,6 +251,9 @@
       // Check if the form fields have valid input
       validateInputs() {
         this.$refs.form.validate();
+         
+        // Change this field to validation signal ConfirmSubmission
+        this.validationSignal = !this.validationSignal;
       },
 
       reset() {

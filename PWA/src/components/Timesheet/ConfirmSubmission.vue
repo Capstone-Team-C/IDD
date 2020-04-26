@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-btn color="success" dark @click.stop="submit()">
+    <v-btn color="success" dark @click.stop="signalParentValidate">
       Submit
     </v-btn>
 
@@ -119,6 +119,12 @@
         type: Boolean,
         default: false,
       },
+      
+      // Signal that parent form has completed validation
+      validationSignal: {
+        type: Boolean,
+        default: false,
+      },
 
       //User (edited) information.
       formFields: {
@@ -153,6 +159,7 @@
         // All the errors of this form
         errors: [],
         isValid: this.valid,
+        waitingOnParent: false,
 
         //URL for the AppServer
         url: process.env.VUE_APP_SERVER_URL.concat("Submit"),
@@ -162,6 +169,13 @@
     watch: {
       valid(newVal) {
         this.isValid = newVal;
+      },
+
+      validationSignal() {
+        if (this.waitingOnParent === true) {
+          this.waitingOnParent = false;
+          this.submit();
+        }
       },
     },
 
@@ -212,12 +226,16 @@
 
       // Validate the form
       validate() {
-        // Send signal to parent component to validate input fields
-        this.$emit("click");
-
         // Reset all error messages
         this.errors = [];
         var numErrors = 0;
+
+        // Check parent's response on validity of input fields
+        if (!this.valid) {
+          numErrors += 1;
+          this.errors.push("ERROR: Invalid input in some form fields!");
+          this.isValid = false;
+        }
 
         // Check the validity of the serviceDeliveredOn table
         numErrors += this.getTableErrors();
@@ -276,12 +294,6 @@
             }
           }
         }
-
-        // Check parent's response on validity of input fields
-        if (!this.isValid) {
-          numErrors += 1;
-          this.errors.push("ERROR: Invalid input in some form fields!");
-        }
         return numErrors;
       },
 
@@ -311,6 +323,15 @@
         );
 
         return submitData;
+      },
+      
+      // Send signal to parent component to validate 
+      signalParentValidate() {
+        // Set flag to wait on parent
+        this.waitingOnParent = true;
+        
+        // Send signal to parent component to validate input fields
+        this.$emit("click");
       },
 
       //Submits form to AppServer.
