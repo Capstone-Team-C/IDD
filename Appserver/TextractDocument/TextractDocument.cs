@@ -1,4 +1,5 @@
 ﻿using Amazon.Textract.Model;
+using Amazon.Textract;
 using Newtonsoft.Json;
 using System.Text.Json;
 using Newtonsoft.Json.Linq;
@@ -108,9 +109,9 @@ namespace Appserver.TextractDocument
             }
         }
 
-        public void FromTextractResponse( Amazon.Textract.Response response)
+        public void FromTextractResponse( Amazon.Textract.Model.GetDocumentAnalysisResponse response)
         {
-            ParseJson(JsonSerializer.Serialize(res));
+            ParseJson(System.Text.Json.JsonSerializer.Serialize(response));
         }
 
         public int PageCount() => Pages.Count();

@@ -1,9 +1,5 @@
-﻿using Amazon.ElasticTranscoder.Model;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Appserver.TextractDocument
 {
