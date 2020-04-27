@@ -26,6 +26,9 @@ namespace Appserver.TextractDocument
         private Dictionary<string, Block> _childMap = new Dictionary<string, Block>();
         private List<Line> _lines = new List<Line>();
         private List<Table> _tables = new List<Table>();
+        private List<SelectionElement> _selection = new List<SelectionElement>();
+        private List<KeyValueSet> _keyvalue = new List<KeyValueSet>();
+        private Dictionary<KeyValueSet, KeyValueSet> _keyvaluepairs = new Dictionary<KeyValueSet, KeyValueSet>();
         private readonly Geometry _geometry;
         private int _page;
         private string _Id;
@@ -67,9 +70,28 @@ namespace Appserver.TextractDocument
                         child.SetPage(this);
                         child.CreateStructure();
                         break;
+                    case Appserver.TextractDocument.BlockType.SELECTION_ELEMENT:
+                        _selection.Add((SelectionElement)child);
+                        child.SetPage(this);
+                        child.CreateStructure();
+                        break;
+                    case Appserver.TextractDocument.BlockType.KEY_VALUE_SET:
+                        _keyvalue.Add((KeyValueSet)child);
+                        child.SetPage(this);
+                        child.CreateStructure();
+                        break;
+                    default:
+                        //Console.WriteLine(String.Format("Block Type: {0}", child.GetBlockType()));
+                        break;
                 }
             }
-
+            foreach( var kv in _keyvalue)
+            {
+                if(kv.GetEntityType() == KeyValueSet.EntityType.KEY)
+                {
+                    _keyvaluepairs.Add(kv, kv.GetValue());
+                }
+            }
         }
 
         public override void SetPage(Page page)
@@ -86,14 +108,20 @@ namespace Appserver.TextractDocument
             Console.WriteLine(String.Format("Page-id: {0}",_Id));
             Console.WriteLine(String.Format("Line count: {0}", _lines.Count));
             Console.WriteLine(String.Format("Table count: {0}", _tables.Count));
+            Console.WriteLine(String.Format("Selection Count: {0}", _selection.Count));
+            Console.WriteLine(String.Format("Key-Value Count: {0}", _keyvalue.Count));
             Console.WriteLine(String.Format("Child count: {0}", _childMap.Count));
             foreach( var line in _lines)
             {
                 //line.PrintSummary();
             }
-            foreach( var table in _tables)
+            foreach (var table in _tables)
             {
-                table.PrintSummary();
+                //table.PrintSummary();
+            }
+            foreach (var kv in _keyvaluepairs)
+            {
+                kv.Key.PrintSummary();
             }
         }
     }

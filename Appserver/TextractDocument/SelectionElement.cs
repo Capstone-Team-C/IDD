@@ -74,7 +74,11 @@ namespace Appserver.TextractDocument
         }
         public override void PrintSummary()
         {
-            throw new NotImplementedException();
+            Console.WriteLine(String.Format("Selection ID: {0}",_Id));
+            foreach( var child in _children)
+            {
+                Console.WriteLine(String.Format("Selection Block Child: {0}",child.GetBlockType()));
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.CodeAnalysis;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace Appserver.TextractDocument
             KEY,
             VALUE
         }
+        /// <summary>
+        /// For KEY entities the children is the value of the key
+        /// For VALUE entities the 
+        /// </summary>
+        /// <param name="block"></param>
         public KeyValueSet(JToken block)
         {
             _geometry = new Geometry(block["Geometry"]);
@@ -57,15 +63,22 @@ namespace Appserver.TextractDocument
             }
         }
         public override Appserver.TextractDocument.BlockType GetBlockType()
-            => Appserver.TextractDocument.BlockType.SELECTION_ELEMENT;
+            => Appserver.TextractDocument.BlockType.KEY_VALUE_SET;
         public override Geometry GetGeometry() => _geometry;
         public override string GetId() => _Id;
         public override List<Block> GetRelationships() => _children;
         public override int GetPage() => _page;
         public override float GetConfidence() => Confidence;
+        public EntityType GetEntityType() => _entityType;
+        public KeyValueSet GetValue()
+        {
+            if (_entityType == EntityType.KEY)
+                return _value;
+            return this;
+        }
 
         ////////////////////////
-        /// Properties of a Table
+        /// Properties of a KeyValueSet
         ////////////////////////
         ///
 
@@ -80,6 +93,8 @@ namespace Appserver.TextractDocument
         private Dictionary<string, Block> _childMap = new Dictionary<string, Block>();
         private List<string> _valueIds = new List<string>();
         private List<string> _childIds = new List<string>();
+        private List<Block> _values = new List<Block>();
+        private KeyValueSet _value;
         private Page _parent;
         public override void SetPage(Page page)
         {
@@ -87,11 +102,52 @@ namespace Appserver.TextractDocument
         }
         public override void CreateStructure()
         {
-            throw new NotImplementedException();
+
+            if (_parent == null)
+            {
+                throw new System.ArgumentException("No Parent");
+            }
+            foreach (var child in _childIds)
+            {
+                var b = _parent.GetChildById(child);
+                _childMap[child] = b;
+                _children.Add(b);
+            }
+
+            if( _entityType == EntityType.KEY)
+            {
+                if( _valueIds.Count >= 1)
+                {
+                    var child = _parent.GetChildById(_valueIds[0]);
+                    if( child.GetBlockType() != BlockType.KEY_VALUE_SET)
+                    {
+                        throw new System.ArgumentException("Value of Key is not valid type");
+                    }
+                    _value = (KeyValueSet)child;
+                }
+            }
         }
         public override void PrintSummary()
         {
-            throw new NotImplementedException();
+            switch (_entityType)
+            {
+                case EntityType.KEY:
+                    Console.WriteLine(String.Format("[{0}] => {1}", this.ToString(), _value.ToString()));
+                    break;
+                case EntityType.VALUE:
+                    Console.WriteLine(String.Format("Value: {0}", this.ToString()));
+                    break;
+            }
+        }
+
+        public override string ToString()
+        {
+            string keystring = "";
+            foreach (var child in _children)
+            {
+                keystring += child.ToString() + " ";
+            }
+            return keystring;
         }
     }
 }
