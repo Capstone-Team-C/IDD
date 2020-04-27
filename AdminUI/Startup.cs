@@ -31,11 +31,11 @@ namespace AdminUI
             services.AddProgressiveWebApp();
             services.AddMvc().AddRazorRuntimeCompilation();
 
-            services.AddDbContext<TimesheetContext>(options =>
+            services.AddDbContext<SubmissionContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AzureDB")));
             services.AddDbContext<AdminAccountContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AzureDB")));
-            services.AddDbContext<LockTableContext>(options =>
+            services.AddDbContext<UserContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AzureDB")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AdminAccountContext>();

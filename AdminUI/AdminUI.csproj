@@ -35,7 +35,6 @@
     <Content Remove="Views\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="uploaded_docs\" />
-    <Folder Include="Views\Timesheets\NewFolder\" />
+    <Folder Include="..\Common\" />
   </ItemGroup>
 </Project>
