@@ -1,4 +1,5 @@
 ﻿using AdminUI.Data;
+using Common.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdminUITest

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using AdminUI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Common.Models;
+using Common.Data;
 
 namespace AdminUI.Models
 {

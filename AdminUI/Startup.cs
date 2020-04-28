@@ -12,6 +12,7 @@ using AdminUI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Common.Data;
 
 namespace AdminUI
 {
@@ -32,11 +33,14 @@ namespace AdminUI
             services.AddMvc().AddRazorRuntimeCompilation();
 
             services.AddDbContext<SubmissionContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AzureDB")));
+                options.UseSqlServer(Configuration.GetConnectionString("AzureDB"), 
+                    b => b.MigrationsAssembly("AdminUI")));
             services.AddDbContext<AdminAccountContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AzureDB")));
+                options.UseSqlServer(Configuration.GetConnectionString("AzureDB"),
+                    b => b.MigrationsAssembly("AdminUI")));
             services.AddDbContext<UserContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AzureDB")));
+                options.UseSqlServer(Configuration.GetConnectionString("AzureDB"),
+                    b => b.MigrationsAssembly("AdminUI")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AdminAccountContext>();
             services.AddRazorPages();

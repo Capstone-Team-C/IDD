@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,8 +7,9 @@ using AdminUI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AdminUI.Models;
-using Microsoft.Owin.Security.Provider;
-
+using Common.Models;
+using Microsoft.EntityFrameworkCore;
+using Common.Data;
 
 namespace AdminUI.Controllers
 {

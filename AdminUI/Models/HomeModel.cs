@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Common.Models;
 namespace AdminUI.Models
 {
     public class HomeModel

@@ -12,6 +12,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
+using Common.Models;
+using Common.Data;
 
 namespace AdminUITest
 {

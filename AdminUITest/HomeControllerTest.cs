@@ -3,6 +3,7 @@ using AdminUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AdminUI.Data;
+using Common.Data;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AdminUITest
