@@ -17,6 +17,24 @@
               something is wrong with it.
             </v-card-text>
 
+            <v-card-text v-if="this.totalEdited > 0">
+              <em>
+                There were {{ totalEdited }} edited fields. Provider and Employer must resign the timesheet form.
+              </em>
+               
+              <!-- 
+                If there were any changes to the form, disable 
+                submission until both provider and employer re-sign. 
+              -->
+              <v-container fluid>
+                <v-checkbox color="success" v-model="reSigned" label="Employer accepts all changes to the IDD form." value="Employer"></v-checkbox>
+                <v-checkbox color="success" v-model="reSigned" label="Provider accepts all changes to the IDD form." value="Provider"></v-checkbox>
+              </v-container>
+              
+              <v-card color="red lighten-2">
+              </v-card>
+            </v-card-text>
+
             <v-card-actions>
               <v-spacer></v-spacer>
 
@@ -24,7 +42,8 @@
               <v-btn color="red" text @click="displaySubmit = false">
                 Cancel
               </v-btn>
-              <v-btn text color="green darken-1" @click="submit">
+              <v-btn text color="green darken-1" 
+              :disabled="canSubmit" @click="submit">
                 Submit
               </v-btn>
             </v-card-actions>
@@ -81,9 +100,9 @@
             your form.
             <hr />
             Errors:
-            <v-sheet class="my-1 pa-1" color="red lighten-2" v-for="(error, index) in errors" :key="index">
+            <v-card color="red lighten-2" v-for="(error, index) in errors" :key="index">
               <strong>{{ error }}</strong>
-            </v-sheet>
+            </v-card>
           </v-card-text>
         </v-card>
       </div>
@@ -171,9 +190,18 @@
         isValid: this.valid,
         waitingOnParent: false,
 
+        // Provider and employer re-signed the form
+        reSigned: [],
+
         //URL for the AppServer
         url: process.env.VUE_APP_SERVER_URL.concat("Submit"),
       };
+    },
+
+    computed: {
+        canSubmit: function() {
+          return (this.totalEdited > 0) && !(this.reSigned.length === 2) && this.isValid; 
+        },
     },
 
     watch: {
@@ -195,6 +223,14 @@
     },
 
     methods: {
+      // Reset all submission values
+      resetValid() {
+        this.reSigned = [];
+        this.loading = false;
+        this.submissionStatus = false;
+        this.returnHome = false;
+      },
+
       //Formats the data to be posted
       formatData() {
         var submitData = {};
@@ -225,6 +261,9 @@
 
       // Send signal to parent component to validate
       signalParentValidate() {
+        // Reset the submission values
+        this.resetValid()
+
         // Set flag to wait on parent
         this.waitingOnParent = true;
         
@@ -234,17 +273,11 @@
 
       //Submits form to AppServer.
       submit() {
-        // If there are errors, do not post timesheet
-        if (!this.isValid) {
-          return false; 
-        }
-
-        // If there was an edited field, re-acquire provider and employer
-        // signatures
-        if (this.numEdited > 0) {
-          console.log(
-            `There were ${this.numEdited} edited fields. Provider and employer must resign the timesheet form.`
-          );
+        // Do not post timesheet if any:
+        //   - The form is invalid
+        //   - There were edits, but employer and provider didn't re-sign
+        if (this.canSubmit) {
+          return false
         }
 
         // Else, post timesheet
