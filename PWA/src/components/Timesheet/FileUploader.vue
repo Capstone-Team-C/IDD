@@ -224,7 +224,7 @@
 
 <script>
   import FileUpload from "vue-upload-component";
-  //import axios from "axios"
+  import axios from "axios"
 
   export default {
     name: "file_uploader",
@@ -254,41 +254,11 @@
           if (this.files[x].success == true) count += 1;
         }
         if (count == this.files.length) {
-          console.log("true");
           return true;
         } else {
-          console.log("false");
           return false;
         }
       },
-      /*
-		async custom() {
-			axios.post(this.url, this.files, {
-				headers: {
-					"X-Requested-With": "XMLHttpRequest",
-					"content-type": "formdata/multipart"}}, ).
-				then(function(response) {
-					if (response["data"]["response"]){
-						console.log("Submitted")
-					}
-				}).
-				catch(function (error) {
-					console.log(error)
-				})
-
-			//return await component.uploadHtml5(file)
-			/*var x
-			var count = 0
-			while(count != this.files.length) {
-				for(x in this.files){
-					if(this.files[x].active == false)
-						count += 1
-				}
-				count = 0
-			}
-			console.log('after')
-			console.log(this.files)
-		},*/
     },
     data() {
       return {
@@ -305,6 +275,16 @@
       loader() {
         const l = this.loader;
         this[l] = !this[l];
+				
+				axios.get(this.urlGet)
+					.then( function(response) {
+						console.log(response) 
+					})
+					.catch(function (error) {
+						console.log(error)
+					})
+
+					
 
         setTimeout(() => (this[l] = false), 3000);
 
