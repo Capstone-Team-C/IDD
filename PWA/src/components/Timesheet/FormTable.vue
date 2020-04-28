@@ -13,7 +13,7 @@
         <v-dialog max-width="500px" v-model="displayWarning">
           <v-card>
             <v-card-title class="headline"
-              >Do you want to edit this parsed field?</v-card-title
+              >Do you want to edit this field?</v-card-title
             >
 
             <v-card-text>
@@ -69,7 +69,6 @@
                 @click="
                   focusedElement = $event.target;
                   initialize();
-                  validate();
                 "
               >
                 <v-icon color="white">mdi-refresh</v-icon>
@@ -84,7 +83,7 @@
             </v-card-title>
 
             <!-- The form area -->
-            <v-card-text>
+            <v-card-text v-if="displayEditDialog">
               <v-container>
                 <v-row
                   class="py-0 my-0"
@@ -109,6 +108,7 @@
                   :input-value="editedItem.group"
                   @change="flipGroup(editedItem)"
                   @keyup.native.enter.stop="flipGroup(editedItem)"
+                  :disabled="!displayEditDialog"
                 ></v-checkbox>
               </v-container>
             </v-card-text>
@@ -383,6 +383,9 @@
           });
         }
 
+        // Validate initial table
+        this.validate();
+
         // Update parent
         this.$emit("input", this.allEntries);
       },
@@ -413,8 +416,10 @@
       // Delete a single row of the table
       deleteItem(item) {
         const index = this.allEntries.indexOf(item);
-        confirm("Are you sure you want to delete this item?") &&
+        if(confirm("Are you sure you want to delete this item?")) {
           this.allEntries.splice(index, 1);
+          this.validate();
+        }
 
         // No need to notify parent, because an item can only be deleted if
         // the 'add row' button was unlocked or if a parsed row was unlocked
@@ -628,12 +633,14 @@
         var aStart = time_functions.parseTime(a.startTime);
         var aEnd = time_functions.parseTime(a.endTime);
         var bStart = time_functions.parseTime(b.startTime);
-        var timeDiff = [0, 0];
-
-        // If a starts after b, return
-        timeDiff = time_functions.subtractTime(aStart, bStart);
-        if (timeDiff[0] >= 0 || timeDiff[1] >= 0) return -1;
-
+        var timeDiff = time_functions.subtractTime(aStart, bStart);
+        var order = 1;
+        
+        // If a starts after b starts, it appears before b
+        if (timeDiff[0] >= 0 || timeDiff[1] >= 0) {
+          order = -1; 
+        }
+        
         // If a and b start or end at the same time, error
         if (a.startTime === b.startTime || a.endTime === b.endTime) {
           cols.forEach((col) => {
@@ -641,17 +648,23 @@
             b["errors"][col].push("Start or end time already exists!");
           });
         }
-
-        // Check that a ends before b begins, if not -> error
-        timeDiff = time_functions.subtractTime(aEnd, bStart);
+        
+        // Check that times do not overlap
+        if (order === -1) {
+          //// a starts, then b starts
+          timeDiff = time_functions.subtractTime(aEnd, bStart);
+        } else {
+          //// b starts, then a starts
+          timeDiff = time_functions.subtractTime(aEnd, bStart);
+        }
 
         if (timeDiff[0] < 0 || timeDiff[1] < 0) {
           cols.forEach((col) => {
-            a["errors"][col].push("End time conflicts with another row!");
-            b["errors"][col].push("Start time conflicts with another row!");
+            a["errors"][col].push("Time period conflicts with another row!");
+            b["errors"][col].push("Time period conflicts with another row!");
           });
         }
-        return 1;
+        return order;
       },
 
       // Get the color of a cell in the table

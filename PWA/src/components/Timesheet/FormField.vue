@@ -15,7 +15,7 @@
       <v-dialog v-model="editDialog" max-width="500px">
         <v-card>
           <v-card-title class="headline"
-            >Do you want to edit this parsed field?</v-card-title
+            >Do you want to edit this field?</v-card-title
           >
 
           <v-card-text>

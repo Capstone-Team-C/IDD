@@ -81,9 +81,9 @@
             your form.
             <hr />
             Errors:
-            <v-card v-for="(error, index) in errors" :key="index">
-              {{ error }}
-            </v-card>
+            <v-sheet class="my-1 pa-1" color="red lighten-2" v-for="(error, index) in errors" :key="index">
+              <strong>{{ error }}</strong>
+            </v-sheet>
           </v-card-text>
         </v-card>
       </div>
@@ -109,7 +109,6 @@
 
 <script>
   import axios from "axios";
-  import time_functions from "@/components/Timesheet/TimeFunctions.js";
 
   export default {
     name: "ConfirmSubmission",
@@ -124,6 +123,18 @@
       validationSignal: {
         type: Boolean,
         default: false,
+      },
+
+      // The list of errors from the parent's validation function
+      errors: {
+        type: Array,
+        default: null,
+      },
+
+      // The amount of errors from the parent's validation function
+      numErrors: {
+        type: Number,
+        default: 0,
       },
 
       //User (edited) information.
@@ -157,7 +168,6 @@
         submitData: null,
 
         // All the errors of this form
-        errors: [],
         isValid: this.valid,
         waitingOnParent: false,
 
@@ -167,11 +177,16 @@
     },
 
     watch: {
-      valid(newVal) {
-        this.isValid = newVal;
-      },
-
+      // The parent form has finished validating all fields on the 
+      // IDD Timesheet. Display errors or submit
       validationSignal() {
+        var numErrors = this.errors.length;
+        if (numErrors > 0) {
+          this.isValid = false;
+        } else {
+          this.isValid = true;
+        }
+
         if (this.waitingOnParent === true) {
           this.waitingOnParent = false;
           this.displaySubmit = true;
@@ -180,123 +195,6 @@
     },
 
     methods: {
-      // Compute the sum of all serviceDeliveredOn totalHours with the totalHours field
-      sumTableHours() {
-        var sumHours = 0;
-        var sumMinutes = 0;
-
-        // For each row in the array of entries...
-        this.formFields["serviceDeliveredOn"]["value"].forEach((entry) => {
-          // Check that the totalHours field is valid
-          if (entry["errors"]["totalHours"].length == 0) {
-            sumHours += parseInt(entry["totalHours"].substr(0, 2));
-            sumMinutes += parseInt(entry["totalHours"].substr(3, 2));
-          }
-        });
-        sumHours += (sumMinutes - (sumMinutes % 60)) / 60;
-        sumMinutes %= 60;
-
-        return sumHours.toString() + ":" + sumMinutes.toString();
-      },
-
-      // Count the number of errors in the serviceDeliveredOn table
-      getTableErrors() {
-        var numErrors = 0;
-
-        // For each row in the array of entries...
-        this.formFields["serviceDeliveredOn"]["value"].forEach(
-          (entry, index) => {
-            // For each error col in an entry, check the amount of errors
-            Object.entries(entry["errors"]).forEach(([col, errors]) => {
-              var colErrors = errors.length;
-              if (colErrors > 0) {
-                this.errors.push(
-                  `ERROR: in row ${
-                    index + 1
-                  } of the serviceDeliveredOn table, '${col}' has the following errors:`,
-                  errors
-                );
-                numErrors += colErrors;
-              }
-            });
-          }
-        );
-        return numErrors;
-      },
-
-      // Validate the form
-      validate() {
-        // Reset all error messages
-        this.errors = [];
-        var numErrors = 0;
-
-        // Check parent's response on validity of input fields
-        if (!this.valid) {
-          numErrors += 1;
-          this.errors.push("ERROR: Invalid input in some form fields!");
-          this.isValid = false;
-        }
-
-        // Check the validity of the serviceDeliveredOn table
-        numErrors += this.getTableErrors();
-
-        // Ensure that the serviceDeliveredOn table sum == totalHours field
-        if (this.formFields.totalHours.value !== null) {
-          var sumHours = this.sumTableHours();
-          if (sumHours.localeCompare(this.formFields.totalHours.value) !== 0) {
-            numErrors += 1;
-            this.errors.push(
-              `ERROR: valid rows in the serviceDeliveredOn table sums up to ${sumHours} hours, but the totalHours field reports ${this.formFields.totalHours.value} hours!`
-            );
-          }
-        }
-
-        // If there were no edited fields, ensure that the provider and
-        // employer signature date are after the last service date
-        if (this.totalEdited <= 0) {
-          // Only compare the earlier date
-          var comparisonDate = this.formFields.providerSignDate.value;
-          if (
-            time_functions.dateCompare(
-              comparisonDate,
-              this.formFields.employerSignDate.value
-            ) > 0
-          ) {
-            comparisonDate = this.formFields.employerSignDate.value;
-          }
-
-          // Compare signage dates with the pay period
-          // Note, only comparing the YYYY-mm part
-          var submissionDate = this.formFields.submissionDate.value;
-          if (
-            time_functions.dateCompare(
-              comparisonDate.substr(0, 7),
-              submissionDate
-            ) < 0
-          ) {
-            numErrors += 1;
-            this.errors.push(
-              `ERROR: the employer or provider sign date is before the pay period.`
-            );
-          }
-
-          // Get the last date from the serviceDeliveredOn table
-          var latestDateIdx = this.formFields.serviceDeliveredOn.value.length;
-          if (latestDateIdx > 0) {
-            var latestDate = this.formFields.serviceDeliveredOn.value[
-              latestDateIdx - 1
-            ]["date"];
-            if (time_functions.dateCompare(comparisonDate, latestDate) < 0) {
-              numErrors += 1;
-              this.errors.push(
-                `ERROR: the employer or provider sign date is before the latest service delivery date.`
-              );
-            }
-          }
-        }
-        return numErrors;
-      },
-
       //Formats the data to be posted
       formatData() {
         var submitData = {};
@@ -329,27 +227,16 @@
       signalParentValidate() {
         // Set flag to wait on parent
         this.waitingOnParent = true;
-        this.isValid = true;
-
+        
         // Send signal to parent component to validate input fields
         this.$emit("click");
       },
 
       //Submits form to AppServer.
       submit() {
-        // Validate the form
-        var numErrors = this.validate();
-
-        // Display the dialog for submitting the form
-        this.displaySubmit = true;
-
         // If there are errors, do not post timesheet
-        if (numErrors > 0) {
-          this.errors.push(
-            `There were ${numErrors} errors, please fix before submitting.`
-          );
-          this.isValid = false;
-          return false;
+        if (!this.isValid) {
+          return false; 
         }
 
         // If there was an edited field, re-acquire provider and employer
@@ -360,8 +247,6 @@
           );
         }
 
-        this.isValid = true;
-
         // Else, post timesheet
         this.loading = true;
         var self = this;
@@ -369,7 +254,7 @@
         // Finally, prepare the form data and send to the backend
         this.submitData = this.formatData();
 
-        if (numErrors === 0) {
+        if (this.errors.length === 0) {
           axios
             .post(this.url, this.submitData, {
               headers: {
