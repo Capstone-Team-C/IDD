@@ -29,7 +29,7 @@
       <div class="example-btn">
         <file-upload
           class="btn btn-primary"
-					:post-action= 'url'
+					:custom-action= 'custom'
           :multiple="true"
           :drop="true"
           :drop-directory="true"
@@ -42,10 +42,20 @@
           <i class="fa fa-plus"></i>
           Select files
         </file-upload>
-        <button @click="types" type="button" class="btn btn-success" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
-          <i id="startUpload" class="fa fa-arrow-up" aria-hidden="true"></i>
+
+        <button 
+					type="button" 
+					class="btn btn-success" 
+					v-if="!$refs.upload || !$refs.upload.active" 
+					@click.prevent="$refs.upload.active = true"
+				>
+          <i id="startUpload" 
+						class="fa fa-arrow-up" 
+						aria-hidden="true"></i
+					>
           Start Upload
         </button>
+
         <button
           type="button"
           class="btn btn-danger"
@@ -111,6 +121,7 @@
 
 <script>
 import FileUpload from 'vue-upload-component'
+import axios from "axios"
 
 export default {
   name: "file_uploader",
@@ -128,13 +139,39 @@ export default {
 		types() {
 			this.uploadStatus = 1
 			return 1
-		}
+		},
+		async custom() {
+			axios.post(this.url, this.files).
+				then(function(response) {
+					if (response["data"]["response"]){
+						console.log("Submitted")
+					}
+				}).
+				catch(function (error) {
+					console.log(error)
+				})
+
+			//return await component.uploadHtml5(file)
+			/*var x
+			var count = 0
+			while(count != this.files.length) {
+				for(x in this.files){
+					if(this.files[x].active == false)
+						count += 1
+				}
+				count = 0
+			}
+			console.log('after')
+			console.log(this.files)*/
+		},
 	},
   data() {
     return {
       files: [],
 			uploadStatus: 0,
-			url: process.env.VUE_APP_SERVER_URL.concat('ImageUpload/DocAsForm'),
+			url: "https://localhost:5004/ImageUpload/DocAsForm",
+			urlGet: "https://localhost:5004/Timesheet/Ready",
+			//url: process.env.VUE_APP_SERVER_URL.concat('ImageUpload/DocAsForm'),
 
     }
   },
