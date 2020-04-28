@@ -1,16 +1,41 @@
 <template>
   <div class="example-drag">
     <div class="upload">
-      <ul v-if="files.length">
-        <li v-for="(file) in files" :key="file.id">
-          <span data-testid="name">{{file.name}}</span> -
-          <span>{{file.size | formatSize}}</span> -
-          <span v-if="file.error">{{file.error}}</span>
-          <span v-else-if="file.success">success</span>
-          <span v-else-if="file.active">active</span>
-          <span v-else></span>
-        </li>
-      </ul>
+			<div v-if="files.length">
+      <!--ul v-if="files.length"-->
+				<v-row>
+					<v-col>
+						<ul>
+							<li v-for="(file) in files" :key="file.id">
+								<span data-testid="name">{{file.name}}</span> -
+								<span>{{file.size | formatSize}}</span> -
+								<span v-if="file.error">{{file.error}}</span>
+								<span v-else-if="file.success">success</span>
+								<span v-else-if="file.active">active</span>
+								<span v-else></span>
+							</li>
+						</ul>
+					</v-col>
+					<div class="continue" v-if="check()">
+						<v-col>
+							<div class="text-center">
+								<v-btn
+									:loading="loading"
+									:disabled="loading"
+									color="blue-grey"
+									class="ma-2 white--text"
+									@click="loader = 'loading'"
+								>
+									Complete Form
+									<v-icon right dark>mdi-cloud-upload</v-icon>
+								</v-btn>
+							</div>
+						</v-col>
+				</div>
+				</v-row>
+			</div>
+			
+
       <ul v-else>
         <td colspan="7">
           <div class="text-center p-5">
@@ -29,7 +54,7 @@
       <div class="example-btn">
         <file-upload
           class="btn btn-primary"
-					:custom-action= 'custom'
+					:post-action = 'url'
           :multiple="true"
           :drop="true"
           :drop-directory="true"
@@ -49,7 +74,7 @@
 					v-if="!$refs.upload || !$refs.upload.active" 
 					@click.prevent="$refs.upload.active = true"
 				>
-          <i id="startUpload" 
+          <i  
 						class="fa fa-arrow-up" 
 						aria-hidden="true"></i
 					>
@@ -80,14 +105,14 @@
   justify-content: center;
   align-items: center;
   flex-flow: column;
-  padding-top: 50em;
+  padding-top: 20em;
 }
 .example-drag {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-flow: column;
-  padding-top: 5em;
+  padding-top: 1em;
 }
 .example-drag.btn {
   margin-bottom: 0;
@@ -107,7 +132,7 @@
 .example-drag.drop-active h3 {
   margin: -0.5em 0 0;
   position: absolute;
-  top: 50em;
+  top: 10em;
   left: 5em;
   right: 0;
   -webkit-transform: translateY(-50%);
@@ -117,11 +142,47 @@
   color: #fff;
   padding: 0;
 }
+.custom-loader {
+	animation: loader 1s infinite;
+	display: flex;
+}
+@-moz-keyframes loader {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+@-webkit-keyframes loader {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+@-o-keyframes loader {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+@keyframes loader {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
 </style>
 
 <script>
 import FileUpload from 'vue-upload-component'
-import axios from "axios"
+//import axios from "axios"
 
 export default {
   name: "file_uploader",
@@ -140,8 +201,28 @@ export default {
 			this.uploadStatus = 1
 			return 1
 		},
+		check() {
+			var count = 0
+			var x
+			for(x in this.files){
+				if(this.files[x].success == true)
+					count+=1
+			}
+			if (count == this.files.length){
+				console.log('true')
+				return true
+			}
+			else {
+				console.log('false')
+				return false
+			}
+		},
+				/*
 		async custom() {
-			axios.post(this.url, this.files).
+			axios.post(this.url, this.files, {
+				headers: {
+					"X-Requested-With": "XMLHttpRequest",
+					"content-type": "formdata/multipart"}}, ).
 				then(function(response) {
 					if (response["data"]["response"]){
 						console.log("Submitted")
@@ -162,19 +243,29 @@ export default {
 				count = 0
 			}
 			console.log('after')
-			console.log(this.files)*/
-		},
+			console.log(this.files)
+		},*/
 	},
   data() {
     return {
       files: [],
 			uploadStatus: 0,
-			url: "https://localhost:5004/ImageUpload/DocAsForm",
+			url: "https://localhost:5004/ImageUpload",
 			urlGet: "https://localhost:5004/Timesheet/Ready",
+			loader: null, //Calls our form retrieval and displays loading progress
+			loading: false, //Is form retrieval loading
 			//url: process.env.VUE_APP_SERVER_URL.concat('ImageUpload/DocAsForm'),
-
     }
-  },
-}
+},
+	watch: {
+      loader () {
+        const l = this.loader
+        this[l] = !this[l]
 
+        setTimeout(() => (this[l] = false), 3000)
+
+        this.loader = null
+      },
+    },
+}
 </script>
