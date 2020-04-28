@@ -27,7 +27,7 @@
     <!-- Render either file upload or form -->
     <v-row>
       <v-col v-if="variant === 'Upload an image'">
-        <FileUploader />
+        <FileUploader @error = "handleError($event)" @success = "fillForm($event)" />
       </v-col>
 
       <v-col v-else-if="variant === 'Fill out a form'">
@@ -60,6 +60,15 @@ export default {
     ],
     variant: 'default',
     parsedFileData: mock_json
-  })
+  }),
+	methods: {
+		fillForm (response) {
+			console.log("in View")
+			console.log(response)
+		},
+		handleError (error) {
+			console.log(error)
+		},
+	}
 }
 </script>

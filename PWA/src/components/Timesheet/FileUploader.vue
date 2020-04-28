@@ -281,11 +281,11 @@
 
 				axios.get(this.urlGet)
 					.then( function(response) {
-						console.log(response) 
-						self.fieldData = response
+						self.$emit('success', response)
 					})
 					.catch(function (error) {
 						console.log(error)
+						self.$emit('error', error)
 					})
 
 					
