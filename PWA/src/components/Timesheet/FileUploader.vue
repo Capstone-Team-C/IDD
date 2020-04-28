@@ -225,7 +225,8 @@
 <script>
   import FileUpload from "vue-upload-component";
   import axios from "axios"
-
+	//import IDDForm from "@/components/Timesheet/IDDForm"
+	
   export default {
     name: "file_uploader",
     components: {
@@ -268,6 +269,7 @@
         urlGet: "https://localhost:5004/Timesheet/Ready",
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
+				fieldData: null
         //url: process.env.VUE_APP_SERVER_URL.concat('ImageUpload/DocAsForm'),
       };
     },
@@ -275,10 +277,12 @@
       loader() {
         const l = this.loader;
         this[l] = !this[l];
-				
+				var self = this
+
 				axios.get(this.urlGet)
 					.then( function(response) {
 						console.log(response) 
+						self.fieldData = response
 					})
 					.catch(function (error) {
 						console.log(error)
