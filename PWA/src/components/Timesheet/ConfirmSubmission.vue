@@ -31,7 +31,11 @@
                 <v-checkbox color="success" v-model="reSigned" label="Provider accepts all changes to the IDD form." value="Provider"></v-checkbox>
               </v-container>
               
-              <v-card color="red lighten-2">
+              <v-card color="red lighten-2" v-if="!reSigned.includes('Employer')">
+                Employer must re-sign form!
+              </v-card>
+              <v-card color="red lighten-2" v-if="!reSigned.includes('Provider')">
+                Provider must re-sign form!
               </v-card>
             </v-card-text>
 
