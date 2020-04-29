@@ -77,14 +77,10 @@ namespace FormSubmit.Tests
             obj.approval = true;
             obj.providerSignature = true;
             obj.providerSignDate = "2020-04-01";
-            //obj.review_status = "Pending";
 
             // Due to Windows adding \r for newlines we remove these, and for whatever reason Windows
             // Also adds a newline at the end of the file even if it doesn't exist, so we add that.
             string j = JsonConvert.SerializeObject(obj, Formatting.Indented).Replace("\r", "") + "\n";
-
-            System.Console.WriteLine("J: " + j);
-            System.Console.WriteLine("K: " + k);
 
             Assert.IsTrue(String.Equals(j, k));
         }
