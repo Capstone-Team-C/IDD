@@ -1,43 +1,6 @@
 <template>
   <div class="example-drag">
     <div class="upload">
-      <!--div v-if="files.length">
-      <ul v-if="files.length">
-			<v-container>
-				<v-row>
-					<v-col>
-						<ul>
-							<li v-for="(file) in files" :key="file.id">
-								<span data-testid="name">{{file.name}}</span> -
-								<span>{{file.size | formatSize}}</span> -
-								<span v-if="file.error">{{file.error}}</span>
-								<span v-else-if="file.success">success</span>
-								<span v-else-if="file.active">active</span>
-								<span v-else></span>
-							</li>
-					</ul>
-				</v-col>
-					<div class="continue" v-if="check()">
-						<v-col>
-							<div class="text-center">
-								<v-btn
-									:loading="loading"
-									:disabled="loading"
-									color="blue-grey"
-									class="ma-2 white-text"
-									@click="loader = 'loading'"
-								>
-									Complete Form
-									<v-icon right dark>mdi-cloud-upload</v-icon>
-								</v-btn>
-							</div>
-						</v-col>
-				</div>
-				</v-row>
-			</v-container>
-			</div-->
-
-      <!--ul v-else-->
       <ul v-if="!files.length">
         <td colspan="7">
           <div class="text-center p-5">
@@ -59,7 +22,7 @@
             <div class="example-btn">
               <file-upload
                 class="btn btn-primary"
-                :post-action="url"
+                :post-action="urlPost"
                 :multiple="true"
                 :drop="true"
                 :drop-directory="true"
@@ -95,7 +58,6 @@
             </div>
 
             <div v-if="files.length">
-              <!--ul v-if="files.length"-->
               <ul class="file-list">
                 <li v-for="file in files" :key="file.id">
                   <span data-testid="name">{{ file.name }}</span> -
@@ -224,9 +186,8 @@
 
 <script>
   import FileUpload from "vue-upload-component";
-  import axios from "axios"
-	//import IDDForm from "@/components/Timesheet/IDDForm"
-	
+  import axios from "axios";
+
   export default {
     name: "file_uploader",
     components: {
@@ -242,10 +203,7 @@
       },
     },
     methods: {
-      types() {
-        this.uploadStatus = 1;
-        return 1;
-      },
+      //Checks if all of the files are ready to be submitted.
       check() {
         if (!this.files.length) return false;
 
@@ -265,31 +223,31 @@
       return {
         files: [],
         uploadStatus: 0,
-        url: "https://localhost:5004/ImageUpload",
-        urlGet: "https://localhost:5004/Timesheet/Ready",
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
-				fieldData: null
-        //url: process.env.VUE_APP_SERVER_URL.concat('ImageUpload/DocAsForm'),
+        urlGet: process.env.VUE_APP_SERVER_URL.concat("Timesheet/Ready"), //Retrieve timesheet
+        urlPost: process.env.VUE_APP_SERVER_URL.concat("ImageUpload/DocAsForm"), //Post AppServer
       };
     },
+    //Watches for the user to press submit.
     watch: {
       loader() {
         const l = this.loader;
         this[l] = !this[l];
-				var self = this;
+        var self = this;
 
-				axios.get(this.urlGet)
-					.then( function(response) {
-						self.$emit('success', response)
-					})
-					.catch(function (error) {
-						console.log(error)
-						self.$emit('error', error)
-					})
+        //Retrieves json response from timesheet.
+        axios
+          .get(this.urlGet)
+          .then(function (response) {
+            self.$emit("success", response["data"]);
+          })
+          .catch(function (error) {
+            console.log(error);
+            self.$emit("error", error);
+          });
 
         setTimeout(() => (this[l] = false), 3000);
-        
         this.loader = null;
       },
     },
