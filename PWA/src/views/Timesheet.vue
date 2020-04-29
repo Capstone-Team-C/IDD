@@ -9,28 +9,20 @@
       </v-col>
     </v-row>
 
-    <!-- Select to toggle between file upload submition and form submition -->
-    <v-row>
-      <v-col class="mx-9">
-        <v-select
-          clearable
-          label="Timesheet submission method:"
-          light
-          v-model="variant"
-          :items="items"
-        ></v-select>
-      </v-col>
-    </v-row>
-
-    <v-divider></v-divider>
-
     <!-- Render either file upload or form -->
     <v-row>
-      <v-col v-if="variant === 'Upload an image'">
+      <v-col v-if="fileStatus === 1 || fileStatus === 3">
         <FileUploader @error = "handleError($event)" @success = "fillForm($event)" />
+        <v-card v-if="fileStatus === 3" class="ma-5">
+          <v-card-title class="error white--text" 
+          >FILE UPLOAD ERROR!</v-card-title>
+          <v-card-text>
+            {{ errors }}
+          </v-card-text>
+        </v-card>
       </v-col>
 
-      <v-col v-else-if="variant === 'Fill out a form'">
+      <v-col v-else-if="fileStatus === 2">
         <IDDForm 
           :parsedFileData="parsedFileData"
         /> 
@@ -43,31 +35,40 @@
 import FileUploader from "@/components/Timesheet/FileUploader";
 import IDDForm from "@/components/Timesheet/IDDForm";
 
-// MOCK .json data
-import mock_json from "@/components/Timesheet/OR507_Example.json";
-
 export default {
   name: "Timesheet",
   components: {
     FileUploader,
     IDDForm,
   },
-  data: () => ({
-    // Choices for the select component
-    items: [
-      'Upload an image',
-      'Fill out a form',
-    ],
-    variant: 'default',
-    parsedFileData: mock_json
-  }),
+  data: function() {
+    return {
+      // The uploaded timesheet, as a .json of parsed values from the backend
+      parsedFileData: null,
+      
+      // Possible statuses of the uploading the form:
+      //   - 1 form not uploaded
+      //   - 2 form successfully uploaded
+      //   - 3 form unsuccessfully uploaded
+      // Props isn't going to work unless you define it in a diff file
+      fileStatus: 1,
+      
+      // Upload errors
+      errors: [],
+    };
+  },
 	methods: {
-		fillForm (response) {
-			console.log("in View")
-			console.log(response)
+    // Successfully received parsed .json from the backend
+		fillForm(response) {
+      // Save the parsed .json
+      this.parsedFileData = response; 
+
+      // Hide the image upload and display the pre-populated IDD form
+      this.fileStatus = 2;
 		},
-		handleError (error) {
-			console.log(error)
+		handleError(error) {
+      this.errors = error;
+      this.fileStatus = 3;
 		},
 	}
 }

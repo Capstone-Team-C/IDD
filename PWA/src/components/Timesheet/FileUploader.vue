@@ -277,7 +277,7 @@
       loader() {
         const l = this.loader;
         this[l] = !this[l];
-				var self = this
+				var self = this;
 
 				axios.get(this.urlGet)
 					.then( function(response) {
@@ -288,10 +288,8 @@
 						self.$emit('error', error)
 					})
 
-					
-
         setTimeout(() => (this[l] = false), 3000);
-
+        
         this.loader = null;
       },
     },
