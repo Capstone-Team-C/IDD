@@ -187,7 +187,6 @@
 <script>
   import FileUpload from "vue-upload-component";
   import axios from "axios"; 
-import test_json from "@/components/Timesheet/Other_Example.json";
 
   export default {
     name: "file_uploader",
