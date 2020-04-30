@@ -222,7 +222,6 @@
     data() {
       return {
         files: [],
-        uploadStatus: 0,
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
         urlGet: process.env.VUE_APP_SERVER_URL.concat("Timesheet/Ready"), //Retrieve timesheet
