@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import FileUploader from "@/components/Timesheet/FileUploader";
-import IDDForm from "@/components/Timesheet/IDDForm";
+  import FileUploader from "@/components/Timesheet/FileUploader";
+  import IDDForm from "@/components/Timesheet/IDDForm";
 
 export default {
   name: "Timesheet",
