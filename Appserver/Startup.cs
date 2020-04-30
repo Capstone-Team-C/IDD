@@ -46,11 +46,9 @@ namespace Appserver
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            //app.UseCors(builder =>
-              //builder.WithOrigins("http://iddpwa.azurewebsites.net"));
-
             app.UseCors(builder =>
-              builder.WithOrigins("http://localhost:8080"));
+              builder.WithOrigins("http://iddpwa.azurewebsites.net"));
+
 
             app.UseRouting();
 

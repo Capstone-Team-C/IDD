@@ -186,7 +186,7 @@
 
 <script>
   import FileUpload from "vue-upload-component";
-  import axios from "axios"; 
+  import axios from "axios";
 
   export default {
     name: "file_uploader",
