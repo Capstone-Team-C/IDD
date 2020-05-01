@@ -56,9 +56,9 @@ namespace AdminUI.Controllers
                                 "Provider Name: " + ts.ProviderName + "\n" +
                                 "Provider Num: " + ts.ProviderId + "\n" +
                                 "CM Organization: Multnomah Case Management\n" +
-                                "Form Type: " + ts.FormType + "\n" +
-                                "Service Goal: " + ts.ServiceGoal + "\n" +
-                                "Progress Notes: " + ts.ProgressNotes + "\n" +
+                                "Form Type: " + ts.FormType + "\n\n" +
+                                "Service Goal: " + ts.ServiceGoal + "\n\n" +
+                                "Progress Notes: " + ts.ProgressNotes + "\n\n" +
                                 "Submitted on: " + ts.Submitted + "\n";
 
 
@@ -168,7 +168,7 @@ namespace AdminUI.Controllers
             docRenderer.PrepareDocument();
 
             // Render the paragraph. You can render tables or shapes the same way.
-            docRenderer.RenderObject(gfx, XUnit.FromCentimeter(5), XUnit.FromCentimeter(10), "12cm", table);
+            docRenderer.RenderObject(gfx, XUnit.FromCentimeter(5), XUnit.FromCentimeter(13), "12cm", table);
 
 
 
