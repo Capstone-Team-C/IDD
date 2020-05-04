@@ -119,7 +119,7 @@
     }
     <div class="row">
         @{ 
-            int i = 1;
+            int i = 0;
             var side = "";
         }
         @foreach (var uri in Model.UriList)
@@ -127,7 +127,7 @@
             <div class="column">
                 <div class="container">
                     <a target="_blank" href="@Href(uri)">
-                        @if (i == 1) //This is assuming that the UriString has starts with the "front.png,back.png".
+                        @if (i == 0) //This is assuming that the UriString has starts with the "front.png,back.png".
                         {
                             side = "Front";
                         }
