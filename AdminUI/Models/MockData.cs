@@ -96,8 +96,7 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/2/20 1:45PM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriList = new List<string> { "~/images/timesheet-front.png", "~/images/timesheet-back.png" },
-                    UriString = "hi,hello,how are you",
+                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -139,8 +138,7 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/3/20 8:06AM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriList = new List<string> { "~/images/timesheet-front.png", "~/images/timesheet-back.png" },
-                    UriString = "hi,hello,how are you",
+                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -190,8 +188,7 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/4/20 5:13PM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriList = new List<string> { "~/images/timesheet-front.png", "~/images/timesheet-back.png" },
-                    UriString = "hi,hello,how are you",
+                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -241,8 +238,7 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/2/20 10:20AM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriList = new List<string> { "~/images/timesheet-front.png", "~/images/timesheet-back.png" },
-                    UriString = "hi,hello,how are you",
+                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -279,8 +275,7 @@ namespace AdminUI.Models
                         Submitted = DateTime.Parse("4/1/20 10:20AM"),
                         RejectionReason = "",
                         Status = "Pending",
-                        UriList = new List<string> { "~/images/timesheet-front.png", "~/images/timesheet-back.png" },
-                        UriString = "hi,hello,how are you",
+                        UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
                         TimeEntries = new List<TimeEntry>
                         {
                                 new TimeEntry
