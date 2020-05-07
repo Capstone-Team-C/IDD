@@ -1,5 +1,9 @@
 import {mount} from '@vue/test-utils'
+import Vue from 'vue';
+import Vuetify from 'vuetify';
 import ConfirmSubmission from '../../src/components/Timesheet/ConfirmSubmission.vue'
+
+Vue.use(Vuetify);
 
 describe('ConfirmSubmission', () => {
 
@@ -29,7 +33,7 @@ describe('ConfirmSubmission', () => {
 		expect(wrapper.find('#invalid').exists()).toBe(true)
 	})
 
-	//Given an valid form, and submit has been clicked, it should prompt them if they are sure they
+	//Given a valid form, and submit has been clicked, it should prompt them if they are sure they
 	//want to submit.
 	it('Should ask if user is sure they want to submit given valid form', () => {
 		const wrapper = mount(ConfirmSubmission, {

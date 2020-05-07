@@ -1,3 +1,5 @@
+import moment from 'vue-moment';
+
 let time_functions = {
   // Parses a time field like HH:mm AM/PM into an array of time sections
   parseTime(time) {
@@ -21,15 +23,16 @@ let time_functions = {
   // Compare two date fields like YYYY-mm-dd
   dateCompare(start, end) {
     if (!start || !end) return 1;
+    
+    var formattedStart = moment(start).format('YYYY-mm-dd');
+    var formattedEnd = moment(end).format('YYYY-mm-dd');
 
-    // start is after end
-    if (start > end) return 1;
+    if (moment().isSame(formattedStart, formattedEnd))
+      return 0;
 
-    // start is before end
-    if (start < end) return -1;
-
-    // star and end are the same days
-    return 0;
+    if (formattedStart.isBefore(formattedEnd))
+      return -1;
+    return 1;
   },
 
   // Find the difference between two time fields like [HH, mm, AM/PM]

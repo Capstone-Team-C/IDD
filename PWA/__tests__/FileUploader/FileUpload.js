@@ -1,7 +1,10 @@
-import {shallowMount} from '@vue/test-utils'
+import { shallowMount, mount } from '@vue/test-utils';
+import sinon from 'sinon';
+import Vue from 'vue';
+import Vuetify from 'vuetify';
 import FileUpload from '../../src/components/Timesheet/FileUploader.vue'
-import { mount } from '@vue/test-utils'
-import sinon from 'sinon'
+
+Vue.use(Vuetify);
 
 describe('FileUpload', () => {
 
