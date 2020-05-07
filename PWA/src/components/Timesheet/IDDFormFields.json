@@ -1,6 +1,6 @@
 {
-  "customerName": {
-    "counter": 25,
+  "clientName": {
+    "counter": 50,
     "disabled": false,
     "hint": "Full name",
     "label": "Customer Name",
@@ -24,14 +24,14 @@
     "value": null
   },
   "providerName": {
-    "counter": 25,
+    "counter": 50,
     "disabled": false,
     "hint": "Full name",
     "label": "Provider Name",
     "rules": ["required", "name"],
     "value": null
   },
-  "providerNumber": {
+  "providerNum": {
     "counter": 6,
     "disabled": false,
     "hint": "Six digit number found on xyz",
@@ -39,23 +39,23 @@
     "rules": ["required", "numeric"],
     "value": null
   },
-  "SC/PA Name": {
-    "counter": 25,
+  "scpaName": {
+    "counter": 50,
     "disabled": false,
     "hint": "Name of the SC PA person",
     "label": "SC/PA Name",
     "rules": ["required", "name"],
     "value": null
   },
-  "CMOrg": {
-    "counter": 50,
+  "brokerage": {
+    "counter": 100,
     "disabled": false,
     "hint": "Organization name",
     "label": "CM Organization",
     "rules": ["required", "name"],
     "value": null
   },
-  "service": {
+  "serviceAuthorized": {
     "counter": 100,
     "disabled": false,
     "hint": "Service provided",
@@ -63,7 +63,7 @@
     "rules": ["required", "name"],
     "value": null
   },
-  "serviceDeliveredOn": {
+  "timesheet": {
     "disabled": false,
     "value": null
   },

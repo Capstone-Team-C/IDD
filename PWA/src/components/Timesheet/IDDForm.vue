@@ -25,10 +25,10 @@
     <!-- Table containing timesheet  -->
     <v-card-text>
       <FormTable
-        v-model="formFields.serviceDeliveredOn.value"
-        v-bind="formFields.serviceDeliveredOn"
+        v-model="formFields.timesheet.value"
+        v-bind="formFields.timesheet"
         :reset="resetChild"
-        @disable-change="handleDisableChange('serviceDeliveredOn', $event)"
+        @disable-change="handleDisableChange('timesheet', $event)"
       />
     </v-card-text>
 
@@ -261,13 +261,13 @@
         this.validationSignal = !this.validationSignal;
       },
 
-      // Compute the sum of all serviceDeliveredOn totalHours with the totalHours field
+      // Compute the sum of all timesheet totalHours with the totalHours field
       sumTableHours() {
         var sumHours = 0;
         var sumMinutes = 0;
 
         // For each row in the array of entries...
-        this.formFields["serviceDeliveredOn"]["value"].forEach((entry) => {
+        this.formFields["timesheet"]["value"].forEach((entry) => {
           // Check that the totalHours field is valid
           if (entry["errors"]["totalHours"].length == 0) {
             sumHours += parseInt(entry["totalHours"].substr(0, 2));
@@ -280,10 +280,10 @@
         return sumHours.toString() + ":" + sumMinutes.toString();
       },
 
-      // Count the number of errors in the serviceDeliveredOn table
+      // Count the number of errors in the timesheet table
       getTableErrors() {
         // For each row in the array of entries...
-        this.formFields["serviceDeliveredOn"]["value"].forEach(
+        this.formFields["timesheet"]["value"].forEach(
           (entry, index) => {
             // For each error col in an entry, check the amount of errors
             Object.entries(entry["errors"]).forEach(([col, errors]) => {
@@ -292,7 +292,7 @@
                 this.errors.push([
                   `ERROR: in row ${
                     index + 1
-                  } of the serviceDeliveredOn table, '${col}' has the following errors:`,
+                  } of the timesheet table, '${col}' has the following errors:`,
                   errors,
                 ]);
               }
@@ -311,15 +311,15 @@
           this.errors.push("ERROR: Invalid input in some form fields!");
         }
 
-        // Check the validity of the serviceDeliveredOn table
+        // Check the validity of the timesheet table
         this.getTableErrors();
 
-        // Ensure that the serviceDeliveredOn table sum == totalHours field
+        // Ensure that the timesheet table sum == totalHours field
         if (this.formFields.totalHours.value !== null) {
           var sumHours = this.sumTableHours();
           if (sumHours.localeCompare(this.formFields.totalHours.value) !== 0) {
             this.errors.push(
-              `ERROR: valid rows in the serviceDeliveredOn table sums up to ${sumHours} hours, but the totalHours field reports ${this.formFields.totalHours.value} hours!`
+              `ERROR: valid rows in the timesheet table sums up to ${sumHours} hours, but the totalHours field reports ${this.formFields.totalHours.value} hours!`
             );
           }
         }
@@ -352,10 +352,10 @@
             );
           }
 
-          // Get the last date from the serviceDeliveredOn table
-          var latestDateIdx = this.formFields.serviceDeliveredOn.value.length;
+          // Get the last date from the timesheet table
+          var latestDateIdx = this.formFields.timesheet.value.length;
           if (latestDateIdx > 0) {
-            var latestDate = this.formFields.serviceDeliveredOn.value[
+            var latestDate = this.formFields.timesheet.value[
               latestDateIdx - 1
             ]["date"];
             if (time_functions.dateCompare(comparisonDate, latestDate) < 0) {

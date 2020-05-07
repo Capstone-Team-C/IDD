@@ -89,8 +89,8 @@
                   class="py-0 my-0"
                   v-for="field in [
                     'date',
-                    'startTime',
-                    'endTime',
+                    'starttime',
+                    'endtime',
                     'totalHours',
                   ]"
                   :key="field"
@@ -140,15 +140,15 @@
       </v-container>
     </template>
 
-    <template v-slot:item.startTime="{ item }">
-      <v-container flat :class="getColor(item.errors, 'startTime')">
-        {{ item.startTime }}
+    <template v-slot:item.starttime="{ item }">
+      <v-container flat :class="getColor(item.errors, 'starttime')">
+        {{ item.starttime }}
       </v-container>
     </template>
 
-    <template v-slot:item.endTime="{ item }">
-      <v-container flat :class="getColor(item.errors, 'endTime')">
-        {{ item.endTime }}
+    <template v-slot:item.endtime="{ item }">
+      <v-container flat :class="getColor(item.errors, 'endtime')">
+        {{ item.endtime }}
       </v-container>
     </template>
 
@@ -239,7 +239,7 @@
             label: "Date",
             rules: rules["required"].concat(rules["date"], rules.maxLength(10)),
           },
-          startTime: {
+          starttime: {
             counter: 8,
             disabled: false,
             hint: "HH:mm AM/PM",
@@ -249,7 +249,7 @@
               rules.maxLength(8)
             ),
           },
-          endTime: {
+          endtime: {
             counter: 8,
             disabled: false,
             hint: "HH:mm AM/PM",
@@ -274,8 +274,8 @@
         // Column headers and associated values for the table
         headers: [
           { text: "Date", align: "start", value: "date", sortable: false },
-          { text: "Start/Time IN", value: "startTime", sortable: false },
-          { text: "End/Time OUT", value: "endTime", sortable: false },
+          { text: "Start/Time IN", value: "starttime", sortable: false },
+          { text: "End/Time OUT", value: "endtime", sortable: false },
           { text: "Total Hours", value: "totalHours", sortable: false },
           { text: "Group?", value: "group", sortable: false },
           { text: "Actions", value: "actions", sortable: false },
@@ -314,8 +314,8 @@
         // saving changes to that row
         editedItem: {
           date: "",
-          startTime: "",
-          endTime: "",
+          starttime: "",
+          endtime: "",
           totalHours: "",
           group: "No",
           disabled: false,
@@ -553,7 +553,7 @@
       validate() {
         var ret = 0;
         // The columns to check for validation (ex. exclude action, group)
-        var cols = ["date", "startTime", "endTime", "totalHours"];
+        var cols = ["date", "starttime", "endtime", "totalHours"];
 
         // First check that each field has a valid value
         this.allEntries.forEach((entry) => {
@@ -577,15 +577,15 @@
         this.allEntries.forEach((entry) => {
           // If the start and end times are valid, begin parsing
           if (
-            entry["errors"]["startTime"].length === 0 &&
-            entry["errors"]["endTime"].length === 0
+            entry["errors"]["starttime"].length === 0 &&
+            entry["errors"]["endtime"].length === 0
           ) {
             var timeDifference = [0, 0]; // HH:mm
             var err = [0, 0]; // start & end; totalHours
 
             // Parse the times into a comparable format
-            var start = time_functions.parseTime(entry["startTime"]);
-            var end = time_functions.parseTime(entry["endTime"]);
+            var start = time_functions.parseTime(entry["starttime"]);
+            var end = time_functions.parseTime(entry["endtime"]);
             var total = time_functions.parseTime(entry["totalHours"]);
 
             // Check that the total hours field is correctly calculated
@@ -604,8 +604,8 @@
 
             // Create error messages
             if (err[0]) {
-              entry["errors"]["startTime"].push("Invalid time interval");
-              entry["errors"]["endTime"].push("Invalid time interval");
+              entry["errors"]["starttime"].push("Invalid time interval");
+              entry["errors"]["endtime"].push("Invalid time interval");
             }
             if (err[1]) {
               entry["errors"]["totalHours"].push("Incorrect calculation");
@@ -623,16 +623,16 @@
       // Adds errors to rows with overlapping date time entries
       sortDateTime(a, b) {
         // The columns to check for validation (ex. exclude action, group)
-        var cols = ["date", "startTime", "endTime", "totalHours"];
+        var cols = ["date", "starttime", "endtime", "totalHours"];
 
         // Sort by date
         var dateComparison = time_functions.dateCompare(a.date, b.date);
         if (dateComparison !== 0) return dateComparison;
 
         // Dates are the same, sort by time such that a < b
-        var aStart = time_functions.parseTime(a.startTime);
-        var aEnd = time_functions.parseTime(a.endTime);
-        var bStart = time_functions.parseTime(b.startTime);
+        var aStart = time_functions.parseTime(a.starttime);
+        var aEnd = time_functions.parseTime(a.endtime);
+        var bStart = time_functions.parseTime(b.starttime);
         var timeDiff = time_functions.subtractTime(aStart, bStart);
         var order = 1;
 
@@ -642,7 +642,7 @@
         }
 
         // If a and b start or end at the same time, error
-        if (a.startTime === b.startTime || a.endTime === b.endTime) {
+        if (a.starttime === b.starttime || a.endtime === b.endtime) {
           cols.forEach((col) => {
             a["errors"][col].push("Start or end time already exists!");
             b["errors"][col].push("Start or end time already exists!");
