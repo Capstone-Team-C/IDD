@@ -9,3 +9,4 @@ test('Invalid dates should return a 0', () => {
   expect(time_functions.dateCompare(a, b)).toBe(1)
 })
 
+
