@@ -223,7 +223,7 @@
         reSigned: [],
 
         //URL for the AppServer
-        url: process.env.VUE_APP_SERVER_URL.concat("Submit"),
+        url: process.env.VUE_APP_SERVER_URL.concat("Timesheet/Submit"),
       };
     },
 
