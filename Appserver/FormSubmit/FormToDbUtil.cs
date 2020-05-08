@@ -141,8 +141,7 @@ namespace IDD
             foreach(PWAserviceDeliveredListVals lsv in pwasub.serviceDeliveredOn.value)
             {
                 string s = lsv.totalHours.Replace(':', '.');
-                float f = float.Parse(s);
-                tsf.addTimeRow(lsv.date, lsv.startTime, lsv.endTime, f, 2);
+                tsf.addTimeRow(lsv.date, lsv.startTime, lsv.endTime, s, "true");
             }
 
             return tsf;
@@ -166,7 +165,14 @@ namespace IDD
                 {
                     x.Date = DateTime.Now;
                 }
-                x.Hours = tsri.totalHours;
+                try
+                {
+                    x.Hours = float.Parse(tsri.totalHours);
+                }
+                catch (FormatException)
+                {
+                    x.Hours = 0;
+                }
                 totalHours += x.Hours;
 
                 // Assume Group field is 'N'
