@@ -271,8 +271,8 @@
           submitData[key]["wasEdited"] = !value["disabled"];
         });
 
-        submitData["serviceDeliveredOn"]["value"] = [];
-        Object.entries(this.formFields["serviceDeliveredOn"]["value"]).forEach(
+        submitData["timesheet"]["value"] = [];
+        Object.entries(this.formFields["timesheet"]["value"]).forEach(
           ([key, value]) => {
             key;
             var row = {};
@@ -283,7 +283,7 @@
             });
             row["wasEdited"] = !value["disabled"];
 
-            submitData["serviceDeliveredOn"]["value"].push(row);
+            submitData["timesheet"]["value"].push(row);
           }
         );
 

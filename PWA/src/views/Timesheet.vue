@@ -11,12 +11,12 @@
 
     <!-- Render either file upload or form -->
     <v-row>
-      <v-col v-if="fileStatus === 1 || fileStatus === 3">
+      <v-col v-if="fileStatus === FILE_INIT || fileStatus === FILE_FAILURE">
         <FileUploader
           @error="handleError($event)"
           @success="fillForm($event)"
         />
-        <v-card v-if="fileStatus === 3" class="ma-5">
+        <v-card v-if="fileStatus === FILE_FAILURE" class="ma-5">
           <v-card-title class="error white--text"
             >FILE UPLOAD ERROR!</v-card-title
           >
@@ -26,8 +26,8 @@
         </v-card>
       </v-col>
 
-      <v-col v-else-if="fileStatus === 2">
-        <IDDForm :parsedFileData="parsedFileData" />
+      <v-col v-else-if="fileStatus === FILE_SUCCESS">
+        <IDDForm :parsedFileData="parsedFileData"/>
       </v-col>
     </v-row>
   </div>
@@ -36,7 +36,7 @@
 <script>
   import FileUploader from "@/components/Timesheet/FileUploader";
   import IDDForm from "@/components/Timesheet/IDDForm";
-
+  
   export default {
     name: "Timesheet",
     components: {
@@ -44,16 +44,19 @@
       IDDForm,
     },
     data: function () {
+      const FILE_INIT = 1;
+      const FILE_SUCCESS = 2;
+      const FILE_FAILURE = 3;
+
       return {
         // The uploaded timesheet, as a .json of parsed values from the backend
         parsedFileData: null,
 
-        // Possible statuses of the uploading the form:
-        //   - 1 form not uploaded
-        //   - 2 form successfully uploaded
-        //   - 3 form unsuccessfully uploaded
-        // Props isn't going to work unless you define it in a diff file
-        fileStatus: 1,
+        // Possible statuses of the uploading the form
+        FILE_INIT: FILE_INIT,
+        FILE_SUCCESS: FILE_SUCCESS,
+        FILE_FAILURE: FILE_FAILURE,
+        fileStatus: FILE_INIT,
 
         // Upload errors
         errors: [],
@@ -66,11 +69,11 @@
         this.parsedFileData = response;
 
         // Hide the image upload and display the pre-populated IDD form
-        this.fileStatus = 2;
+        this.fileStatus = this.FILE_SUCCESS;
       },
       handleError(error) {
         this.errors = error;
-        this.fileStatus = 3;
+        this.fileStatus = this.FILE_FAILURE;
       },
     },
   };

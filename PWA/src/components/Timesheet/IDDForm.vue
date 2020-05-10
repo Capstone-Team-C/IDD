@@ -6,17 +6,18 @@
 
     <FormField
       v-for="field in [
-        'customerName',
+        'clientName',
         'prime',
         'submissionDate',
         'providerName',
-        'providerNumber',
-        'SC/PA Name',
-        'CMOrg',
-        'service',
+        'providerNum',
+        'scpaName',
+        'brokerage',
+        'serviceAuthorized',
       ]"
       v-model="formFields[field].value"
       v-bind="formFields[field]"
+      :willResign="willResign"
       :key="field"
       :reset="resetChild"
       @disable-change="handleDisableChange(field, $event)"
@@ -28,18 +29,15 @@
         v-model="formFields.timesheet.value"
         v-bind="formFields.timesheet"
         :reset="resetChild"
+        :totalHours="totalHours"
+        :willResign="willResign"
+        @update-totalHours="totalHours = $event"
         @disable-change="handleDisableChange('timesheet', $event)"
       />
     </v-card-text>
 
     <!-- totalHours -->
-    <FormField
-      v-model="formFields.totalHours.value"
-      v-bind="formFields.totalHours"
-      :reset="resetChild"
-      @disable-change="handleDisableChange('totalHours', $event)"
-    />
-
+    Total Hours: {{ totalHours }}
     <hr />
 
     <p class="title">
@@ -50,6 +48,7 @@
       v-for="field in ['serviceGoal', 'progressNotes']"
       v-model="formFields[field].value"
       v-bind="formFields[field]"
+      :willResign="willResign"
       :key="field"
       :reset="resetChild"
       @disable-change="handleDisableChange(field, $event)"
@@ -73,6 +72,7 @@
       v-for="field in ['employerSignature', 'employerSignDate']"
       v-model="formFields[field].value"
       v-bind="formFields[field]"
+      :willResign="willResign"
       :key="field"
       :reset="resetChild"
       @disable-change="handleDisableChange(field, $event)"
@@ -99,6 +99,7 @@
       v-for="field in ['providerSignature', 'providerSignDate']"
       v-model="formFields[field].value"
       v-bind="formFields[field]"
+      :willResign="willResign"
       :key="field"
       :reset="resetChild"
       @disable-change="handleDisableChange(field, $event)"
@@ -109,9 +110,10 @@
 
     <strong class="subtitle-1">
       <FormField
-        v-for="field in ['authorization', 'providerInitials']"
+        v-for="field in ['authorization', 'approval']"
         v-model="formFields[field].value"
         v-bind="formFields[field]"
+        :willResign="willResign"
         :key="field"
         :reset="resetChild"
         @disable-change="handleDisableChange(field, $event)"
@@ -150,7 +152,7 @@
   import ConfirmSubmission from "@/components/Timesheet/ConfirmSubmission";
   import fieldData from "@/components/Timesheet/IDDFormFields.json";
   import rules from "@/components/Timesheet/FormRules.js";
-  import time_functions from "@/components/Timesheet/TimeFunctions.js";
+  import { subtractTime, YEAR_MONTH_DAY, YEAR_MONTH } from "@/components/Timesheet/TimeFunctions.js";
 
   export default {
     name: "IDDForm",
@@ -172,7 +174,6 @@
     // IDD Timesheet form field
     created: function () {
       this.initialize();
-
       // Bind validation rules to each field that has a 'rules' string
       // specified
       Object.entries(fieldData).forEach(([key, value]) => {
@@ -205,6 +206,8 @@
         // The amount of parsed fields that were edited
         totalEdited: 0,
 
+        totalHours: "00:00",
+
         // Hide form validation error messages by default
         valid: true,
 
@@ -213,6 +216,8 @@
 
         // Signal denoting completion of validation for form fields
         validationSignal: false,
+
+        willResign: false,
       };
     },
 
@@ -226,6 +231,7 @@
       initialize() {
         // Initialize some fields
         this.totalEdited = 0;
+        this.willResign = false;
 
         // Bind data from a .json IDD timesheet to form fields
         if (this.entries !== null) {
@@ -259,25 +265,6 @@
 
         // Change this field to validation signal ConfirmSubmission
         this.validationSignal = !this.validationSignal;
-      },
-
-      // Compute the sum of all timesheet totalHours with the totalHours field
-      sumTableHours() {
-        var sumHours = 0;
-        var sumMinutes = 0;
-
-        // For each row in the array of entries...
-        this.formFields["timesheet"]["value"].forEach((entry) => {
-          // Check that the totalHours field is valid
-          if (entry["errors"]["totalHours"].length == 0) {
-            sumHours += parseInt(entry["totalHours"].substr(0, 2));
-            sumMinutes += parseInt(entry["totalHours"].substr(3, 2));
-          }
-        });
-        sumHours += (sumMinutes - (sumMinutes % 60)) / 60;
-        sumMinutes %= 60;
-
-        return sumHours.toString() + ":" + sumMinutes.toString();
       },
 
       // Count the number of errors in the timesheet table
@@ -314,39 +301,28 @@
         // Check the validity of the timesheet table
         this.getTableErrors();
 
-        // Ensure that the timesheet table sum == totalHours field
-        if (this.formFields.totalHours.value !== null) {
-          var sumHours = this.sumTableHours();
-          if (sumHours.localeCompare(this.formFields.totalHours.value) !== 0) {
-            this.errors.push(
-              `ERROR: valid rows in the timesheet table sums up to ${sumHours} hours, but the totalHours field reports ${this.formFields.totalHours.value} hours!`
-            );
-          }
-        }
-
         // If there were no edited fields, ensure that the provider and
         // employer signature date are after the last service date
         if (this.totalEdited <= 0) {
           // Only compare the earlier date
           var comparisonDate = this.formFields.providerSignDate.value;
           if (
-            time_functions.dateCompare(
+            subtractTime(
               comparisonDate,
-              this.formFields.employerSignDate.value
-            ) > 0
+              this.formFields.employerSignDate.value,
+              YEAR_MONTH_DAY
+            ) < 0
           ) {
             comparisonDate = this.formFields.employerSignDate.value;
           }
 
           // Compare signage dates with the pay period
-          // Note, only comparing the YYYY-mm part
           var submissionDate = this.formFields.submissionDate.value;
-          if (
-            time_functions.dateCompare(
-              comparisonDate.substr(0, 7),
-              submissionDate
-            ) < 0
-          ) {
+          var submissionDiff = subtractTime(
+                comparisonDate.substr(0, 7), 
+                submissionDate, 
+                YEAR_MONTH);
+          if (submissionDiff < 0) {
             this.errors.push(
               `ERROR: the employer or provider sign date is before the pay period.`
             );
@@ -358,7 +334,7 @@
             var latestDate = this.formFields.timesheet.value[
               latestDateIdx - 1
             ]["date"];
-            if (time_functions.dateCompare(comparisonDate, latestDate) < 0) {
+            if (subtractTime(latestDate, comparisonDate, YEAR_MONTH_DAY) < 0) {
               this.errors.push(
                 `ERROR: the employer or provider sign date is before the latest service delivery date.`
               );
@@ -397,6 +373,7 @@
       handleDisableChange(fieldName, amtEdited) {
         if (amtEdited > 0) {
           this.formFields[fieldName].disabled = true;
+          this.willResign = true;
         } else {
           this.formFields[fieldName].disabled = false;
         }

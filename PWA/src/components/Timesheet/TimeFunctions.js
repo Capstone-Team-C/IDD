@@ -1,83 +1,57 @@
-import moment from 'vue-moment';
+var moment = require('moment');
+var momentDurationFormatSetup = require("moment-duration-format");
+momentDurationFormatSetup(moment);
 
-let time_functions = {
-  // Parses a time field like HH:mm AM/PM into an array of time sections
-  parseTime(time) {
-    var ret = [];
+export const FULL_DATE = "YYYY-MM-DD HH:mm A";
+export const YEAR_MONTH_DAY = "YYYY-MM-DD";
+export const YEAR_MONTH = "YYYY-MM";
+export const TIME_12 = "HH:mm A";
+export const TIME_24 = "HH:mm";
+export const ERROR = -0;
 
-    // Check that time is long enough
-    if (!time) return null;
-    if (time.length < 5) return null;
+/**
+ *
+ * description
+ * Paramters
+ *      paratmer: <type> - description of parameter
+ * Parameter 1
+ * Parameter 2
+ * Returns
+ *      return value
+ *
+ * 
+ *
+ * */
+// Compare two date fields like YYYY-MM-DD
+// Find the difference in milliseconds between two time fields
+export const subtractTime = (start, end, format) => {
+  if (start == undefined || end == undefined || format == undefined) return ERROR; 
+  
+  const formattedStart = moment(start, format, true);
+  const formattedEnd = moment(end, format, true);
+  
+  if (!formattedStart.isValid() || !formattedEnd.isValid()){
+    return ERROR;
+  }
+  
+  const difference = moment.duration(formattedEnd.diff(formattedStart));
+  if (difference === 0) {
+    return 0;
+  }
 
-    // Separate the HH:mm part
-    ret.push(parseInt(time.substr(0, 2)));
-    ret.push(parseInt(time.substr(3, 2)));
+  return difference.asMilliseconds();
+}
 
-    // Separate the AM/PM part if it exists
-    if (time.length > 5) {
-      ret.push(time.substr(6, 2));
-    }
-    return ret;
-  },
 
-  // Compare two date fields like YYYY-mm-dd
-  dateCompare(start, end) {
-    if (!start || !end) return 1;
-    
-    var formattedStart = moment(start).format('YYYY-mm-dd');
-    var formattedEnd = moment(end).format('YYYY-mm-dd');
 
-    if (moment().isSame(formattedStart, formattedEnd))
-      return 0;
-
-    if (formattedStart.isBefore(formattedEnd))
-      return -1;
-    return 1;
-  },
-
-  // Find the difference between two time fields like [HH, mm, AM/PM]
-  subtractTime(a, b) {
-    var start = a.slice();
-    var end = b.slice();
-    var ret = [0, 0];
-
-    // Check that a and b are valid
-    if (!start || !end) return 0;
-
-    // If add 12 hours to fields with PM
-    if (start.length === 3 && start[2] === "PM") start[0] += 12;
-    if (end.length === 3 && end[2] === "PM") end[0] += 12;
-
-    // Calculate the time difference
-    var ret_hr = 0;
-    var ret_min = 0;
-    ret_hr = end[0] - start[0];
-
-    if (ret_hr > 0) {
-      // start is earlier than end; start->end minutes
-      ret_min = 60 - start[1] + end[1];
-      ret_hr -= 1;
-      if (ret_min >= 60) {
-        ret_hr += 1;
-        ret_min -= 60;
-      }
-    } else if (ret_hr < 0) {
-      // start is later than end; end->start minutes
-      ret_min = 60 - end[1] + start[1];
-      ret_hr -= 1;
-      if (ret_min >= 60) {
-        ret_hr += 1;
-        ret_min -= 60;
-      }
-      ret_min *= -1;
-    } else {
-      // start and end are in the same hour
-      ret_min = end[1] - start[1];
-    }
-    ret[0] = ret_hr;
-    ret[1] = ret_min;
-    return ret;
-  },
-};
-
-export default time_functions;
+// Convert milliseconds to a certain format
+export const milliToFormat = (milli, format) => {
+  if (milli == undefined) return ERROR;
+  let ret = "";  
+  if (milli < 0) ret += "-";
+  
+  const dur = moment.duration(Math.abs(milli));
+  ret += dur.format(format, { trim: false, useGrouping: false }); 
+  
+  return ret;
+}
