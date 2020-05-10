@@ -29,6 +29,7 @@
                 :maximum="2"
                 :size="1024 * 1024 * 10"
                 accept="image/*, application/pdf"
+								@input-file="inputFile"
                 v-model="files"
                 ref="upload"
               >
@@ -79,7 +80,7 @@
                   :disabled="loading"
                   color="blue-grey"
                   class="ma-2 white-text"
-                  @click="loader = 'loading'"
+                  @click="loader = loading"
                 >
                   Complete Form
                   <v-icon right dark>mdi-cloud-upload</v-icon>
@@ -207,8 +208,8 @@
       check() {
         if (!this.files.length) return false;
 
-        var count = 0;
-        var x;
+        let count = 0;
+        let x;
         for (x in this.files) {
           if (this.files[x].success == true) count += 1;
         }
@@ -218,13 +219,31 @@
           return false;
         }
       },
+			inputFile: function (newFile, oldFile) {
+				let jsonResponse
+				if(newFile.xhr){
+					//console.log('input file response data', newFile.xhr.response)
+					jsonResponse = JSON.parse(newFile.xhr.response)
+					//console.log("response id", jsonResponse["id"])
+					this.urlResponse = jsonResponse["id"]
+			}
+
+
+				if (newFile && oldFile && !newFile.active && oldFile.active)
+					if (newFile.xhr) {
+						jsonResponse = JSON.parse(newFile.xhr.response)
+						this.urlResponse = jsonResponse["id"]
+				}
+			},
     },
     data() {
       return {
         files: [],
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
-        urlGet: process.env.VUE_APP_SERVER_URL.concat("Timesheet/Ready"), //Retrieve timesheet
+				urlResponse: 0,
+				getUpdated: false,
+        urlGet: process.env.VUE_APP_SERVER_URL.concat("Timesheet/ReadyTest?id="), //Retrieve timesheet
         urlPost: process.env.VUE_APP_SERVER_URL.concat("ImageUpload/DocAsForm"), //Post AppServer
       };
     },
@@ -233,9 +252,14 @@
       loader() {
         const l = this.loader;
         this[l] = !this[l];
-        var self = this;
+        let self = this;
 
         //Retrieves json response from timesheet.
+				console.log("Response id", this.urlResponse)
+				if(!this.getUpdated)
+					this.urlGet = this.urlGet.concat(this.urlResponse)
+          this.getUpdated=true
+
         axios
           .get(this.urlGet)
           .then(function (response) {
@@ -246,7 +270,7 @@
             self.$emit("error", error);
           });
 
-        setTimeout(() => (this[l] = false), 3000);
+        setTimeout(() => (this[l] = false), 30000);
         this.loader = null;
       },
     },
