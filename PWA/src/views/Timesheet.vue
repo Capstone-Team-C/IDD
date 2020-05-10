@@ -27,7 +27,7 @@
       </v-col>
 
       <v-col v-else-if="fileStatus === FILE_SUCCESS">
-        <IDDForm :parsedFileData="parsedFileData"/>
+        <IDDForm :parsedFileData="parsedFileData" />
       </v-col>
     </v-row>
   </div>
@@ -36,7 +36,7 @@
 <script>
   import FileUploader from "@/components/Timesheet/FileUploader";
   import IDDForm from "@/components/Timesheet/IDDForm";
-  
+
   export default {
     name: "Timesheet",
     components: {

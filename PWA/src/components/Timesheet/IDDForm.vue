@@ -152,7 +152,11 @@
   import ConfirmSubmission from "@/components/Timesheet/ConfirmSubmission";
   import fieldData from "@/components/Timesheet/IDDFormFields.json";
   import rules from "@/components/Timesheet/FormRules.js";
-  import { subtractTime, YEAR_MONTH_DAY, YEAR_MONTH } from "@/components/Timesheet/TimeFunctions.js";
+  import {
+    subtractTime,
+    YEAR_MONTH_DAY,
+    YEAR_MONTH,
+  } from "@/components/Timesheet/TimeFunctions.js";
 
   export default {
     name: "IDDForm",
@@ -270,22 +274,20 @@
       // Count the number of errors in the timesheet table
       getTableErrors() {
         // For each row in the array of entries...
-        this.formFields["timesheet"]["value"].forEach(
-          (entry, index) => {
-            // For each error col in an entry, check the amount of errors
-            Object.entries(entry["errors"]).forEach(([col, errors]) => {
-              var colErrors = errors.length;
-              if (colErrors > 0) {
-                this.errors.push([
-                  `ERROR: in row ${
-                    index + 1
-                  } of the timesheet table, '${col}' has the following errors:`,
-                  errors,
-                ]);
-              }
-            });
-          }
-        );
+        this.formFields["timesheet"]["value"].forEach((entry, index) => {
+          // For each error col in an entry, check the amount of errors
+          Object.entries(entry["errors"]).forEach(([col, errors]) => {
+            var colErrors = errors.length;
+            if (colErrors > 0) {
+              this.errors.push([
+                `ERROR: in row ${
+                  index + 1
+                } of the timesheet table, '${col}' has the following errors:`,
+                errors,
+              ]);
+            }
+          });
+        });
       },
 
       // Validate the form
@@ -319,9 +321,10 @@
           // Compare signage dates with the pay period
           var submissionDate = this.formFields.submissionDate.value;
           var submissionDiff = subtractTime(
-                comparisonDate.substr(0, 7), 
-                submissionDate, 
-                YEAR_MONTH);
+            comparisonDate.substr(0, 7),
+            submissionDate,
+            YEAR_MONTH
+          );
           if (submissionDiff < 0) {
             this.errors.push(
               `ERROR: the employer or provider sign date is before the pay period.`
@@ -331,9 +334,9 @@
           // Get the last date from the timesheet table
           var latestDateIdx = this.formFields.timesheet.value.length;
           if (latestDateIdx > 0) {
-            var latestDate = this.formFields.timesheet.value[
-              latestDateIdx - 1
-            ]["date"];
+            var latestDate = this.formFields.timesheet.value[latestDateIdx - 1][
+              "date"
+            ];
             if (subtractTime(latestDate, comparisonDate, YEAR_MONTH_DAY) < 0) {
               this.errors.push(
                 `ERROR: the employer or provider sign date is before the latest service delivery date.`

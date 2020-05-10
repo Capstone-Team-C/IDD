@@ -87,11 +87,7 @@
               <v-container>
                 <v-row
                   class="py-0 my-0"
-                  v-for="field in [
-                    'date',
-                    'starttime',
-                    'endtime',
-                  ]"
+                  v-for="field in ['date', 'starttime', 'endtime']"
                   :key="field"
                 >
                   <FormField
@@ -99,7 +95,7 @@
                     v-model="editedItem[field]"
                   />
                 </v-row>
-                
+
                 <v-row class="py-0 my-0">
                   Total Hours: {{ editedItemTotalHours }}
                 </v-row>
@@ -197,10 +193,14 @@
   import FormField from "@/components/Timesheet/FormField";
   import FormTableFields from "@/components/Timesheet/FormTableFields.json";
   import rules from "@/components/Timesheet/FormRules.js";
-  import { subtractTime, milliToFormat, FULL_DATE,
-           TIME_12, TIME_24 
-          } from "@/components/Timesheet/TimeFunctions.js";
-  var moment = require('moment');
+  import {
+    subtractTime,
+    milliToFormat,
+    FULL_DATE,
+    TIME_12,
+    TIME_24,
+  } from "@/components/Timesheet/TimeFunctions.js";
+  var moment = require("moment");
 
   export default {
     name: "FormTable",
@@ -322,23 +322,27 @@
     created: function () {
       // Bind validation rules to each field that has a 'rules' string
       // specified
-      Object.entries(FormTableFields["colValidation"]).forEach(([key, value]) => {
-        if ("rules" in value) {
-          var _rules = value.rules;
-          this.$set(FormTableFields["colValidation"][key], "rules", []);
-          _rules.forEach((fieldRule) => {
-            // Not using the spread operator for IE compatibility
-            FormTableFields["colValidation"][key].rules.push.apply(
-              FormTableFields["colValidation"][key].rules,
-              rules[fieldRule]
-            );
-          });
+      Object.entries(FormTableFields["colValidation"]).forEach(
+        ([key, value]) => {
+          if ("rules" in value) {
+            var _rules = value.rules;
+            this.$set(FormTableFields["colValidation"][key], "rules", []);
+            _rules.forEach((fieldRule) => {
+              // Not using the spread operator for IE compatibility
+              FormTableFields["colValidation"][key].rules.push.apply(
+                FormTableFields["colValidation"][key].rules,
+                rules[fieldRule]
+              );
+            });
 
-          if (FormTableFields["colValidation"][key].counter) {
-            FormTableFields["colValidation"][key].rules.push(rules.maxLength(FormTableFields["colValidation"][key].counter));
+            if (FormTableFields["colValidation"][key].counter) {
+              FormTableFields["colValidation"][key].rules.push(
+                rules.maxLength(FormTableFields["colValidation"][key].counter)
+              );
+            }
           }
         }
-      });
+      );
       this.initialize();
       this.validate();
     },
@@ -373,7 +377,7 @@
                 );
               }
             });
-              
+
             // If there was a start and an end time, calculate totalHours
             var start = obj["parsedValue"]["starttime"];
             var end = obj["parsedValue"]["endtime"];
@@ -585,7 +589,7 @@
             }
           });
         });
-        
+
         // Next, check that the end time is after the start time
         this.allEntries.forEach((entry) => {
           // If the start and end times are valid, begin parsing
@@ -596,12 +600,14 @@
             var start = entry["starttime"];
             var end = entry["endtime"];
             var timeDiff = subtractTime(start, end, TIME_12);
-            if (timeDiff <= 0) {  
+            if (timeDiff <= 0) {
               entry["errors"]["starttime"].push("Invalid time interval");
               entry["errors"]["endtime"].push("Invalid time interval");
             }
 
-            var formatTimeDiff = moment.duration({"minutes": timeDiff}).format(TIME_24);
+            var formatTimeDiff = moment
+              .duration({ minutes: timeDiff })
+              .format(TIME_24);
             if (formatTimeDiff.localeCompare(entry["totalHours"]) === 0) {
               entry["errors"]["totalHours"].push("Invalid calculation");
             }
@@ -609,35 +615,34 @@
         });
 
         // Sort by date & time to check for overlapping time entries
-        this.allEntries.sort((start, end) => 
-          -1 * subtractTime(
-            start["date"] + " " + start["starttime"], 
-            end["date"] + " " + end["starttime"], 
-            FULL_DATE
-          )
+        this.allEntries.sort(
+          (start, end) =>
+            -1 *
+            subtractTime(
+              start["date"] + " " + start["starttime"],
+              end["date"] + " " + end["starttime"],
+              FULL_DATE
+            )
         );
         this.checkOverlapping();
 
         // Calculate the totalHours
         this.allTotalHours = this.sumTableHours();
-        this.$emit('update-totalHours', this.allTotalHours);
-         
+        this.$emit("update-totalHours", this.allTotalHours);
 
-        // Count up the amount of errors 
+        // Count up the amount of errors
         // For each row in the array of entries...
-        this.allEntries.forEach(
-          (entry, index) => {
-            index;
-            // For each error col in an entry, check the amount of errors
-            Object.entries(entry["errors"]).forEach(([col, errors]) => {
-              col;
-              if (errors.length > 0) {
-                amtErrors += 1;
-              }
-            });
-          }
-        );
-        
+        this.allEntries.forEach((entry, index) => {
+          index;
+          // For each error col in an entry, check the amount of errors
+          Object.entries(entry["errors"]).forEach(([col, errors]) => {
+            col;
+            if (errors.length > 0) {
+              amtErrors += 1;
+            }
+          });
+        });
+
         return amtErrors;
       },
 
@@ -645,23 +650,22 @@
         var ret = 0;
         var prev_end = null;
 
-        this.allEntries.forEach(
-          (entry, index) => {
-            var start = entry["date"] + " " + entry["starttime"];
-            var end = entry["date"] + " " + entry["endtime"];
-            
-            if (index !== 0) {
-              // If the start is before the end of the prev's end, there is an overlap
-              var timeDiff = subtractTime(prev_end, start, FULL_DATE);
-              if (timeDiff <= 0) {  
-                ret += 1;
-                entry["errors"]["starttime"].push("Invalid time interval");
-                entry["errors"]["endtime"].push("Invalid time interval");
-              }
-            }
+        this.allEntries.forEach((entry, index) => {
+          var start = entry["date"] + " " + entry["starttime"];
+          var end = entry["date"] + " " + entry["endtime"];
 
-            prev_end = end;
-          });
+          if (index !== 0) {
+            // If the start is before the end of the prev's end, there is an overlap
+            var timeDiff = subtractTime(prev_end, start, FULL_DATE);
+            if (timeDiff <= 0) {
+              ret += 1;
+              entry["errors"]["starttime"].push("Invalid time interval");
+              entry["errors"]["endtime"].push("Invalid time interval");
+            }
+          }
+
+          prev_end = end;
+        });
 
         return ret;
       },
@@ -671,28 +675,25 @@
         let totalMilli = 0;
 
         // For each row in the array of entries...
-        this.allEntries.forEach(
-          (entry, index) => {
-            index;
-            if (entry["errors"]["totalHours"].length === 0) {
-              totalMilli += moment.duration(entry["totalHours"]).asMilliseconds();
-            }
+        this.allEntries.forEach((entry, index) => {
+          index;
+          if (entry["errors"]["totalHours"].length === 0) {
+            totalMilli += moment.duration(entry["totalHours"]).asMilliseconds();
+          }
         });
 
         return milliToFormat(totalMilli, TIME_24);
       },
 
       printErrors() {
-        this.allEntries.forEach(
-          (entry, index) => {
-            // For each error col in an entry, check the amount of errors
-            Object.entries(entry["errors"]).forEach(([col, errors]) => {
-              if (errors.length > 0) {
-                console.log("Row", index, "[", col, "]: ", errors);
-              }
-            });
-          }
-        );
+        this.allEntries.forEach((entry, index) => {
+          // For each error col in an entry, check the amount of errors
+          Object.entries(entry["errors"]).forEach(([col, errors]) => {
+            if (errors.length > 0) {
+              console.log("Row", index, "[", col, "]: ", errors);
+            }
+          });
+        });
       },
 
       // Get the color of a cell in the table

@@ -21,12 +21,24 @@
 
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
-    
-    <v-container fluid>
-     <v-row align="center" justify="center">
-        <v-col cols="12" md="4" sm="8" v-for="card in cards" :key="card.title">
-          <v-card class="mx-auto" elevation=4 max-width="250" :to="card.link" link>
-             <template> 
+
+      <v-container fluid>
+        <v-row align="center" justify="center">
+          <v-col
+            cols="12"
+            md="4"
+            sm="8"
+            v-for="card in cards"
+            :key="card.title"
+          >
+            <v-card
+              class="mx-auto"
+              elevation="4"
+              max-width="250"
+              :to="card.link"
+              link
+            >
+              <template>
                 <v-img
                   height="200px"
                   :src="require('@/assets/card_portland.png')"
@@ -36,14 +48,15 @@
                   <h4>
                     {{ card.title }}
                   </h4>
-                <v-icon x-large :color="card.iconColor" >{{ card.icon }}</v-icon>
+                  <v-icon x-large :color="card.iconColor">{{
+                    card.icon
+                  }}</v-icon>
                 </v-card-text>
-             </template> 
-          </v-card>
-        </v-col>
-      </v-row>
+              </template>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-container>
-
     </v-container>
   </v-img>
 </template>
@@ -73,8 +86,20 @@
     },
     data: () => ({
       cards: [
-        {title: 'Upload Timesheet', src:'@/assets/card_portland.png', link:'/timesheet', icon:'add_circle', iconColor:'success'}, 
-        {title: 'About', src:'@/assets/card_portland.png', link:'/about', icon:'info', iconColor:'warning'}, 
+        {
+          title: "Upload Timesheet",
+          src: "@/assets/card_portland.png",
+          link: "/timesheet",
+          icon: "add_circle",
+          iconColor: "success",
+        },
+        {
+          title: "About",
+          src: "@/assets/card_portland.png",
+          link: "/about",
+          icon: "info",
+          iconColor: "warning",
+        },
       ],
     }),
   };

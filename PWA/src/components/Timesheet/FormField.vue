@@ -150,7 +150,7 @@
       willResign: {
         type: Boolean,
         Default: false,
-      }
+      },
     },
 
     created: function () {

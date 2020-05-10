@@ -1,6 +1,6 @@
 // Generic form validation rules
 // NOTE: When adding rules to a required field, put the 'required' rule
-// at the end, or else form validation will display the wrong error 
+// at the end, or else form validation will display the wrong error
 // message for an empty field
 let rules = {
   required: [(v) => !!v || "This field is required"],

@@ -29,7 +29,7 @@
                 :maximum="2"
                 :size="1024 * 1024 * 10"
                 accept="image/*, application/pdf"
-								@input-file="inputFile"
+                @input-file="inputFile"
                 v-model="files"
                 ref="upload"
               >
@@ -219,31 +219,32 @@
           return false;
         }
       },
-			inputFile: function (newFile, oldFile) {
-				let jsonResponse
-				if(newFile.xhr){
-					//console.log('input file response data', newFile.xhr.response)
-					jsonResponse = JSON.parse(newFile.xhr.response)
-					//console.log("response id", jsonResponse["id"])
-					this.urlResponse = jsonResponse["id"]
-			}
+      inputFile: function (newFile, oldFile) {
+        let jsonResponse;
+        if (newFile.xhr) {
+          //console.log('input file response data', newFile.xhr.response)
+          jsonResponse = JSON.parse(newFile.xhr.response);
+          //console.log("response id", jsonResponse["id"])
+          this.urlResponse = jsonResponse["id"];
+        }
 
-
-				if (newFile && oldFile && !newFile.active && oldFile.active)
-					if (newFile.xhr) {
-						jsonResponse = JSON.parse(newFile.xhr.response)
-						this.urlResponse = jsonResponse["id"]
-				}
-			},
+        if (newFile && oldFile && !newFile.active && oldFile.active)
+          if (newFile.xhr) {
+            jsonResponse = JSON.parse(newFile.xhr.response);
+            this.urlResponse = jsonResponse["id"];
+          }
+      },
     },
     data() {
       return {
         files: [],
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
-				urlResponse: 0,
-				getUpdated: false,
-        urlGet: process.env.VUE_APP_SERVER_URL.concat("Timesheet/ReadyTest?id="), //Retrieve timesheet
+        urlResponse: 0,
+        getUpdated: false,
+        urlGet: process.env.VUE_APP_SERVER_URL.concat(
+          "Timesheet/ReadyTest?id="
+        ), //Retrieve timesheet
         urlPost: process.env.VUE_APP_SERVER_URL.concat("ImageUpload/DocAsForm"), //Post AppServer
       };
     },
@@ -255,10 +256,10 @@
         let self = this;
 
         //Retrieves json response from timesheet.
-				console.log("Response id", this.urlResponse)
-				if(!this.getUpdated)
-					this.urlGet = this.urlGet.concat(this.urlResponse)
-          this.getUpdated=true
+        console.log("Response id", this.urlResponse);
+        if (!this.getUpdated)
+          this.urlGet = this.urlGet.concat(this.urlResponse);
+        this.getUpdated = true;
 
         axios
           .get(this.urlGet)
