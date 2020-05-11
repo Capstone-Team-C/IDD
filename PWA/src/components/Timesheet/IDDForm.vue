@@ -138,6 +138,7 @@
             :formFields="formFields"
             :totalEdited="totalEdited"
             :validationSignal="validationSignal"
+            :formID="formID"
             @click="validateInputs"
           />
         </v-col>
@@ -218,6 +219,9 @@
         // The number of invalid fields
         errors: [],
 
+        //Form ID
+        formID: 0,
+
         // Signal denoting completion of validation for form fields
         validationSignal: false,
 
@@ -292,6 +296,7 @@
 
       // Validate the form
       validate() {
+        this.formID = this.parsedFileData["id"]
         // Reset all error messages and validation
         this.errors = [];
 
