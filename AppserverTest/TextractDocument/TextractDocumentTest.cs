@@ -92,7 +92,9 @@ namespace AppserverTest.TextractDocument
             Assert.IsTrue(frontDoc.PageCount() == 1);
             Assert.IsTrue(backDoc.PageCount() == 1);
             // Now merge them together, the page count should now be 2
+            frontDoc.AddPages(backDoc);
             Assert.IsTrue(frontDoc.PageCount() == 2);
+            Assert.IsTrue(frontDoc.GetPage(1).GetPage() == 1); // Pages enumerate from 0
         }
 
         [TearDown]

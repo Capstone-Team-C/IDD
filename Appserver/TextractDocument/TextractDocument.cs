@@ -159,6 +159,18 @@ namespace Appserver.TextractDocument
             ParseJson(JObject.Parse( JsonConvert.SerializeObject(response)));
         }
 
+        public void AddPages(TextractDocument doc)
+        {
+            var pages = doc.Pages;
+            int count = Pages.Count;
+            foreach( var p in pages)
+            {
+                p.SetPage(count);
+                Pages.Add(p);
+                ++count;
+            }
+        }
+
         public void printSummary()
         {
             foreach( var p in Pages)
