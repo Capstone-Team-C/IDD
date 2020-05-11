@@ -222,17 +222,18 @@
       inputFile: function (newFile, oldFile) {
         let jsonResponse;
         if (newFile.xhr) {
-          //console.log('input file response data', newFile.xhr.response)
-          jsonResponse = JSON.parse(newFile.xhr.response);
-          //console.log("response id", jsonResponse["id"])
-          this.urlResponse = jsonResponse["id"];
+          if(newFile.xhr.response)
+            jsonResponse = JSON.parse(newFile.xhr.response);
+            this.urlResponse = jsonResponse["id"];
+          
         }
 
         if (newFile && oldFile && !newFile.active && oldFile.active)
           if (newFile.xhr) {
-            jsonResponse = JSON.parse(newFile.xhr.response);
-            this.urlResponse = jsonResponse["id"];
-          }
+            if(newFile.xhr.response)
+              jsonResponse = JSON.parse(newFile.xhr.response);
+              this.urlResponse = jsonResponse["id"];
+            }
       },
     },
     data() {

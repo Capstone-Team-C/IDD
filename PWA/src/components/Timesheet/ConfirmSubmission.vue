@@ -167,6 +167,12 @@
         default: false,
       },
 
+      //ID to submit form with
+      formID: {
+        type: Number,
+        default: 0,
+      },
+
       // Signal that parent form has completed validation
       validationSignal: {
         type: Boolean,
@@ -223,7 +229,7 @@
         reSigned: [],
 
         //URL for the AppServer
-        url: process.env.VUE_APP_SERVER_URL.concat("Submit"),
+        url: process.env.VUE_APP_SERVER_URL.concat("Timesheet/Submit"),
       };
     },
 
@@ -313,16 +319,17 @@
 
         // Else, post timesheet
         this.loading = true;
-        var self = this;
+        let self = this;
 
         // Finally, prepare the form data and send to the backend
         this.submitData = this.formatData();
 
         if (this.errors.length === 0) {
+          this.submitData["id"] = this.formID
           axios
             .post(this.url, this.submitData, {
               headers: {
-                "content-type": "text/plain",
+                "content-type": "application/json",
               },
             })
             .then(function (response) {
