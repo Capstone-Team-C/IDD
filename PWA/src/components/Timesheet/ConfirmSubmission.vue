@@ -229,7 +229,7 @@
         reSigned: [],
 
         //URL for the AppServer
-        url: process.env.VUE_APP_SERVER_URL.concat("Submit?id="),
+        url: process.env.VUE_APP_SERVER_URL.concat("Timesheet/Submit"),
       };
     },
 
@@ -325,11 +325,11 @@
         this.submitData = this.formatData();
 
         if (this.errors.length === 0) {
-          this.url = this.url.concat(this.formID)
+          this.submitData["id"] = this.formID
           axios
             .post(this.url, this.submitData, {
               headers: {
-                "content-type": "text/plain",
+                "content-type": "application/json",
               },
             })
             .then(function (response) {
