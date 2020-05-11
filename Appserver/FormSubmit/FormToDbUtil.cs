@@ -9,6 +9,7 @@ using Appserver.Data;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Text.RegularExpressions;
 
 namespace IDD
 {
@@ -22,6 +23,9 @@ namespace IDD
             _scontext = context;
             _sscontext = sscontext;
         }
+
+        // Overload for just accessing the conversion methods.
+        public FormToDbUtil() { }
 
 
         // Use EF core to send data to DB
@@ -159,7 +163,8 @@ namespace IDD
                 var x = new TimeEntry();
                 try
                 {
-                    x.Date = Convert.ToDateTime(tsri.date);
+                    //x.Date = Convert.ToDateTime(tsri.date);
+                    x.Date = DateStringConvertUtil(tsri.date);
                 }
                 catch (FormatException)
                 {
@@ -176,10 +181,12 @@ namespace IDD
                 totalHours += x.Hours;
 
                 // Assume Group field is 'N'
-                x.Group = true;
+                x.Group = false;
 
                 // Assume starttime is AM, pad with leading zero if necessary
                 string sdf = TimeFormatterPadding(tsri.starttime);
+                sdf = TimeStringCleaning(tsri.starttime);
+
                 string sd;
                 if (!sdf.Contains("AM"))
                 {
@@ -192,7 +199,8 @@ namespace IDD
                 }
                 try
                 {
-                    x.In = DateTime.ParseExact(sd, "yyyy-MM-dd HH:mm tt", null);
+                    x.In = DateStringConvertUtil(sd);
+                    //x.In = DateTime.ParseExact(sd, "yyyy-MM-dd HH:mm tt", null);
                 }
                 catch ( FormatException) 
                 {
@@ -201,10 +209,11 @@ namespace IDD
 
                 // Assume endtime is PM, convert to 24hr.
                 string edf = TimeFormatter24(tsri.endtime);
+                edf = TimeStringCleaning(tsri.endtime);
                 string ed;
-                if (!sdf.Contains("AM"))
+                if (!edf.Contains("PM"))
                 {
-                    ed = tsri.date + " " + edf + " PM";
+                    ed = tsri.date + " " + edf + " PM"; 
                 }
                 else
                 {
@@ -213,7 +222,8 @@ namespace IDD
                 }
                 try
                 {
-                    x.Out = DateTime.ParseExact(ed, "yyyy-MM-dd HH:mm tt", null);
+                    x.Out = DateStringConvertUtil(ed);
+                    //x.Out = DateTime.ParseExact(ed, "yyyy-MM-dd HH:mm tt", null);
                 }
                 catch (FormatException)
                 {
@@ -227,6 +237,25 @@ namespace IDD
             tsheet.TimeEntries = tl;   
         }
 
+        // Attemps to clean up fomatting of string that
+        // represents time.
+        public string TimeStringCleaning(string s)
+        {
+            s = s.ToLower();
+
+            // Replace odd delimeters
+            s = s.Replace(".", ":");
+            s = s.Replace(";", ":");
+
+            // Assume some incorrect parsed letters
+            s = s.Replace("s", "5");
+            s = s.Replace("i", "1");
+            s = s.Replace("l", "1");
+            s = s.Replace("o", "0");
+            s = s.Replace("z", "2");
+            s = s.Replace("b", "8");
+            return s;
+        }
 
         // Convert PM time to 24hr time.
         // TODO make this not necessary?
@@ -275,6 +304,150 @@ namespace IDD
             }
 
             return false;
+        }
+
+
+        // Removes spaces, replaces commas with hyphens,
+        // and attempts to replace things like 1st, 2nd with
+        // just the numeric equivalent.
+        private string DateStringCleaning(string s)
+        {
+            // Remove spaces, normal chars to lowercase
+            s = s.ToLower();
+            s = s.Replace(" ", "");
+            s = s.Replace(",", "-");
+
+            // Get rid of 1st, 2nd, 14th, etc. chars in string.
+            // A bit hacky, but since regex.replace would replace the entire matched
+            // pattern. August is the month that gets in the way...
+            s = s.Replace("august", "aug");
+            if (Regex.IsMatch(s, @"[1-9]+((st)|(rd)|(nd)|(th))"))
+            {
+                s = s.Replace("st", "");
+                s = s.Replace("rd", "");
+                s = s.Replace("nd", "");
+                s = s.Replace("th", "");
+            }
+
+            s = NormalizeMonth(s);
+            return s;
+        }
+
+        // Assumes a-b-c format, attemps to convert short
+        // and long spelling of months into their numbered
+        // equivalent.
+        private string NormalizeMonth(string s)
+        {
+            var l = s.Split("-");
+            foreach (string x in l)
+            {
+                DateTime xd;
+                if (DateTime.TryParseExact(
+                    x,
+                    new[] { "MMM", "MMMM" },
+                    null,
+                    System.Globalization.DateTimeStyles.None,
+                    out xd))
+                {
+
+                    // Switch out name for integer of month
+                    var i = Array.IndexOf(l, x);
+                    l[i] = xd.ToString("MM");
+                    s = String.Join("-", l);
+
+                    //System.Console.WriteLine("PARSED MONTH " + x);
+                    //System.Console.WriteLine("TO: " + xd.ToString("MM"));
+                    //System.Console.WriteLine("RETURNING: " + s);
+                    return s;
+
+                }
+            }
+
+            // Return original if no replacements were made
+            return s;
+        }
+
+        // Attempts to parse the passed string into a valid
+        // DateTime obj. via several methods. 
+        private bool DateStringCustomParser(string ts, out DateTime dt)
+        {
+            // Second pass try more specific formats
+            try
+            {
+                DateTime.TryParseExact(
+                    ts,
+                    new[] { "yyyy-M-dd", "MMMM-D-yyyy", "y-M-dd", "y-M-d",
+                            "yyyy-M-dd HH:mm tt", "MMMM-D-yyyy HH:mm tt",
+                            "y-M-dd HH:mm tt", "y-M-d HH:mm tt"},
+                    null,
+                    System.Globalization.DateTimeStyles.None,
+                    out dt);
+                return true;
+            }
+            catch (FormatException) { }
+
+            dt = default;
+            return false;
+        }
+
+
+        // Takes a string meant to represent a date and
+        // attempts to convert it to a DateTime object. Otherwise,
+        // a FormatException is thrown.
+        public DateTime DateStringConvertUtil(string s)
+        {
+
+            // Try the default parser
+            DateTime dt;
+            if(DateTime.TryParse(s, out dt))
+            {
+                // Did we at least parse a year in
+                // the second millenia?
+                if (dt.Year.ToString().Contains("20"))
+                {
+                    //System.Console.WriteLine("\nOUT: " + dt.ToString());
+                    //System.Console.WriteLine("FROM: " + s);
+                    return dt;
+                }
+                else
+                {
+                    throw new FormatException();
+                }
+            }
+
+            // Clean up the passed string and try again
+            var cleanx = DateStringCleaning(s);
+            if(DateTime.TryParse(cleanx, out dt))
+            {
+                if (dt.Year.ToString().Contains("20"))
+                {
+                    //System.Console.WriteLine("\nOut Clean: " + dt.ToString());
+                    //System.Console.WriteLine("FROM : " + s);
+                    return dt;
+                }
+                else
+                {
+                    throw new FormatException();
+                }
+            }
+
+            // Try more specific parser
+            if(DateStringCustomParser(s, out dt))
+            {
+                if (dt.Year.ToString().Contains("20"))
+                {
+                    //System.Console.WriteLine("\nOUT Custom: " + dt.ToString());
+                    //System.Console.WriteLine("FROM: " + s);
+                    return dt;
+                }
+                else
+                {
+                    throw new FormatException();
+                }
+            }
+
+            // Unable to parse string into DateTime
+            throw new FormatException();
         }
 
     }
