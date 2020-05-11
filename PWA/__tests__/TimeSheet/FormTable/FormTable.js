@@ -8,9 +8,9 @@ import { mount, createLocalVue } from "@vue/test-utils";
 
 Vue.use(Vuetify);
 
-// describe has the name of the file
-// it has the name of the functionality I am testingj
-describe("FormTable", () => {
+let amtErrors = 0;
+
+describe("FormTable.js", () => {
   let valid_props = {};
   valid_props["parsed_value"] = valid_timesheet["timesheet"];
   valid_props["value"] = valid_timesheet["timesheet"];
@@ -19,34 +19,38 @@ describe("FormTable", () => {
   // Given no values, the table should still load
   it("Given empty props, the table should load with no entries or errors", () => {
     const localVue = createLocalVue();
-    const wrapper = mount(FormTable, {
+    let wrapper = mount(FormTable, {
       localVue,
       vuetify: new Vuetify(),
     });
     expect(wrapper.vm.allEntries.length).toBe(0);
     expect(wrapper.vm.amtEdited).toBe(0);
     expect(wrapper.vm.validate()).toBe(0);
+    wrapper.destroy();
   });
 
   // Given a valid timesheet table .json, the user should not get an error.
   it("Given valid props, the table should load with no errors", () => {
     const localVue = createLocalVue();
-    const wrapper = mount(FormTable, {
+    let wrapper = mount(FormTable, {
       localVue,
       vuetify: new Vuetify(),
       propsData: valid_props,
     });
     expect(wrapper.vm.allEntries.length).toBe(valid_props["value"].length);
     expect(wrapper.vm.amtEdited).toBe(0);
-    var amtErrors = wrapper.vm.validate();
+    amtErrors = wrapper.vm.validate();
     wrapper.vm.printErrors();
     expect(amtErrors).toBe(0);
+    wrapper.destroy();
   });
+});
 
+describe("FormTable.js", () => {
   // Invalid timesheet entries should have an error
   it("Given mal-formatted props, the table should load with errors", () => {
     const localVue = createLocalVue();
-    const wrapper = mount(FormTable, {
+    let wrapper = mount(FormTable, {
       localVue,
       vuetify: new Vuetify(),
       propsData: {
@@ -58,17 +62,21 @@ describe("FormTable", () => {
         ],
       },
     });
+    const expectedAmtErrors = 16; // 1 row with 4/5 invalid fields
+    wrapper.vm.initialize();
+    amtErrors = wrapper.vm.validate();
+
     expect(wrapper.vm.allEntries.length).toBe(4);
     expect(wrapper.vm.amtEdited).toBe(0);
-
-    var amtErrors = wrapper.vm.validate();
-    const expectedAmtErrors = 16; // 4 invalid rows w/ 4 fields each
     if (amtErrors !== expectedAmtErrors) {
       wrapper.vm.printErrors();
     }
     expect(amtErrors).toBe(expectedAmtErrors);
+    wrapper.destroy();
   });
+});
 
+describe("FormTable.js", () => {
   let conflicting_props = {};
   conflicting_props["parsed_value"] = conflicting_timesheet["timesheet"];
   conflicting_props["value"] = conflicting_timesheet["timesheet"];
@@ -77,7 +85,7 @@ describe("FormTable", () => {
   // Valid entries that conflict should return an error
   it("Given invalid props, the table should load with errors", () => {
     const localVue = createLocalVue();
-    const wrapper = mount(FormTable, {
+    let wrapper = mount(FormTable, {
       localVue,
       vuetify: new Vuetify(),
       propsData: conflicting_props,
@@ -85,12 +93,13 @@ describe("FormTable", () => {
     expect(wrapper.vm.allEntries.length).toBe(2);
     expect(wrapper.vm.amtEdited).toBe(0);
 
-    var amtErrors = wrapper.vm.validate();
+    amtErrors = wrapper.vm.validate();
     const expectedAmtErrors = 2; // 2 valid rows, but conflicting time
     if (amtErrors !== expectedAmtErrors) {
       wrapper.vm.printErrors();
     }
     expect(amtErrors).toBe(expectedAmtErrors);
     expect(wrapper.vm.checkOverlapping()).toBe(1);
+    wrapper.destroy();
   });
 });

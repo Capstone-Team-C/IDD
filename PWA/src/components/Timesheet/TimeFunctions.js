@@ -2,6 +2,7 @@ var moment = require("moment");
 var momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
 
+// Enums representing supported datetime strings
 export const FULL_DATE = "YYYY-MM-DD HH:mm A";
 export const YEAR_MONTH_DAY = "YYYY-MM-DD";
 export const YEAR_MONTH = "YYYY-MM";
@@ -10,20 +11,16 @@ export const TIME_24 = "HH:mm";
 export const ERROR = -0;
 
 /**
- *
- * description
- * Paramters
- *      paratmer: <type> - description of parameter
- * Parameter 1
- * Parameter 2
- * Returns
- *      return value
- *
- *
- *
- * */
-// Compare two date fields like YYYY-MM-DD
-// Find the difference in milliseconds between two time fields
+ * function:: subtractTime(start, end, format)
+ *      Find the difference of two datetimes in milliseconds.
+ * Parameters:
+ *      * `start`: <String> Subtrahend; the term to the right of the minus
+ *      * `end`: <String> Minuend; the term to the left of the minus
+ *      * `format`: <String> The enum representing the expected format of
+ *          the `start` and `end`
+ * Returns:
+ *      * <Number> The amount of milliseconds passed since `start` to `end`
+ */
 export const subtractTime = (start, end, format) => {
   if (start == undefined || end == undefined || format == undefined)
     return ERROR;
@@ -43,7 +40,15 @@ export const subtractTime = (start, end, format) => {
   return difference.asMilliseconds();
 };
 
-// Convert milliseconds to a certain format
+/**
+ * function:: milliToFormat(milli, format)
+ *      Convert milliseconds to a specified datetime format
+ * Parameters:
+ *      * `milli`: <Number> An duration of time expressed in milliseconds
+ *      * `format`: <String> The enum representing the desired output fomat
+ * Returns:
+ *      * <String> `milli` expressed as a during in the format `format`
+ */
 export const milliToFormat = (milli, format) => {
   if (milli == undefined) return ERROR;
   let ret = "";
