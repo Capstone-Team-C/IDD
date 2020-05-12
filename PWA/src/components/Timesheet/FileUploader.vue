@@ -222,17 +222,17 @@
       inputFile: function (newFile, oldFile) {
         let jsonResponse;
         if (newFile.xhr) {
-          if(newFile.xhr.response)
+          if(newFile.xhr.response != undefined)
             jsonResponse = JSON.parse(newFile.xhr.response);
-            this.urlResponse = jsonResponse["id"];
+            this.formID = jsonResponse["id"];
           
         }
 
         if (newFile && oldFile && !newFile.active && oldFile.active)
           if (newFile.xhr) {
-            if(newFile.xhr.response)
+            if(newFile.xhr.response != undefined)
               jsonResponse = JSON.parse(newFile.xhr.response);
-              this.urlResponse = jsonResponse["id"];
+              this.formID = jsonResponse["id"];
             }
       },
     },
@@ -241,7 +241,7 @@
         files: [],
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
-        urlResponse: 0,
+        formID: 0,
         getUpdated: false,
         urlGet: process.env.VUE_APP_SERVER_URL.concat(
           "Timesheet/ReadyTest?id="
@@ -257,9 +257,8 @@
         let self = this;
 
         //Retrieves json response from timesheet.
-        console.log("Response id", this.urlResponse);
         if (!this.getUpdated)
-          this.urlGet = this.urlGet.concat(this.urlResponse);
+          this.urlGet = this.urlGet.concat(this.formID);
         this.getUpdated = true;
 
         axios
