@@ -173,6 +173,11 @@
         default: 0,
       },
 
+      // The type of form being submitted
+      formChoice: {
+        type: Number,
+      },
+
       // Signal that parent form has completed validation
       validationSignal: {
         type: Boolean,
@@ -283,7 +288,7 @@
             key;
             var row = {};
 
-            var cols = ["date", "startTime", "endTime", "totalHours", "group"];
+            var cols = ["date", "starttime", "endtime", "totalHours", "group"];
             cols.forEach((col) => {
               row[col] = value[col];
             });
@@ -325,7 +330,8 @@
         this.submitData = this.formatData();
 
         if (this.errors.length === 0) {
-          this.submitData["id"] = this.formID
+          this.submitData["id"] = this.formID;
+          this.submitData["formChoice"] = this.formChoice;
           axios
             .post(this.url, this.submitData, {
               headers: {

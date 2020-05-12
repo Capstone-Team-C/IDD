@@ -2,7 +2,7 @@
 // NOTE: When adding rules to a required field, put the 'required' rule
 // at the end, or else form validation will display the wrong error
 // message for an empty field
-let rules = {
+const rules = {
   required: [(v) => !!v || "This field is required"],
   maxLength(max) {
     return (v) =>

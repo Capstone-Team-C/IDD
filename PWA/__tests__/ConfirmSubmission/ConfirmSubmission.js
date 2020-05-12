@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import Vue from "vue";
 import Vuetify from "vuetify";
-import ConfirmSubmission from "../../src/components/Timesheet/ConfirmSubmission.vue";
+import ConfirmSubmission from "@/components/Forms/ConfirmSubmission.vue";
 
 Vue.use(Vuetify);
 

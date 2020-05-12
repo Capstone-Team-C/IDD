@@ -222,18 +222,17 @@
       inputFile: function (newFile, oldFile) {
         let jsonResponse;
         if (newFile.xhr) {
-          if(newFile.xhr.response != undefined)
+          if (newFile.xhr.response != undefined)
             jsonResponse = JSON.parse(newFile.xhr.response);
-            this.formID = jsonResponse["id"];
-          
+          this.formID = jsonResponse["id"];
         }
 
         if (newFile && oldFile && !newFile.active && oldFile.active)
           if (newFile.xhr) {
-            if(newFile.xhr.response != undefined)
+            if (newFile.xhr.response != undefined)
               jsonResponse = JSON.parse(newFile.xhr.response);
-              this.formID = jsonResponse["id"];
-            }
+            this.formID = jsonResponse["id"];
+          }
       },
     },
     data() {
@@ -257,8 +256,7 @@
         let self = this;
 
         //Retrieves json response from timesheet.
-        if (!this.getUpdated)
-          this.urlGet = this.urlGet.concat(this.formID);
+        if (!this.getUpdated) this.urlGet = this.urlGet.concat(this.formID);
         this.getUpdated = true;
 
         axios

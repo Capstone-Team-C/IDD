@@ -190,20 +190,18 @@
 </template>
 
 <script>
-  import FormField from "@/components/Timesheet/FormField";
-  import FormTableFields from "@/components/Timesheet/FormTableFields.json";
-  import rules from "@/components/Timesheet/FormRules.js";
+  import FormField from "@/components/Forms/FormField";
+  import ServicesDeliveredTableFields from "@/components/Forms/ServicesDelivered/ServicesDeliveredTableFields.json";
+  import rules from "@/components/Utility/FormRules.js";
+  import { TIME } from "@/components/Utility/Enums.js";
   import {
     subtractTime,
     milliToFormat,
-    FULL_DATE,
-    TIME_12,
-    TIME_24,
-  } from "@/components/Timesheet/TimeFunctions.js";
+  } from "@/components/Utility/TimeFunctions.js";
   var moment = require("moment");
 
   export default {
-    name: "FormTable",
+    name: "ServicesDeliveredTable",
     components: {
       FormField,
     },
@@ -247,11 +245,11 @@
       return {
         // Specify rules and hints for adding a new row to the table
         colValidation: JSON.parse(
-          JSON.stringify(FormTableFields["colValidation"])
+          JSON.stringify(ServicesDeliveredTableFields["colValidation"])
         ),
 
         // Column headers and associated values for the table
-        headers: FormTableFields["headers"],
+        headers: ServicesDeliveredTableFields["headers"],
 
         // Record the amount of edited parsed fields and added rows
         amtEdited: false,
@@ -306,8 +304,8 @@
       editedItemTotalHours: function () {
         var start = this.editedItem["starttime"];
         var end = this.editedItem["endtime"];
-        var timeDiff = subtractTime(start, end, TIME_12);
-        var formatTimeDiff = milliToFormat(timeDiff, TIME_24);
+        var timeDiff = subtractTime(start, end, TIME.TIME_12);
+        var formatTimeDiff = milliToFormat(timeDiff, TIME.TIME_24);
         this.$set(this.editedItem, "totalHours", formatTimeDiff);
         return formatTimeDiff;
       },
@@ -381,9 +379,13 @@
             // If there was a start and an end time, calculate totalHours
             var start = obj["parsedValue"]["starttime"];
             var end = obj["parsedValue"]["endtime"];
-            var totalHours = subtractTime(start, end, TIME_12);
+            var totalHours = subtractTime(start, end, TIME.TIME_12);
             if (totalHours > 0) {
-              this.$set(obj, "totalHours", milliToFormat(totalHours, TIME_24));
+              this.$set(
+                obj,
+                "totalHours",
+                milliToFormat(totalHours, TIME.TIME_24)
+              );
             }
 
             // If the parsed row was not empty, add it to the table
@@ -599,7 +601,7 @@
           ) {
             var start = entry["starttime"];
             var end = entry["endtime"];
-            var timeDiff = subtractTime(start, end, TIME_12);
+            var timeDiff = subtractTime(start, end, TIME.TIME_12);
             if (timeDiff <= 0) {
               entry["errors"]["starttime"].push("Invalid time interval");
               entry["errors"]["endtime"].push("Invalid time interval");
@@ -607,7 +609,7 @@
 
             var formatTimeDiff = moment
               .duration({ minutes: timeDiff })
-              .format(TIME_24);
+              .format(TIME.TIME_24);
             if (formatTimeDiff.localeCompare(entry["totalHours"]) === 0) {
               entry["errors"]["totalHours"].push("Invalid calculation");
             }
@@ -621,7 +623,7 @@
             subtractTime(
               start["date"] + " " + start["starttime"],
               end["date"] + " " + end["starttime"],
-              FULL_DATE
+              TIME.FULL_DATE
             )
         );
         this.checkOverlapping();
@@ -656,7 +658,7 @@
 
           if (index !== 0) {
             // If the start is before the end of the prev's end, there is an overlap
-            var timeDiff = subtractTime(prev_end, start, FULL_DATE);
+            var timeDiff = subtractTime(prev_end, start, TIME.FULL_DATE);
             if (timeDiff <= 0) {
               ret += 1;
               entry["errors"]["starttime"].push("Invalid time interval");
@@ -682,7 +684,7 @@
           }
         });
 
-        return milliToFormat(totalMilli, TIME_24);
+        return milliToFormat(totalMilli, TIME.TIME_24);
       },
 
       printErrors() {

@@ -1,22 +1,35 @@
 <template>
   <div>
+    <!-- Have the user choose which form they want to upload -->
+    <v-row class="mt-9">
+      <v-col align="center" justify="center">
+        Select the type of form that you would like to submit:
+        <v-select
+          :items="Object.keys(FORM)"
+          label="Timesheet"
+          v-model="formChoice"
+          outlined
+        ></v-select>
+      </v-col>
+    </v-row>
+
     <!-- Page Title -->
     <v-row class="mt-9">
       <v-col align="center" justify="center">
         <p class="headline">
-          eXPRS Plan of Care - Services Delivered Report Form
+          {{ formChoice ? formChoice : "Please select a form type!" }} <br />
         </p>
       </v-col>
     </v-row>
 
     <!-- Render either file upload or form -->
-    <v-row>
-      <v-col v-if="fileStatus === FILE_INIT || fileStatus === FILE_FAILURE">
+    <v-row v-if="formChoice !== null">
+      <v-col v-if="fileStatus === FILE.INIT || fileStatus === FILE.FAILURE">
         <FileUploader
           @error="handleError($event)"
           @success="fillForm($event)"
         />
-        <v-card v-if="fileStatus === FILE_FAILURE" class="ma-5">
+        <v-card v-if="fileStatus === FILE.FAILURE" class="ma-5">
           <v-card-title class="error white--text"
             >FILE UPLOAD ERROR!</v-card-title
           >
@@ -26,37 +39,54 @@
         </v-card>
       </v-col>
 
-      <v-col v-else-if="fileStatus === FILE_SUCCESS">
-        <IDDForm :parsedFileData="parsedFileData" />
+      <v-col
+        v-else-if="
+          fileStatus === FILE.SUCCESS &&
+          (FORM[formChoice] === FORM.OOR507_RELIEF ||
+            FORM[formChoice] === FORM.OOR526_ATTENDANT)
+        "
+      >
+        <ServicesDelivered
+          :parsedFileData="parsedFileData"
+          :formChoice="FORM[formChoice]"
+        />
+      </v-col>
+
+      <v-col
+        v-else-if="
+          fileStatus === FILE.SUCCESS &&
+          FORM[formChoice] === FORM.OOR004_MILEAGE
+        "
+      >
+        NOT IMPLEMENTED YET!
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-  import FileUploader from "@/components/Timesheet/FileUploader";
-  import IDDForm from "@/components/Timesheet/IDDForm";
+  import FileUploader from "@/components/Forms/FileUploader";
+  import ServicesDelivered from "@/components/Forms/ServicesDelivered/ServicesDelivered";
+  import { FORM, FILE } from "@/components/Utility/Enums.js";
 
   export default {
     name: "Timesheet",
     components: {
       FileUploader,
-      IDDForm,
+      ServicesDelivered,
     },
     data: function () {
-      const FILE_INIT = 1;
-      const FILE_SUCCESS = 2;
-      const FILE_FAILURE = 3;
-
       return {
+        // Expose the imported enums to the html section
+        FILE: FILE,
+        FORM: FORM,
+
         // The uploaded timesheet, as a .json of parsed values from the backend
         parsedFileData: null,
+        formChoice: null,
 
         // Possible statuses of the uploading the form
-        FILE_INIT: FILE_INIT,
-        FILE_SUCCESS: FILE_SUCCESS,
-        FILE_FAILURE: FILE_FAILURE,
-        fileStatus: FILE_INIT,
+        fileStatus: FILE.INIT,
 
         // Upload errors
         errors: [],
@@ -69,11 +99,11 @@
         this.parsedFileData = response;
 
         // Hide the image upload and display the pre-populated IDD form
-        this.fileStatus = this.FILE_SUCCESS;
+        this.fileStatus = FILE.SUCCESS;
       },
       handleError(error) {
         this.errors = error;
-        this.fileStatus = this.FILE_FAILURE;
+        this.fileStatus = FILE.FAILURE;
       },
     },
   };

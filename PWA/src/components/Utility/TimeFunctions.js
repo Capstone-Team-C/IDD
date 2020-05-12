@@ -1,14 +1,8 @@
+import { TIME } from "@/components/Utility/Enums.js";
+
 var moment = require("moment");
 var momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
-
-// Enums representing supported datetime strings
-export const FULL_DATE = "YYYY-MM-DD HH:mm A";
-export const YEAR_MONTH_DAY = "YYYY-MM-DD";
-export const YEAR_MONTH = "YYYY-MM";
-export const TIME_12 = "HH:mm A";
-export const TIME_24 = "HH:mm";
-export const ERROR = -0;
 
 /**
  * function:: subtractTime(start, end, format)
@@ -23,13 +17,13 @@ export const ERROR = -0;
  */
 export const subtractTime = (start, end, format) => {
   if (start == undefined || end == undefined || format == undefined)
-    return ERROR;
+    return TIME.ERROR;
 
   const formattedStart = moment(start, format, true);
   const formattedEnd = moment(end, format, true);
 
   if (!formattedStart.isValid() || !formattedEnd.isValid()) {
-    return ERROR;
+    return TIME.ERROR;
   }
 
   const difference = moment.duration(formattedEnd.diff(formattedStart));
@@ -50,7 +44,7 @@ export const subtractTime = (start, end, format) => {
  *      * <String> `milli` expressed as a during in the format `format`
  */
 export const milliToFormat = (milli, format) => {
-  if (milli == undefined) return ERROR;
+  if (milli == undefined) return TIME.ERROR;
   let ret = "";
   if (milli < 0) ret += "-";
 

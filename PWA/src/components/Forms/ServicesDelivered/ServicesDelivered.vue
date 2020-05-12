@@ -25,19 +25,20 @@
 
     <!-- Table containing timesheet  -->
     <v-card-text>
-      <FormTable
+      <ServicesDeliveredTable
         v-model="formFields.timesheet.value"
         v-bind="formFields.timesheet"
         :reset="resetChild"
-        :totalHours="totalHours"
+        :totalHours="formFields['totalHours']['value']"
         :willResign="willResign"
-        @update-totalHours="totalHours = $event"
+        @update-totalHours="formFields['totalHours']['value'] = $event"
         @disable-change="handleDisableChange('timesheet', $event)"
       />
     </v-card-text>
 
     <!-- totalHours -->
-    Total Hours: {{ totalHours }}
+    Total Hours:
+    {{ this.formFields["totalHours"]["value"] }}
     <hr />
 
     <p class="title">
@@ -139,6 +140,7 @@
             :totalEdited="totalEdited"
             :validationSignal="validationSignal"
             :formID="formID"
+            :formChoice="formChoice"
             @click="validateInputs"
           />
         </v-col>
@@ -148,21 +150,18 @@
 </template>
 
 <script>
-  import FormTable from "@/components/Timesheet/FormTable";
-  import FormField from "@/components/Timesheet/FormField";
-  import ConfirmSubmission from "@/components/Timesheet/ConfirmSubmission";
-  import fieldData from "@/components/Timesheet/IDDFormFields.json";
-  import rules from "@/components/Timesheet/FormRules.js";
-  import {
-    subtractTime,
-    YEAR_MONTH_DAY,
-    YEAR_MONTH,
-  } from "@/components/Timesheet/TimeFunctions.js";
+  import ServicesDeliveredTable from "@/components/Forms/ServicesDelivered/ServicesDeliveredTable";
+  import FormField from "@/components/Forms/FormField";
+  import ConfirmSubmission from "@/components/Forms/ConfirmSubmission";
+  import fieldData from "@/components/Forms/ServicesDelivered/ServicesDeliveredFields.json";
+  import rules from "@/components/Utility/FormRules.js";
+  import { TIME } from "@/components/Utility/Enums.js";
+  import { subtractTime } from "@/components/Utility/TimeFunctions.js";
 
   export default {
-    name: "IDDForm",
+    name: "ServicesDelivered",
     components: {
-      FormTable,
+      ServicesDeliveredTable,
       FormField,
       ConfirmSubmission,
     },
@@ -172,6 +171,9 @@
       parsedFileData: {
         type: Object,
         default: null,
+      },
+      formChoice: {
+        type: Number,
       },
     },
 
@@ -210,8 +212,6 @@
 
         // The amount of parsed fields that were edited
         totalEdited: 0,
-
-        totalHours: "00:00",
 
         // Hide form validation error messages by default
         valid: true,
@@ -296,7 +296,7 @@
 
       // Validate the form
       validate() {
-        this.formID = this.parsedFileData["id"]
+        this.formID = this.parsedFileData["id"];
         // Reset all error messages and validation
         this.errors = [];
 
@@ -317,7 +317,7 @@
             subtractTime(
               comparisonDate,
               this.formFields.employerSignDate.value,
-              YEAR_MONTH_DAY
+              TIME.YEAR_MONTH_DAY
             ) < 0
           ) {
             comparisonDate = this.formFields.employerSignDate.value;
@@ -328,7 +328,7 @@
           var submissionDiff = subtractTime(
             comparisonDate.substr(0, 7),
             submissionDate,
-            YEAR_MONTH
+            TIME.YEAR_MONTH
           );
           if (submissionDiff < 0) {
             this.errors.push(
@@ -342,7 +342,9 @@
             var latestDate = this.formFields.timesheet.value[latestDateIdx - 1][
               "date"
             ];
-            if (subtractTime(latestDate, comparisonDate, YEAR_MONTH_DAY) < 0) {
+            if (
+              subtractTime(latestDate, comparisonDate, TIME.YEAR_MONTH_DAY) < 0
+            ) {
               this.errors.push(
                 `ERROR: the employer or provider sign date is before the latest service delivery date.`
               );

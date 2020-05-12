@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuetify from "vuetify";
-import FormTable from "@/components/Timesheet/FormTable.vue";
+import ServicesDeliveredTable from "@/components/Forms/ServicesDelivered/ServicesDeliveredTable.vue";
 import valid_timesheet from "./valid_timesheet.json";
 import conflicting_timesheet from "./conflicting_timesheet.json";
 
@@ -10,7 +10,7 @@ Vue.use(Vuetify);
 
 let amtErrors = 0;
 
-describe("FormTable.js", () => {
+describe("ServicesDeliveredTable.js", () => {
   let valid_props = {};
   valid_props["parsed_value"] = valid_timesheet["timesheet"];
   valid_props["value"] = valid_timesheet["timesheet"];
@@ -19,7 +19,7 @@ describe("FormTable.js", () => {
   // Given no values, the table should still load
   it("Given empty props, the table should load with no entries or errors", () => {
     const localVue = createLocalVue();
-    let wrapper = mount(FormTable, {
+    let wrapper = mount(ServicesDeliveredTable, {
       localVue,
       vuetify: new Vuetify(),
     });
@@ -32,7 +32,7 @@ describe("FormTable.js", () => {
   // Given a valid timesheet table .json, the user should not get an error.
   it("Given valid props, the table should load with no errors", () => {
     const localVue = createLocalVue();
-    let wrapper = mount(FormTable, {
+    let wrapper = mount(ServicesDeliveredTable, {
       localVue,
       vuetify: new Vuetify(),
       propsData: valid_props,
@@ -46,11 +46,11 @@ describe("FormTable.js", () => {
   });
 });
 
-describe("FormTable.js", () => {
+describe("ServicesDeliveredTable.js", () => {
   // Invalid timesheet entries should have an error
   it("Given mal-formatted props, the table should load with errors", () => {
     const localVue = createLocalVue();
-    let wrapper = mount(FormTable, {
+    let wrapper = mount(ServicesDeliveredTable, {
       localVue,
       vuetify: new Vuetify(),
       propsData: {
@@ -76,7 +76,7 @@ describe("FormTable.js", () => {
   });
 });
 
-describe("FormTable.js", () => {
+describe("ServicesDeliveredTable.js", () => {
   let conflicting_props = {};
   conflicting_props["parsed_value"] = conflicting_timesheet["timesheet"];
   conflicting_props["value"] = conflicting_timesheet["timesheet"];
@@ -85,7 +85,7 @@ describe("FormTable.js", () => {
   // Valid entries that conflict should return an error
   it("Given invalid props, the table should load with errors", () => {
     const localVue = createLocalVue();
-    let wrapper = mount(FormTable, {
+    let wrapper = mount(ServicesDeliveredTable, {
       localVue,
       vuetify: new Vuetify(),
       propsData: conflicting_props,

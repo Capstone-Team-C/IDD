@@ -3,7 +3,7 @@
     "counter": 50,
     "disabled": false,
     "hint": "Full name",
-    "label": "Client Name",
+    "label": "Customer Name",
     "rules": ["name", "required"],
     "value": null
   },
