@@ -246,7 +246,9 @@
     data: function () {
       return {
         // Specify rules and hints for adding a new row to the table
-        colValidation: FormTableFields["colValidation"],
+        colValidation: JSON.parse(
+          JSON.stringify(FormTableFields["colValidation"])
+        ),
 
         // Column headers and associated values for the table
         headers: FormTableFields["headers"],
@@ -322,27 +324,25 @@
     created: function () {
       // Bind validation rules to each field that has a 'rules' string
       // specified
-      Object.entries(FormTableFields["colValidation"]).forEach(
-        ([key, value]) => {
-          if ("rules" in value) {
-            var _rules = value.rules;
-            this.$set(FormTableFields["colValidation"][key], "rules", []);
-            _rules.forEach((fieldRule) => {
-              // Not using the spread operator for IE compatibility
-              FormTableFields["colValidation"][key].rules.push.apply(
-                FormTableFields["colValidation"][key].rules,
-                rules[fieldRule]
-              );
-            });
+      Object.entries(this.colValidation).forEach(([key, value]) => {
+        if ("rules" in value) {
+          var _rules = value.rules;
+          this.$set(this.colValidation[key], "rules", []);
+          _rules.forEach((fieldRule) => {
+            // Not using the spread operator for IE compatibility
+            this.colValidation[key].rules.push.apply(
+              this.colValidation[key].rules,
+              rules[fieldRule]
+            );
+          });
 
-            if (FormTableFields["colValidation"][key].counter) {
-              FormTableFields["colValidation"][key].rules.push(
-                rules.maxLength(FormTableFields["colValidation"][key].counter)
-              );
-            }
+          if (this.colValidation[key].counter) {
+            this.colValidation[key].rules.push(
+              rules.maxLength(this.colValidation[key].counter)
+            );
           }
         }
-      );
+      });
       this.initialize();
       this.validate();
     },
@@ -575,15 +575,15 @@
             entry["errors"][col] = [];
 
             // Run the validation functions associated w/ this field
-            if ("rules" in FormTableFields["colValidation"][col]) {
+            if ("rules" in this.colValidation[col]) {
               var wasInvalid = false;
-              FormTableFields["colValidation"][col]["rules"].forEach((rule) => {
+              this.colValidation[col]["rules"].forEach((rule) => {
                 // If the validation function fails, add an error to field
                 if (rule(entry[col]) !== true) {
                   wasInvalid = true;
                 }
               });
-              if (wasInvalid) {
+              if (wasInvalid === true) {
                 entry["errors"][col].push("Invalid input");
               }
             }
