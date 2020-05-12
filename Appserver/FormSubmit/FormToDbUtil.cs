@@ -228,55 +228,5 @@ namespace IDD
             tsheet.TimeEntries = tl;   
         }
 
-        /*
-        // Convert PM time to 24hr time.
-        // TODO make this not necessary?
-        public string TimeFormatter24(string t)
-        {
-            var ts = t.Split(':');
-            int hours;
-            try
-            {
-                hours = Convert.ToInt32(ts[0]);
-            }
-            catch (FormatException)
-            {
-                hours = 0;
-            }
-            hours = hours + 12;
-            if( ts.Length < 2)
-                return Convert.ToString(hours) + ":" + "00";
-            else
-                return Convert.ToString(hours) + ":" + ts[1];
-        }
-
-        // Add leading zero if needed.
-        // TODO make this not necessary?
-        public string TimeFormatterPadding(string t)
-        {
-            var ts = t.Split(':');
-            if( ts.Length < 2)
-            {
-                return "00:00";
-            }
-            if(ts[0].Length < 2)
-            {
-                string x = "0" + ts[0];
-                return x + ":" + ts[1];
-            }
-            return t;
-        }
-
-        public bool PWABoolConverter(string val)
-        {
-            val = val.ToLower();
-            if(val == "true" || val == "yes")
-            {
-                return true;
-            }
-
-            return false;
-        }*/
-
     }
 }

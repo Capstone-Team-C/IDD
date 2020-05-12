@@ -23,7 +23,7 @@ namespace FormSubmit.Tests
         public void EmptyTimesheet()
         {
             
-            string path = TestContext.CurrentContext.TestDirectory + @"/FormSubmit/emptyTimesheet.json";
+            string path = TestContext.CurrentContext.TestDirectory + @"\FormSubmit\emptyTimesheet.json";
 
             if (!File.Exists(path))
             {
@@ -45,7 +45,7 @@ namespace FormSubmit.Tests
         [Test]
         public void TenRowTimesheet()
         {
-            string path = TestContext.CurrentContext.TestDirectory + @"/FormSubmit/TenRowTimesheet.json";
+            string path = TestContext.CurrentContext.TestDirectory + @"\FormSubmit\TenRowTimesheet.json";
 
             if (!File.Exists(path))
             {
