@@ -161,6 +161,13 @@ namespace Appserver.TextractDocument
 
         public void AddPages(TextractDocument doc)
         {
+            if( Pages.Count == 0)
+            {
+                DocumentMetadata = doc.DocumentMetadata;
+                Pages = doc.Pages;
+                JobStatus = doc.JobStatus;
+                return;
+            }
             var pages = doc.Pages;
             int count = Pages.Count;
             foreach( var p in pages)
