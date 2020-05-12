@@ -139,7 +139,8 @@ namespace IDD
             tsf.approval = PWABoolConverter(pwasub.approval.value);
             tsf.type = PWAFormChoiceToString(pwasub.formChoice);
 
-            foreach(PWAtimesheetVals lsv in pwasub.timsheet.value)
+
+            foreach(PWAtimesheetVals lsv in pwasub.timesheet.value)
             {
                 string s = lsv.totalHours.Replace(':', '.');
                 tsf.addTimeRow(lsv.date, lsv.starttime, lsv.endtime, s, "true");

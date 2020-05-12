@@ -24,7 +24,7 @@ namespace Common.Models
         public PWAsubmissionVals approval { get; set; }
         public PWAsubmissionVals scpaName { get; set; }
         public PWAsubmissionVals brokerage { get; set; }
-        public PWAtimesheetVals timsheet { get; set; }
+        public PWAtimesheetEntries timesheet { get; set; }
     }
 
     public class PWAsubmissionVals
@@ -33,10 +33,10 @@ namespace Common.Models
         public bool wasEdited { get; set; }
     }
 
-    public class PWAserviceDeliveredVals
+    public class PWAtimesheetEntries
     {
         public bool wasEdited { get; set; }
-        public List<PWAtimesheetVals> value { get; set; }
+        public ICollection<PWAtimesheetVals> value { get; set; }
     }
 
     public class PWAtimesheetVals
@@ -47,6 +47,5 @@ namespace Common.Models
         public string totalHours { get; set; }
         public string group { get; set; }
         public bool wasEdited { get; set; }
-        public IEnumerable<PWAtimesheetVals> value { get; internal set; }
     }
 }
