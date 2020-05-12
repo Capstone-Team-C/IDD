@@ -120,6 +120,7 @@ namespace IDD
         // PWA to TimesheetForm converter
         public TimesheetForm PWAtoTimesheetFormConverter(PWAsubmission pwasub)
         {
+            var convUtil = new FormConversionUtils();
             TimesheetForm tsf = new TimesheetForm();
             List<TimesheetRowItem> tsl = new List<TimesheetRowItem>();
             tsf.clientName = pwasub.customerName.value;
@@ -131,11 +132,11 @@ namespace IDD
             tsf.serviceAuthorized = pwasub.service.value;
             tsf.serviceGoal = pwasub.serviceGoal.value;
             tsf.progressNotes = pwasub.progressNotes.value;
-            tsf.employerSignature = PWABoolConverter(pwasub.employerSignature.value);
+            tsf.employerSignature = convUtil.PWABoolConverter(pwasub.employerSignature.value);
             tsf.employerSignDate = pwasub.employerSignDate.value;
-            tsf.providerSignature = PWABoolConverter(pwasub.providerSignature.value);
+            tsf.providerSignature = convUtil.PWABoolConverter(pwasub.providerSignature.value);
             tsf.providerSignDate = pwasub.providerSignDate.value;
-            tsf.authorization = PWABoolConverter(pwasub.authorization.value);
+            tsf.authorization = convUtil.PWABoolConverter(pwasub.authorization.value);
 
             foreach(PWAserviceDeliveredListVals lsv in pwasub.serviceDeliveredOn.value)
             {
@@ -152,6 +153,7 @@ namespace IDD
         {
             double totalHours = 0;
             var tl = new List<TimeEntry>();
+            var convUtil = new FormConversionUtils();
 
             foreach (TimesheetRowItem tsri in tsf.Times)
             {
@@ -178,7 +180,7 @@ namespace IDD
                 x.Group = true;
 
                 // Assume starttime is AM, pad with leading zero if necessary
-                string sdf = TimeFormatterPadding(tsri.starttime);
+                string sdf = convUtil.TimeFormatterPadding(tsri.starttime);
                 string sd;
                 if (!sdf.Contains("AM"))
                 {
@@ -199,7 +201,7 @@ namespace IDD
                 }
 
                 // Assume endtime is PM, convert to 24hr.
-                string edf = TimeFormatter24(tsri.endtime);
+                string edf = convUtil.TimeFormatter24(tsri.endtime);
                 string ed;
                 if (!sdf.Contains("AM"))
                 {
@@ -226,7 +228,7 @@ namespace IDD
             tsheet.TimeEntries = tl;   
         }
 
-
+        /*
         // Convert PM time to 24hr time.
         // TODO make this not necessary?
         public string TimeFormatter24(string t)
@@ -274,7 +276,7 @@ namespace IDD
             }
 
             return false;
-        }
+        }*/
 
     }
 }
