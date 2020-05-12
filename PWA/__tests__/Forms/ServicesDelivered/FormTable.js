@@ -8,6 +8,7 @@ import { mount, createLocalVue } from "@vue/test-utils";
 
 Vue.use(Vuetify);
 
+const valCols = ["date", "starttime", "endtime", "totalHours"];
 let amtErrors = 0;
 
 describe("ServicesDeliveredTable.js", () => {
@@ -15,6 +16,7 @@ describe("ServicesDeliveredTable.js", () => {
   valid_props["parsed_value"] = valid_timesheet["timesheet"];
   valid_props["value"] = valid_timesheet["timesheet"];
   valid_props["disabled"] = true;
+  valid_props["cols"] = valCols;
 
   // Given no values, the table should still load
   it("Given empty props, the table should load with no entries or errors", () => {
@@ -22,6 +24,7 @@ describe("ServicesDeliveredTable.js", () => {
     let wrapper = mount(ServicesDeliveredTable, {
       localVue,
       vuetify: new Vuetify(),
+      propsData: { cols: valCols },
     });
     expect(wrapper.vm.allEntries.length).toBe(0);
     expect(wrapper.vm.amtEdited).toBe(0);
@@ -60,6 +63,7 @@ describe("ServicesDeliveredTable.js", () => {
           { endtime: "1000 PM" },
           { totalHours: "11.00" },
         ],
+        cols: valCols,
       },
     });
     const expectedAmtErrors = 16; // 1 row with 4/5 invalid fields
@@ -81,6 +85,7 @@ describe("ServicesDeliveredTable.js", () => {
   conflicting_props["parsed_value"] = conflicting_timesheet["timesheet"];
   conflicting_props["value"] = conflicting_timesheet["timesheet"];
   conflicting_props["disabled"] = true;
+  conflicting_props["cols"] = valCols;
 
   // Valid entries that conflict should return an error
   it("Given invalid props, the table should load with errors", () => {

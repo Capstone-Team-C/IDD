@@ -25,21 +25,21 @@
 
     <!-- Table containing timesheet  -->
     <v-card-text>
-      <ServicesDeliveredTable
-        :cols="valCols"
+      <MileageTable
         v-model="formFields.timesheet.value"
         v-bind="formFields.timesheet"
+        :cols="valCols"
         :reset="resetChild"
-        :totalHours="formFields['totalHours']['value']"
+        :totalMiles="formFields['totalMiles']['value']"
         :willResign="willResign"
-        @update-totalHours="formFields['totalHours']['value'] = $event"
+        @update-totalMiles="formFields['totalMiles']['value'] = $event"
         @disable-change="handleDisableChange('timesheet', $event)"
       />
     </v-card-text>
 
-    <!-- totalHours -->
-    Total Hours:
-    {{ this.formFields["totalHours"]["value"] }}
+    <!-- totalMiles -->
+    Total Miles:
+    {{ this.formFields["totalMiles"]["value"] }}
     <hr />
 
     <p class="title">
@@ -152,18 +152,18 @@
 </template>
 
 <script>
-  import ServicesDeliveredTable from "@/components/Forms/ServicesDelivered/ServicesDeliveredTable";
+  import MileageTable from "@/components/Forms/Mileage/MileageTable";
   import FormField from "@/components/Forms/FormField";
   import ConfirmSubmission from "@/components/Forms/ConfirmSubmission";
-  import fieldData from "@/components/Forms/ServicesDelivered/ServicesDeliveredFields.json";
+  import fieldData from "@/components/Forms/Mileage/MileageFields.json";
   import rules from "@/components/Utility/FormRules.js";
   import { TIME } from "@/components/Utility/Enums.js";
   import { subtractTime } from "@/components/Utility/TimeFunctions.js";
 
   export default {
-    name: "ServicesDelivered",
+    name: "Mileage",
     components: {
-      ServicesDeliveredTable,
+      MileageTable,
       FormField,
       ConfirmSubmission,
     },
@@ -180,7 +180,6 @@
     },
 
     // Upon first loading on the page, bind parsed form data to each
-    // IDD Timesheet form field
     created: function () {
       this.formID = this.parsedFileData["id"];
       this.initialize();
@@ -225,8 +224,8 @@
         // The number of invalid fields
         errors: [],
 
-        cols: ["date", "starttime", "endtime", "totalHours", "group"],
-        valCols: ["date", "starttime", "endtime", "totalHours"],
+        cols: ["date", "totalMiles", "purpose", "group"],
+        valCols: ["date", "totalMiles", "purpose"],
 
         // Signal denoting completion of validation for form fields
         validationSignal: false,
@@ -247,7 +246,6 @@
         this.totalEdited = 0;
         this.willResign = false;
 
-        // Bind data from a .json IDD timesheet to form fields
         if (this.entries !== null) {
           Object.entries(this.parsedFileData).forEach(([key, value]) => {
             if (key in this.formFields) {

@@ -161,6 +161,12 @@
   export default {
     name: "ConfirmSubmission",
     props: {
+      // The cols in the datatable
+      cols: {
+        type: Array,
+        default: null,
+      },
+
       //If the information is valid.
       valid: {
         type: Boolean,
@@ -281,22 +287,22 @@
           submitData[key]["value"] = value["value"];
           submitData[key]["wasEdited"] = !value["disabled"];
         });
+        if ("timesheet" in this.formFields) {
+          submitData["timesheet"]["value"] = [];
+          Object.entries(this.formFields["timesheet"]["value"]).forEach(
+            ([key, value]) => {
+              key;
+              var row = {};
 
-        submitData["timesheet"]["value"] = [];
-        Object.entries(this.formFields["timesheet"]["value"]).forEach(
-          ([key, value]) => {
-            key;
-            var row = {};
+              this.cols.forEach((col) => {
+                row[col] = value[col];
+              });
+              row["wasEdited"] = !value["disabled"];
 
-            var cols = ["date", "starttime", "endtime", "totalHours", "group"];
-            cols.forEach((col) => {
-              row[col] = value[col];
-            });
-            row["wasEdited"] = !value["disabled"];
-
-            submitData["timesheet"]["value"].push(row);
-          }
-        );
+              submitData["timesheet"]["value"].push(row);
+            }
+          );
+        }
 
         return submitData;
       },

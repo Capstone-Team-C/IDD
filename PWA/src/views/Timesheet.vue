@@ -58,7 +58,10 @@
           FORM[formChoice] === FORM.OOR004_MILEAGE
         "
       >
-        NOT IMPLEMENTED YET!
+        <Mileage
+          :parsedFileData="parsedFileData"
+          :formChoice="FORM[formChoice]"
+        />
       </v-col>
     </v-row>
   </div>
@@ -67,6 +70,7 @@
 <script>
   import FileUploader from "@/components/Forms/FileUploader";
   import ServicesDelivered from "@/components/Forms/ServicesDelivered/ServicesDelivered";
+  import Mileage from "@/components/Forms/Mileage/Mileage";
   import { FORM, FILE } from "@/components/Utility/Enums.js";
 
   export default {
@@ -74,6 +78,7 @@
     components: {
       FileUploader,
       ServicesDelivered,
+      Mileage
     },
     data: function () {
       return {

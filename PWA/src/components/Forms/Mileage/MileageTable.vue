@@ -87,17 +87,13 @@
               <v-container>
                 <v-row
                   class="py-0 my-0"
-                  v-for="field in ['date', 'starttime', 'endtime']"
+                  v-for="field in ['date', 'totalMiles', 'purpose']"
                   :key="field"
                 >
                   <FormField
                     v-bind="colValidation[field]"
                     v-model="editedItem[field]"
                   />
-                </v-row>
-
-                <v-row class="py-0 my-0">
-                  Total Hours: {{ editedItemTotalHours }}
                 </v-row>
 
                 <v-checkbox
@@ -139,21 +135,15 @@
       </v-container>
     </template>
 
-    <template v-slot:item.starttime="{ item }">
-      <v-container flat :class="getColor(item.errors, 'starttime')">
-        {{ item.starttime }}
+    <template v-slot:item.totalMiles="{ item }">
+      <v-container flat :class="getColor(item.errors, 'totalMiles')">
+        {{ item.totalMiles }}
       </v-container>
     </template>
 
-    <template v-slot:item.endtime="{ item }">
-      <v-container flat :class="getColor(item.errors, 'endtime')">
-        {{ item.endtime }}
-      </v-container>
-    </template>
-
-    <template v-slot:item.totalHours="{ item }">
-      <v-container flat :class="getColor(item.errors, 'totalHours')">
-        {{ item.totalHours }}
+    <template v-slot:item.purpose="{ item }">
+      <v-container flat :class="getColor(item.errors, 'purpose')">
+        {{ item.purpose }}
       </v-container>
     </template>
 
@@ -191,17 +181,13 @@
 
 <script>
   import FormField from "@/components/Forms/FormField";
-  import ServicesDeliveredTableFields from "@/components/Forms/ServicesDelivered/ServicesDeliveredTableFields.json";
+  import MileageTableFields from "@/components/Forms/Mileage/MileageTableFields.json";
   import rules from "@/components/Utility/FormRules.js";
   import { TIME } from "@/components/Utility/Enums.js";
-  import {
-    subtractTime,
-    milliToFormat,
-  } from "@/components/Utility/TimeFunctions.js";
-  var moment = require("moment");
+  import { subtractTime } from "@/components/Utility/TimeFunctions.js";
 
   export default {
-    name: "ServicesDeliveredTable",
+    name: "MileageTable",
     components: {
       FormField,
     },
@@ -236,9 +222,9 @@
         type: Boolean,
         default: false,
       },
-      totalHours: {
-        type: String,
-        default: "00:00",
+      totalMiles: {
+        type: Number,
+        default: 0,
       },
       willResign: {
         type: Boolean,
@@ -249,15 +235,15 @@
       return {
         // Specify rules and hints for adding a new row to the table
         colValidation: JSON.parse(
-          JSON.stringify(ServicesDeliveredTableFields["colValidation"])
+          JSON.stringify(MileageTableFields["colValidation"])
         ),
 
         // Column headers and associated values for the table
-        headers: ServicesDeliveredTableFields["headers"],
+        headers: MileageTableFields["headers"],
 
         // Record the amount of edited parsed fields and added rows
         amtEdited: false,
-        allTotalHours: this.totalHours,
+        allTotalMiles: this.totalMiles,
 
         // Hide the warning popup for unlocking a parsed row or adding a row
         editingTable: false,
@@ -276,9 +262,8 @@
         // Default values for a new row in the table
         defaultItem: {
           date: "",
-          starttime: "",
-          endtime: "",
-          totalHours: "",
+          totalMiles: "",
+          purpose: "",
           group: "No",
           disabled: false,
           parsed: false,
@@ -289,9 +274,8 @@
         // saving changes to that row
         editedItem: {
           date: "",
-          starttime: "",
-          endtime: "",
-          totalHours: "",
+          totalMiles: "",
+          purpose: "",
           group: "No",
           disabled: false,
           parsed: false,
@@ -302,17 +286,6 @@
         // This allows for resuming tabbing after the dialog/popup closes
         focusedElement: null,
       };
-    },
-
-    computed: {
-      editedItemTotalHours: function () {
-        var start = this.editedItem["starttime"];
-        var end = this.editedItem["endtime"];
-        var timeDiff = subtractTime(start, end, TIME.TIME_12);
-        var formatTimeDiff = milliToFormat(timeDiff, TIME.TIME_24);
-        this.$set(this.editedItem, "totalHours", formatTimeDiff);
-        return formatTimeDiff;
-      },
     },
 
     watch: {
@@ -379,18 +352,6 @@
                 );
               }
             });
-
-            // If there was a start and an end time, calculate totalHours
-            var start = obj["parsedValue"]["starttime"];
-            var end = obj["parsedValue"]["endtime"];
-            var totalHours = subtractTime(start, end, TIME.TIME_12);
-            if (totalHours > 0) {
-              this.$set(
-                obj,
-                "totalHours",
-                milliToFormat(totalHours, TIME.TIME_24)
-              );
-            }
 
             // If the parsed row was not empty, add it to the table
             if (Object.keys(obj).length > 0) {
@@ -572,7 +533,6 @@
       validate() {
         var amtErrors = 0;
         // The columns to check for validation (ex. exclude action, group)
-
         // First check that each field has a valid value
         this.allEntries.forEach((entry) => {
           this.cols.forEach((col) => {
@@ -595,45 +555,15 @@
           });
         });
 
-        // Next, check that the end time is after the start time
-        this.allEntries.forEach((entry) => {
-          // If the start and end times are valid, begin parsing
-          if (
-            entry["errors"]["starttime"].length === 0 &&
-            entry["errors"]["endtime"].length === 0
-          ) {
-            var start = entry["starttime"];
-            var end = entry["endtime"];
-            var timeDiff = subtractTime(start, end, TIME.TIME_12);
-            if (timeDiff <= 0) {
-              entry["errors"]["starttime"].push("Invalid time interval");
-              entry["errors"]["endtime"].push("Invalid time interval");
-            }
-
-            var formatTimeDiff = moment
-              .duration({ minutes: timeDiff })
-              .format(TIME.TIME_24);
-            if (formatTimeDiff.localeCompare(entry["totalHours"]) === 0) {
-              entry["errors"]["totalHours"].push("Invalid calculation");
-            }
-          }
-        });
-
-        // Sort by date & time to check for overlapping time entries
+        // Sort by date
         this.allEntries.sort(
           (start, end) =>
-            -1 *
-            subtractTime(
-              start["date"] + " " + start["starttime"],
-              end["date"] + " " + end["starttime"],
-              TIME.FULL_DATE
-            )
+            -1 * subtractTime(start["date"], end["date"], TIME.YEAR_MONTH_DAY)
         );
-        this.checkOverlapping();
 
-        // Calculate the totalHours
-        this.allTotalHours = this.sumTableHours();
-        this.$emit("update-totalHours", this.allTotalHours);
+        // Calculate the totalMiles
+        this.allTotalMiles = this.sumTableMiles();
+        this.$emit("update-totalMiles", this.allTotalMiles);
 
         // Count up the amount of errors
         // For each row in the array of entries...
@@ -651,43 +581,19 @@
         return amtErrors;
       },
 
-      checkOverlapping() {
-        var ret = 0;
-        var prev_end = null;
-
-        this.allEntries.forEach((entry, index) => {
-          var start = entry["date"] + " " + entry["starttime"];
-          var end = entry["date"] + " " + entry["endtime"];
-
-          if (index !== 0) {
-            // If the start is before the end of the prev's end, there is an overlap
-            var timeDiff = subtractTime(prev_end, start, TIME.FULL_DATE);
-            if (timeDiff <= 0) {
-              ret += 1;
-              entry["errors"]["starttime"].push("Invalid time interval");
-              entry["errors"]["endtime"].push("Invalid time interval");
-            }
-          }
-
-          prev_end = end;
-        });
-
-        return ret;
-      },
-
-      // Compute the sum of all timesheet totalHours with the totalHours field
-      sumTableHours() {
-        let totalMilli = 0;
+      // Compute the sum of all timesheet totalMiles with the totalMiles field
+      sumTableMiles() {
+        let totalMiles = 0;
 
         // For each row in the array of entries...
         this.allEntries.forEach((entry, index) => {
           index;
-          if (entry["errors"]["totalHours"].length === 0) {
-            totalMilli += moment.duration(entry["totalHours"]).asMilliseconds();
+          if (entry["errors"]["totalMiles"].length === 0) {
+            totalMiles += Number(entry["totalMiles"]);
           }
         });
 
-        return milliToFormat(totalMilli, TIME.TIME_24);
+        return totalMiles;
       },
 
       printErrors() {

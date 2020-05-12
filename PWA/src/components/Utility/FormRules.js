@@ -12,7 +12,9 @@ const rules = {
   alphanumeric: [
     (v) => /^[a-zA-Z0-9]+$/.test(v) || "This field must be letters or numbers",
   ],
-  numeric: [(v) => /^[0-9]+$/.test(v) || "This field must be a number"],
+  numeric: [
+    (v) => /^[0-9]+(.[0-9]+)?$/.test(v) || "This field must be a number",
+  ],
   timeOfDay: [
     (v) =>
       /^[0-1][0-9]:[0-6][0-9] [AaPp][Mm]$/.test(v) ||
