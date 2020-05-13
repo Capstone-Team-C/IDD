@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdminUI.Areas.Identity.Data;
+using AdminUI.Data;
 using AdminUI.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,13 +38,18 @@ namespace AdminUI
                 options.UseSqlServer(Configuration.GetConnectionString("AzureDB"), 
                     b => b.MigrationsAssembly("AdminUI")));
 
+            services.AddDbContext<PayPeriodContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("AzureDB"), 
+                    b => b.MigrationsAssembly("AdminUI")));
+            
             services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<AdminUIUser> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<AdminUIUser> userManager, RoleManager<IdentityRole> roleManager, PayPeriodContext context)
         {
             SeedData(roleManager, userManager);
+            GlobalVariables.CurrentPayPeriod = context.PayPeriods.FirstOrDefault(p => p.Current);
 
             if (env.IsDevelopment())
             {

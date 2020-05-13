@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using AdminUI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AdminUI.Models;
@@ -21,11 +22,13 @@ namespace AdminUI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly SubmissionContext _context;
+        private readonly PayPeriodContext _pcontext;
 
-        public HomeController(ILogger<HomeController> logger, SubmissionContext context)
+        public HomeController(ILogger<HomeController> logger, SubmissionContext context, PayPeriodContext pcontext)
         {
             _logger = logger;
             _context = context;
+            _pcontext = pcontext;
         }
 
         public IActionResult Index(string sortOrder = "id", string pName="", string cName="", string dateFrom="", string dateTo="", string prime="", string providerId="", string status="pending", int page = 1, int perPage = 20, string formType="timesheet")
@@ -61,10 +64,20 @@ namespace AdminUI.Controllers
                 model.DateFrom = dateFrom;
                 submissions = submissions.Where(t => t.Submitted >= DateTime.Parse(dateFrom));
             }
+            else if (GlobalVariables.CurrentPayPeriod != null)
+            {
+                model.DateFrom = GlobalVariables.CurrentPayPeriod.DateFrom.ToString("yyyy-MM-dd");
+                submissions = submissions.Where(t => t.Submitted >= DateTime.Parse(model.DateFrom));
+            }
             if (!string.IsNullOrEmpty(dateTo))
             {
                 model.DateTo = dateTo;
                 submissions = submissions.Where(t => t.Submitted <= DateTime.Parse(dateTo));
+            }
+            else if (GlobalVariables.CurrentPayPeriod != null)
+            {
+                model.DateTo = GlobalVariables.CurrentPayPeriod.DateTo.ToString("yyyy-MM-dd");
+                submissions = submissions.Where(t => t.Submitted >= DateTime.Parse(model.DateTo));
             }
 
             if(!string.Equals(status,"all",StringComparison.CurrentCultureIgnoreCase))
@@ -105,6 +118,7 @@ namespace AdminUI.Controllers
             }
 
             model.Submissions = new List<Submission>(submissions);
+            model.Warning = _pcontext.PayPeriods.Count() < 3;
             return View(formType + "Index", model);
         }
 
