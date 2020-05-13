@@ -63,6 +63,18 @@
     "rules": ["name", "required"],
     "value": null
   },
+  "units": {
+    "disabled": false,
+    "value": ""
+  },
+  "type": {
+    "disabled": false,
+    "value": ""
+  },
+  "frequency": {
+    "disabled": false,
+    "value": ""
+  },
   "timesheet": {
     "disabled": false,
     "value": null
