@@ -123,13 +123,13 @@ namespace IDD
             var convUtil = new FormConversionUtils();
             TimesheetForm tsf = new TimesheetForm();
             List<TimesheetRowItem> tsl = new List<TimesheetRowItem>();
-            tsf.clientName = pwasub.customerName.value;
+            tsf.clientName = pwasub.clientName.value;
             tsf.prime = pwasub.prime.value;
             tsf.providerName = pwasub.providerName.value;
-            tsf.providerNum = pwasub.providerNumber.value;
-            tsf.brokerage = pwasub.cmorg.value;
-            tsf.scpaName = pwasub.scpa_name.value;
-            tsf.serviceAuthorized = pwasub.service.value;
+            tsf.providerNum = pwasub.providerNum.value;
+            tsf.brokerage = pwasub.brokerage.value;
+            tsf.scpaName = pwasub.scpaName.value;
+            tsf.serviceAuthorized = pwasub.serviceAuthorized.value;
             tsf.serviceGoal = pwasub.serviceGoal.value;
             tsf.progressNotes = pwasub.progressNotes.value;
             tsf.employerSignature = convUtil.PWABoolConverter(pwasub.employerSignature.value);
@@ -139,10 +139,11 @@ namespace IDD
             tsf.authorization = convUtil.PWABoolConverter(pwasub.authorization.value);
             tsf.id = pwasub.id;
 
-            foreach(PWAserviceDeliveredListVals lsv in pwasub.serviceDeliveredOn.value)
+
+            foreach(PWAtimesheetVals lsv in pwasub.timesheet.value)
             {
                 string s = lsv.totalHours.Replace(':', '.');
-                tsf.addTimeRow(lsv.date, lsv.startTime, lsv.endTime, s, "true");
+                tsf.addTimeRow(lsv.date, lsv.starttime, lsv.endtime, s, "true");
             }
 
             return tsf;
