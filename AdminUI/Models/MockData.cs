@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Threading.Tasks;
-using AdminUI.Areas.Identity.Data;
-using AdminUI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Common.Models;
 using Common.Data;
-using Microsoft.AspNetCore.Http;
 
 //TODO: Delete this file when releasing
 namespace AdminUI.Models
@@ -40,7 +35,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/2/20 2:03PM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -98,7 +94,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/2/20 1:45PM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -140,7 +137,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/3/20 8:06AM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -190,7 +188,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/4/20 5:13PM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -240,7 +239,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/2/20 10:20AM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -277,7 +277,8 @@ namespace AdminUI.Models
                         Submitted = DateTime.Parse("4/1/20 10:20AM"),
                         RejectionReason = "",
                         Status = "Pending",
-                        UriString = "~/images/timesheet-front.png,~/images/timesheet-back.png",
+                        UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
+                                    "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
                         TimeEntries = new List<TimeEntry>
                         {
                                 new TimeEntry
@@ -329,6 +330,68 @@ namespace AdminUI.Models
                     }
 
                 );
+                context.Submissions.Add(
+                   new MileageForm
+                   {
+                       ClientName = "Dalmation " + i,
+                       ClientPrime = "5P0T5",
+                       ProviderName = "Dalmation Dad",
+                       ProviderId = "T1R3D",
+                       TotalMiles = 101.0,
+                       ServiceGoal = "To make sure the kids survive",
+                       ProgressNotes = "Still alive",
+                       FormType = "OR004 Mileage",
+                       Submitted = DateTime.Parse("4/1/20 10:20AM"),
+                       RejectionReason = "",
+                       Status = "Pending",
+                       UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
+                                   "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
+                       MileageEntries = new List<MileageEntry>
+                       {
+                                new MileageEntry
+                                {
+                                    Date = DateTime.Parse("3/27/20"),
+                                    Miles = 4,
+                                    Group = true,
+                                    PurposeOfTrip = "Run to the grocery store",
+                                    Status = "Pending"
+                                },
+                                new MileageEntry
+                                {
+                                    Date = DateTime.Parse("3/28/20"),
+                                    Miles = 10,
+                                    Group = true,
+                                    PurposeOfTrip = "Dropping kids off at school",
+                                    Status = "Pending"
+                                },
+                                new MileageEntry
+                                {
+                                    Date = DateTime.Parse("3/29/20"),
+                                    Miles = 5,
+                                    Group = true,
+                                    PurposeOfTrip = "Run to the pharmacy",
+                                    Status = "Pending"
+                                },
+                                new MileageEntry
+                                {
+                                    Date = DateTime.Parse("3/30/20"),
+                                    Miles = 50,
+                                    Group = true,
+                                    PurposeOfTrip = "Roadtrip!",
+                                    Status = "Pending"
+                                },
+                                new MileageEntry
+                                {
+                                    Date = DateTime.Parse("4/1/20"),
+                                    Miles = 25,
+                                    Group = true,
+                                    PurposeOfTrip = "I'm just putting a really long string in here just to see what happens when the various modules try to display it",
+                                    Status = "Pending"
+                                },
+                       }
+                   }
+
+               );
             }
 
             context.SaveChanges();

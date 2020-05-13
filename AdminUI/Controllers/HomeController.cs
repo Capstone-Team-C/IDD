@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using AdminUI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AdminUI.Models;
@@ -11,6 +10,7 @@ using Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Common.Data;
 using Microsoft.AspNetCore.Authorization;
+using SQLitePCL;
 
 namespace AdminUI.Controllers
 {
@@ -18,19 +18,19 @@ namespace AdminUI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly SubmissionContext _scontext;
+        private readonly SubmissionContext _context;
 
-        public HomeController(ILogger<HomeController> logger, SubmissionContext scontext)
+        public HomeController(ILogger<HomeController> logger, SubmissionContext context)
         {
             _logger = logger;
-            _scontext = scontext;
+            _context = context;
         }
 
-        public IActionResult Index(string sortOrder = "id", string pName="", string cName="", string dateFrom="", string dateTo="", string prime="", string id="", string ProviderId="", string status="pending", int page = 1, int perPage = 20)
+        public IActionResult Index(string sortOrder = "id", string pName="", string cName="", string dateFrom="", string dateTo="", string prime="", string providerId="", string status="pending", int page = 1, int perPage = 20, string formType="timesheet")
         {
-            var submissions = GetTimesheets();
+            var submissions = GetSubmissions(formType);
 
-            var model = new HomeModel();
+            var model = new HomeModel{FormType = formType};
             
             //filter the timesheets 
             if (!string.IsNullOrEmpty(pName))
@@ -38,10 +38,10 @@ namespace AdminUI.Controllers
                 model.PName = pName;
                 submissions = submissions.Where(t => t.ProviderName.ToLower().Contains(pName.ToLower()));
             }
-            if (!string.IsNullOrEmpty(ProviderId))
+            if (!string.IsNullOrEmpty(providerId))
             {
-                model.ProviderId = ProviderId;
-                submissions = submissions.Where(t => t.ProviderId.ToLower().Contains(ProviderId.ToLower()));
+                model.ProviderId = providerId;
+                submissions = submissions.Where(t => t.ProviderId.ToLower().Contains(providerId.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(cName))
@@ -64,12 +64,7 @@ namespace AdminUI.Controllers
                 model.DateTo = dateTo;
                 submissions = submissions.Where(t => t.Submitted <= DateTime.Parse(dateTo));
             }
-            if (!string.IsNullOrEmpty(id))
-            {
-                model.Id = int.Parse(id);
-                submissions = submissions.Where(t => t.Id == int.Parse(id));
-            }
-            
+
             if(!string.Equals(status,"all",StringComparison.CurrentCultureIgnoreCase))
                 submissions = submissions.Where(t => t.Status.Equals(status,StringComparison.CurrentCultureIgnoreCase));
 
@@ -89,24 +84,22 @@ namespace AdminUI.Controllers
                 "cname_desc" => submissions.OrderByDescending(t => t.ClientName),
                 "date" => submissions.OrderBy(t => t.Submitted),
                 "date_desc" => submissions.OrderByDescending(t => t.Submitted),
-                "hours" => submissions.OrderBy(t => t.TotalHours),
-                "hours_desc" => submissions.OrderByDescending(t => t.TotalHours),
                 "ProviderId" => submissions.OrderBy(t => t.ProviderId),
                 "ProviderId_desc" => submissions.OrderByDescending(t => t.ProviderId),
                 _ => submissions.OrderBy(t => t.Id),
             };
+
             model.SortOrder = sortOrder;
             model.TotalSubmissions = submissions.Count();
-
-            model.TotalPages = submissions.Count() / perPage + (submissions.Count() % perPage == 0 ? 0 : 1);
+            model.TotalPages = model.TotalSubmissions / perPage + (model.TotalSubmissions % perPage == 0 ? 0 : 1);
             submissions = submissions.Skip((page - 1) * perPage).Take(perPage);
             model.PerPage = perPage;
             model.Page = page;
 
             foreach (var s in submissions)
-                _scontext.Entry(s).Collection(t => t.TimeEntries).Load();
-            model.Timesheets = new List<Timesheet>(submissions);
-            return View(model);
+                s.LoadEntries(_context);
+            model.Submissions = new List<Submission>(submissions);
+            return View(formType + "Index", model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -115,17 +108,17 @@ namespace AdminUI.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private IEnumerable<Timesheet> GetTimesheets()
+        private IEnumerable<Submission> GetSubmissions(string formType)
         {
-            return _scontext.Timesheets
-                .Include(t => t.TimeEntries)
-                .AsEnumerable();
+            if (formType.Equals("timesheet"))
+                return _context.Timesheets.AsEnumerable();
+            return _context.MileageForms.AsEnumerable();
         }
 
         public bool GetLockInfo(int id)
         {
-            var submission = _scontext.Submissions.Find(id);
-            _scontext.Entry(submission).Reference(t => t.LockInfo).Load();
+            var submission = _context.Submissions.Find(id);
+            _context.Entry(submission).Reference(t => t.LockInfo).Load();
 
             //if lock exists, disable processing and indicate sheet is locked
             //else no lock, create lock.
@@ -138,8 +131,8 @@ namespace AdminUI.Controllers
                     User = User.Identity.Name
                 };
 
-                _scontext.Update(submission);
-                _scontext.SaveChanges();
+                _context.Update(submission);
+                _context.SaveChanges();
             }
 
             return submission.LockInfo.User.Equals(User.Identity.Name);
@@ -148,20 +141,20 @@ namespace AdminUI.Controllers
         //Releases the Lock if the current User is holding the lock
         public void ReleaseLock(int id)
         {
-            var submission = _scontext.Submissions.Find(id);
-            _scontext.Entry(submission).Reference(t => t.LockInfo).Load();
+            var submission = _context.Submissions.Find(id);
+            _context.Entry(submission).Reference(t => t.LockInfo).Load();
 
             if (submission.LockInfo.User.Equals(User.Identity.Name))
             {
                 submission.LockInfo = null;
-                _scontext.Update(submission);
-                _scontext.SaveChanges();
+                _context.Update(submission);
+                _context.SaveChanges();
             }
         }
 
-        public FileContentResult DownloadCSV(string pName, string cName, string dateFrom, string dateTo, string prime, string id, string status)
+        public FileContentResult DownloadCSV(string pName, string cName, string dateFrom, string dateTo, string prime, string id, string status, string formType)
         {
-            var submissions = GetTimesheets();
+            var submissions = GetSubmissions(formType);
 
             //filter the timesubmissions 
             if (!string.IsNullOrEmpty(pName))

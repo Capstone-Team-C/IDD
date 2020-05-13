@@ -4,7 +4,7 @@ namespace AdminUI.Models
 {
     public class HomeModel
     {
-        public IList<Timesheet> Timesheets;
+        public IList<Submission> Submissions;
         public int TotalPages;
         public int TotalSubmissions;
         public int PerPage;
@@ -15,12 +15,12 @@ namespace AdminUI.Models
 
         //keep track of current filters
         public string PName; 
-        public int? Id;
         public string CName;
         public string Prime;
         public string DateFrom;
         public string DateTo;
         public string ProviderId;
         public string Status;
+        public string FormType;
     }
 }
