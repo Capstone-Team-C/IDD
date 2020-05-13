@@ -149,10 +149,9 @@ namespace FormSubmit.Tests
             foreach (var x in dlist)
             {
                 DateTime dt;
-                var convUtil = new FormConversionUtils();
                 try
                 {
-                    dt = convUtil.DateStringConvertUtil(x);
+                    dt = FormConversionUtils.DateStringConvertUtil(x);
                     System.Console.WriteLine("Date: " + dt.ToString());
                     Assert.IsInstanceOf(typeof(DateTime), dt);
                 }

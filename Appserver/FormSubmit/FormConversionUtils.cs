@@ -5,15 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace IDD
 {
-    public class FormConversionUtils
+    public static class FormConversionUtils
     {
-        public FormConversionUtils()
-        {
-        }
-
         // Convert PM time to 24hr time.
         // TODO make this not necessary?
-        public string TimeFormatter24(string t)
+        public static string TimeFormatter24(string t)
         {
             var ts = t.Split(':');
             int hours;
@@ -34,7 +30,7 @@ namespace IDD
 
         // Add leading zero if needed.
         // TODO make this not necessary?
-        public string TimeFormatterPadding(string t)
+        public static string TimeFormatterPadding(string t)
         {
             var ts = t.Split(':');
             if (ts.Length < 2)
@@ -49,7 +45,7 @@ namespace IDD
             return t;
         }
 
-        public bool PWABoolConverter(string val)
+        public static bool PWABoolConverter(string val)
         {
             val = val.ToLower();
             if (val == "true" || val == "yes")
@@ -64,7 +60,7 @@ namespace IDD
         // Removes spaces, replaces commas with hyphens,
         // and attempts to replace things like 1st, 2nd with
         // just the numeric equivalent.
-        private string DateStringCleaning(string s)
+        private static string DateStringCleaning(string s)
         {
             // Remove spaces, normal chars to lowercase
             s = s.ToLower();
@@ -90,7 +86,7 @@ namespace IDD
         // Assumes a-b-c format, attemps to convert short
         // and long spelling of months into their numbered
         // equivalent.
-        private string NormalizeMonth(string s)
+        private static string NormalizeMonth(string s)
         {
             var l = s.Split("-");
             foreach (string x in l)
@@ -123,7 +119,7 @@ namespace IDD
 
         // Attempts to parse the passed string into a valid
         // DateTime obj. via several methods. 
-        private bool DateStringCustomParser(string ts, out DateTime dt)
+        private static bool DateStringCustomParser(string ts, out DateTime dt)
         {
             // Second pass try more specific formats
             try
@@ -148,7 +144,7 @@ namespace IDD
         // Takes a string meant to represent a date and
         // attempts to convert it to a DateTime object. Otherwise,
         // a FormatException is thrown.
-        public DateTime DateStringConvertUtil(string s)
+        public static DateTime DateStringConvertUtil(string s)
         {
 
             // Try the default parser

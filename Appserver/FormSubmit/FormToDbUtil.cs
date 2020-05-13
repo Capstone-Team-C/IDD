@@ -9,6 +9,7 @@ using Appserver.Data;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using convUtil = IDD.FormConversionUtils;
 
 namespace IDD
 {
@@ -120,7 +121,6 @@ namespace IDD
         // PWA to TimesheetForm converter
         public TimesheetForm PWAtoTimesheetFormConverter(PWAsubmission pwasub)
         {
-            var convUtil = new FormConversionUtils();
             TimesheetForm tsf = new TimesheetForm();
             List<TimesheetRowItem> tsl = new List<TimesheetRowItem>();
             tsf.clientName = pwasub.clientName.value;
@@ -155,7 +155,6 @@ namespace IDD
         {
             double totalHours = 0;
             var tl = new List<TimeEntry>();
-            var convUtil = new FormConversionUtils();
 
             foreach (TimesheetRowItem tsri in tsf.Times)
             {
