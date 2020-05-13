@@ -138,6 +138,7 @@ namespace IDD
             tsf.authorization = PWABoolConverter(pwasub.authorization.value);
             tsf.approval = PWABoolConverter(pwasub.approval.value);
             tsf.type = PWAFormChoiceToString(pwasub.formChoice);
+            tsf.id = pwasub.id;
 
 
             foreach(PWAtimesheetVals lsv in pwasub.timesheet.value)
