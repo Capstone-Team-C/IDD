@@ -22,7 +22,7 @@
             <div class="example-btn">
               <file-upload
                 class="btn btn-primary"
-                :post-action="urlPost"
+                :custom-action="customAction"
                 :multiple="true"
                 :drop="true"
                 :drop-directory="true"
@@ -219,19 +219,52 @@
           return false;
         }
       },
+      customAction() {
+        let formData = new FormData();
+
+
+        for (let i = 0; i < this.files.length; i++){
+          let file = this.files[i].file
+          formData.append('files[' + i + ']', file)
+        }
+        let self = this
+        axios.post(this.urlPost,
+          formData,
+          {
+            headers: {
+              'Content-Type' : 'multipart/form-data',
+            }
+          }
+        ).then(function(response) {
+          console.log(response)
+					for (let i = 0; i < self.files.length; i++){
+						self.files[i].active = false
+						self.files[i].success = true
+          }
+          console.log("change to done")
+          self.formID = response["id"]
+          console.log('Posted!')
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        return
+      },
       inputFile: function (newFile, oldFile) {
         let jsonResponse;
         if (newFile.xhr) {
-          if (newFile.xhr.response != undefined)
+          if (!newFile.active){
             jsonResponse = JSON.parse(newFile.xhr.response);
-          this.formID = jsonResponse["id"];
+            this.formID = jsonResponse["id"];
+          }
         }
 
         if (newFile && oldFile && !newFile.active && oldFile.active)
           if (newFile.xhr) {
-            if (newFile.xhr.response != undefined)
+            if (!newFile.active){
               jsonResponse = JSON.parse(newFile.xhr.response);
-            this.formID = jsonResponse["id"];
+              this.formID = jsonResponse["id"];
+            }
           }
       },
     },
