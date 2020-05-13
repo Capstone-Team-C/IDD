@@ -96,8 +96,12 @@ namespace AdminUI.Controllers
             model.PerPage = perPage;
             model.Page = page;
 
-            foreach (var s in submissions)
-                s.LoadEntries(_context);
+            foreach (var sub in submissions)
+            {
+                sub.LoadEntries(_context);
+                _context.Entry(sub).Reference(s => s.LockInfo).Load();
+            }
+
             model.Submissions = new List<Submission>(submissions);
             return View(formType + "Index", model);
         }
