@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -21,6 +22,8 @@ namespace Common.Models
         public ICollection<TimeEntry> TimeEntries { get; set; }
         public override PdfDocument ToPdf()
         {
+            var watch = new Stopwatch();
+            watch.Start();
             //http://www.pdfsharp.net/wiki/Unicode-sample.ashx
             // Create new document
             var document = new PdfDocument();
@@ -144,14 +147,15 @@ namespace Common.Models
             foreach (var uri in UriList)
             {
                 using var wc = new WebClient();
-                using var imgStream = new MemoryStream(wc.DownloadData(uri));
-                using var objImage = XImage.FromStream(imgStream);
+                using var objImage = XImage.FromStream(wc.OpenRead(uri));
                 //do stuff with the image
                 var newPage = document.AddPage();
                 var gfx2 = XGraphics.FromPdfPage(newPage);
-                gfx2.DrawImage(objImage, 10, newPage.Height / 8, objImage.Width * .5, objImage.Height * .5);
+                gfx2.DrawImage(objImage,0,0, newPage.Width, newPage.Height);
             }
 
+            watch.Stop();
+            Console.WriteLine("Time to Generate PDF: " + watch.Elapsed.Seconds + "." + watch.Elapsed.Milliseconds + " seconds");
             return document;
         }
 

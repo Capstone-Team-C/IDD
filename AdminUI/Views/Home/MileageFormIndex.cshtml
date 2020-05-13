@@ -86,6 +86,20 @@
         {
             @class = "btn btn-secondary "
         })
+        @Html.ActionLink("Download PDFs", "DownloadPDFs", new
+        {
+            formType = Model.FormType,
+            pname = Model.PName,
+            providerId = Model.ProviderId,
+            prime = Model.Prime,
+            cname = Model.CName,
+            datefrom = Model.DateFrom,
+            dateto = Model.DateTo,
+            status = Model.Status
+        }, new
+        {
+            @class = "btn btn-dark"
+        })
         <br/><br/>
     </form>
 </div>

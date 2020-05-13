@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -160,7 +162,7 @@ namespace AdminUI.Controllers
         {
             var submissions = GetSubmissions(formType);
 
-            //filter the timesubmissions 
+            //filter the submissions 
             if (!string.IsNullOrEmpty(pName))
                 submissions = submissions.Where(t => t.ProviderName.ToLower().Contains(pName.ToLower()));
 
@@ -205,6 +207,59 @@ namespace AdminUI.Controllers
             }
             var name = "Submissions_summary_" + DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss") + ".csv";
             return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", name);
+        }
+
+        public FileContentResult DownloadPDFs(string pName, string cName, string dateFrom, string dateTo, string prime,
+            string id, string status, string formType)
+        {
+
+            var submissions = GetSubmissions(formType);
+
+            //filter the submissions 
+            if (!string.IsNullOrEmpty(pName))
+                submissions = submissions.Where(t => t.ProviderName.ToLower().Contains(pName.ToLower()));
+
+            if (!string.IsNullOrEmpty(cName))
+                submissions = submissions.Where(t => t.ClientName.ToLower().Contains(cName.ToLower()));
+
+            if (!string.IsNullOrEmpty(dateFrom))
+                submissions = submissions.Where(t => t.Submitted >= DateTime.Parse(dateFrom));
+
+            if (!string.IsNullOrEmpty(dateTo))
+                submissions = submissions.Where(t => t.Submitted <= DateTime.Parse(dateTo));
+
+            if (!string.IsNullOrEmpty(prime))
+                submissions = submissions.Where(t => t.ClientPrime == prime);
+
+            if (!string.IsNullOrEmpty(id))
+                submissions = submissions.Where(t => t.Id == int.Parse(id));
+
+            if (string.IsNullOrEmpty(status))
+                status = "pending";
+
+            if (!string.Equals(status, "all", StringComparison.CurrentCultureIgnoreCase))
+                submissions = submissions.Where(t => t.Status.Equals(status, StringComparison.CurrentCultureIgnoreCase));
+
+            var ms = new MemoryStream();
+            using (var archive = new ZipArchive(ms, ZipArchiveMode.Create, true))
+            {
+
+                foreach (var sub in submissions)
+                {
+                    var fileDownloadName = sub.ClientName + "_" + sub.ClientPrime + "_" + sub.ProviderName + "_" +
+                                           sub.ProviderId + "_" + sub.Submitted.ToString("yyyy-mm-dd") + "_" + sub.FormType + ".pdf";
+                    sub.LoadEntries(_context);
+                    var zipEntry = archive.CreateEntry(fileDownloadName, CompressionLevel.Fastest);
+                    using var zipStream = zipEntry.Open();
+                    var pdfStream = new MemoryStream();
+                    sub.ToPdf().Save(pdfStream, false);
+                    zipStream.Write(pdfStream.ToArray(), 0, (int) pdfStream.Length);
+                    zipStream.Close();
+                }
+            }
+
+            return File(ms.ToArray(), "application/zip", DateTime.Now.ToString("yyyy-m-dd") + "_" + formType + "_pdfs" + ".zip");
+
         }
 
     }
