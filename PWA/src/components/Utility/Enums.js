@@ -1,8 +1,8 @@
 // To be used in views/Timesheet.vue
 export const FORM = {
-  OOR004_MILEAGE: 1,
-  OOR507_RELIEF: 2,
-  OOR526_ATTENDANT: 3,
+  OR004_MILEAGE: 1,
+  OR507_RELIEF: 2,
+  OR526_ATTENDANT: 3,
 };
 
 // To be used in views/Timesheet.vue

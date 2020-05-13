@@ -42,8 +42,8 @@
       <v-col
         v-else-if="
           fileStatus === FILE.SUCCESS &&
-          (FORM[formChoice] === FORM.OOR507_RELIEF ||
-            FORM[formChoice] === FORM.OOR526_ATTENDANT)
+          (FORM[formChoice] === FORM.OR507_RELIEF ||
+            FORM[formChoice] === FORM.OR526_ATTENDANT)
         "
       >
         <ServicesDelivered
@@ -54,8 +54,8 @@
 
       <v-col
         v-else-if="
-          fileStatus === FILE.SUCCESS &&
-          FORM[formChoice] === FORM.OOR004_MILEAGE
+          fileStatus === FILE.SUCCESS&&
+          FORM[formChoice] === FORM.OR004_MILEAGE
         "
       >
         <Mileage
