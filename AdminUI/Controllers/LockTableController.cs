@@ -19,7 +19,7 @@ namespace AdminUI.Controllers
             _context = context;
         }
         // GET
-        public IActionResult LockTable(string sortOrder="id", int page = 1, int perPage = 20)
+        public IActionResult Index(string sortOrder="id", int page = 1, int perPage = 20)
         {
             var model = new LockTableModel();
             var submissions = _context.Submissions.Where(s => s.LockInfo != null);
@@ -71,7 +71,7 @@ namespace AdminUI.Controllers
             submission.LockInfo = null;
             _context.Update(submission);
             await _context.SaveChangesAsync();
-            return RedirectToAction("LockTable", "LockTable");
+            return RedirectToAction("Index", "LockTable");
         }
 
         public async Task<IActionResult> ReleaseAllLocks()
@@ -84,7 +84,7 @@ namespace AdminUI.Controllers
                 _context.Update(s);
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction("LockTable", "LockTable");
+            return RedirectToAction("Index", "LockTable");
         }
 
     }

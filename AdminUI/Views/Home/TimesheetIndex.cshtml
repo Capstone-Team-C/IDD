@@ -9,14 +9,18 @@
 <link rel="manifest" href="~/manifest.json">
 <!-- Note: Avoid using inline styles as much as possible. Instead, use classes or ids & .css files -->
 
-        <div class ="text-center">
-            <div class="leftnav">
-                <p>Saved filters</p>
-                @Html.ActionLink("Submitted by Mickey Mouse", "Index", new {pname = "Mickey Mouse", status="all"})
-                @Html.ActionLink("Submitted since 4/2/2020", "Index", new {datefrom = "2020-04-02", status = "all"})
-                @Html.ActionLink("All unprocessed Submissions", "Index", new {status="pending"})
-            </div>
-        </div>
+@if (Model.Warning)
+{
+    <div class="alert alert-danger" style="text-align:center"><h1>Fewer than 3 Pay Periods remaining in database! Ask an Administrator to add more.</h1></div>
+}
+<div class ="text-center">
+    <div class="leftnav">
+        <p>Saved filters</p>
+        @Html.ActionLink("Submitted by Mickey Mouse", "Index", new {pname = "Mickey Mouse", dateFrom = "1990-01-01", dateTo = DateTime.Now.ToString("yyyy-MM-dd"), status="all"})
+        @Html.ActionLink("Submitted since 4/2/2020", "Index", new {datefrom = "2020-04-02", dateTo = DateTime.Now.ToString("yyyy-MM-dd"), status = "all"})
+        @Html.ActionLink("All unprocessed Submissions", "Index", new {dateFrom = "1990-01-01", dateTo=DateTime.Now.ToString("yyyy-MM-dd"), status="pending"})
+    </div>
+</div>
 <div class="main">
 <div class="text-center" 
      style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 25px; padding-bottom: 25px;
@@ -35,7 +39,7 @@
             </div>
             <div class="col-md-3">
                 <label for="dateFrom">From:</label>
-                <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom">
+                <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom" required>
             </div>
             <div class="col-md-3">
                 <label for="status">Status:</label>
@@ -58,7 +62,7 @@
             </div>
             <div class="col-md-3">
                 <label for="dateTo">To:</label>
-                <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo"><br/>
+                <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo" required><br/>
             </div>
             <div class="col-md-3">
                 <label for="formType">Form Type:</label>
