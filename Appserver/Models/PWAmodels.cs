@@ -5,6 +5,7 @@ namespace Common.Models
 {
     public class PWAsubmission
     {
+        public int id { get; set; }
         public PWAsubmissionVals customerName { get; set; }
         public PWAsubmissionVals prime { get; set; }
         public PWAsubmissionVals submissionDate { get; set; }

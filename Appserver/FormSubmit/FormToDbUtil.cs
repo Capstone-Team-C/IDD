@@ -137,6 +137,7 @@ namespace IDD
             tsf.providerSignature = convUtil.PWABoolConverter(pwasub.providerSignature.value);
             tsf.providerSignDate = pwasub.providerSignDate.value;
             tsf.authorization = convUtil.PWABoolConverter(pwasub.authorization.value);
+            tsf.id = pwasub.id;
 
             foreach(PWAserviceDeliveredListVals lsv in pwasub.serviceDeliveredOn.value)
             {
