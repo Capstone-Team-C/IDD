@@ -9,14 +9,18 @@
 <link rel="manifest" href="~/manifest.json">
 <!-- Note: Avoid using inline styles as much as possible. Instead, use classes or ids & .css files -->
 
-        <div class ="text-center">
-            <div class="leftnav">
-                <p>Saved filters</p>
-                @Html.ActionLink("Submitted by Mickey Mouse", "Index", new {pname = "Mickey Mouse", status="all"})
-                @Html.ActionLink("Submitted since 4/2/2020", "Index", new {datefrom = "2020-04-02", status = "all"})
-                @Html.ActionLink("All unprocessed Submissions", "Index", new {status="pending"})
-            </div>
-        </div>
+@if (Model.Warning)
+{
+    <div class="alert alert-danger" style="text-align:center"><h1>Fewer than 3 Pay Periods remaining in database! Ask an Administrator to add more.</h1></div>
+}
+<div class ="text-center">
+    <div class="leftnav">
+        <p>Saved filters</p>
+        @Html.ActionLink("Submitted by Mickey Mouse", "Index", new {pname = "Mickey Mouse", dateFrom = "1990-01-01", dateTo = DateTime.Now.ToString("yyyy-MM-dd"), status="all"})
+        @Html.ActionLink("Submitted since 4/2/2020", "Index", new {datefrom = "2020-04-02", dateTo = DateTime.Now.ToString("yyyy-MM-dd"), status = "all"})
+        @Html.ActionLink("All unprocessed Submissions", "Index", new {dateFrom = "1990-01-01", dateTo=DateTime.Now.ToString("yyyy-MM-dd"), status="pending"})
+    </div>
+</div>
 <div class="main">
 <div class="text-center" 
      style="background-color: var(--light-grey); width: 100%; margin-top: 0; padding-top: 25px; padding-bottom: 25px;
@@ -35,7 +39,7 @@
             </div>
             <div class="col-md-3">
                 <label for="dateFrom">From:</label>
-                <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom">
+                <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom" required>
             </div>
             <div class="col-md-3">
                 <label for="status">Status:</label>
@@ -50,7 +54,7 @@
         <div class="row text-right">
             <div class="col-md-3">
                 <label for="pName">Provider ID:</label>
-                <input type="select" name="ProviderId" id="ProviderId" value="@Model.ProviderId">
+                <input type="text" name="ProviderId" id="ProviderId" value="@Model.ProviderId">
             </div>
             <div class="col-md-3">
                 <label for="prime">Client Prime:</label>
@@ -58,7 +62,7 @@
             </div>
             <div class="col-md-3">
                 <label for="dateTo">To:</label>
-                <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo"><br/>
+                <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo" required><br/>
             </div>
             <div class="col-md-3">
                 <label for="formType">Form Type:</label>
@@ -85,6 +89,20 @@
         }, new
         {
             @class = "btn btn-secondary "
+        })
+        @Html.ActionLink("Download PDFs", "DownloadPDFs", new
+        {
+            formType = Model.FormType,
+            pname = Model.PName,
+            providerId = Model.ProviderId,
+            prime = Model.Prime,
+            cname = Model.CName,
+            datefrom = Model.DateFrom,
+            dateto = Model.DateTo,
+            status = Model.Status
+        }, new
+        {
+            @class = "btn btn-dark"
         })
         <br/><br/>
     </form>
@@ -182,6 +200,7 @@
             page = Model.Page,
             perPage = Model.PerPage
         })</th>
+    <th>Lock Status</th>
 </tr>
 </thead>
 <tfoot>
@@ -317,6 +336,18 @@
         <td><a data-toggle="modal" data-target="#@("sheet" + m.Id)" asp-controller="Submission" asp-action="Index" asp-route-id="@m.Id">@m.ClientPrime</a></td>
         <td><a data-toggle="modal" data-target="#@("sheet" + m.Id)" asp-controller="Submission" asp-action="Index" asp-route-id="@m.Id">@m.TotalMiles</a></td>
         <td><a data-toggle="modal" data-target="#@("sheet" + m.Id)" asp-controller="Submission" asp-action="Index" asp-route-id="@m.Id">@m.Submitted</a></td>
+        @if (m.LockInfo == null)
+        {
+            <td><a data-toggle="modal" data-target="#@("sheet" + m.Id)" asp-controller="Submission" asp-action="Index" asp-route-id="@m.Id">           </a></td>
+        }
+        else if (m.LockInfo.User.Equals(User.Identity.Name))
+        {
+            <td class="table-success"><a data-toggle="modal" data-target="#@("sheet" + m.Id)" asp-controller="Submission" asp-action="Index" asp-route-id="@m.Id">@m.LockInfo.User</a></td>
+        }
+        else
+        {
+            <td class="table-danger"><a data-toggle="modal" data-target="#@("sheet" + m.Id)" asp-controller="Submission" asp-action="Index" asp-route-id="@m.Id">@m.LockInfo.User</a></td>
+        }
     </tr>
     <div class="modal fade" id="@("sheet" + m.Id)" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">

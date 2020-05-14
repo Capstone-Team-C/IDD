@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using AdminUI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AdminUI.Models;
@@ -19,11 +22,13 @@ namespace AdminUI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly SubmissionContext _context;
+        private readonly PayPeriodContext _pcontext;
 
-        public HomeController(ILogger<HomeController> logger, SubmissionContext context)
+        public HomeController(ILogger<HomeController> logger, SubmissionContext context, PayPeriodContext pcontext)
         {
             _logger = logger;
             _context = context;
+            _pcontext = pcontext;
         }
 
         public IActionResult Index(string sortOrder = "id", string pName="", string cName="", string dateFrom="", string dateTo="", string prime="", string providerId="", string status="pending", int page = 1, int perPage = 20, string formType="timesheet")
@@ -59,10 +64,20 @@ namespace AdminUI.Controllers
                 model.DateFrom = dateFrom;
                 submissions = submissions.Where(t => t.Submitted >= DateTime.Parse(dateFrom));
             }
+            else if (GlobalVariables.CurrentPayPeriod != null)
+            {
+                model.DateFrom = GlobalVariables.CurrentPayPeriod.DateFrom.ToString("yyyy-MM-dd");
+                submissions = submissions.Where(t => t.Submitted >= GlobalVariables.CurrentPayPeriod.DateFrom);
+            }
             if (!string.IsNullOrEmpty(dateTo))
             {
                 model.DateTo = dateTo;
                 submissions = submissions.Where(t => t.Submitted <= DateTime.Parse(dateTo));
+            }
+            else if (GlobalVariables.CurrentPayPeriod != null)
+            {
+                model.DateTo = GlobalVariables.CurrentPayPeriod.DateTo.ToString("yyyy-MM-dd");
+                submissions = submissions.Where(t => t.Submitted <= GlobalVariables.CurrentPayPeriod.DateTo);
             }
 
             if(!string.Equals(status,"all",StringComparison.CurrentCultureIgnoreCase))
@@ -96,9 +111,14 @@ namespace AdminUI.Controllers
             model.PerPage = perPage;
             model.Page = page;
 
-            foreach (var s in submissions)
-                s.LoadEntries(_context);
+            foreach (var sub in submissions)
+            {
+                _context.Entry(sub).Reference(s => s.LockInfo).Load();
+                sub.LoadEntries(_context);
+            }
+
             model.Submissions = new List<Submission>(submissions);
+            model.Warning = _pcontext.PayPeriods.Count() < 3;
             return View(formType + "Index", model);
         }
 
@@ -111,8 +131,8 @@ namespace AdminUI.Controllers
         private IEnumerable<Submission> GetSubmissions(string formType)
         {
             if (formType.Equals("timesheet"))
-                return _context.Timesheets.AsEnumerable();
-            return _context.MileageForms.AsEnumerable();
+                return _context.Timesheets.ToList();
+            return _context.MileageForms.ToList();
         }
 
         public bool GetLockInfo(int id)
@@ -156,7 +176,7 @@ namespace AdminUI.Controllers
         {
             var submissions = GetSubmissions(formType);
 
-            //filter the timesubmissions 
+            //filter the submissions 
             if (!string.IsNullOrEmpty(pName))
                 submissions = submissions.Where(t => t.ProviderName.ToLower().Contains(pName.ToLower()));
 
@@ -201,6 +221,59 @@ namespace AdminUI.Controllers
             }
             var name = "Submissions_summary_" + DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss") + ".csv";
             return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", name);
+        }
+
+        public FileContentResult DownloadPDFs(string pName, string cName, string dateFrom, string dateTo, string prime,
+            string id, string status, string formType)
+        {
+
+            var submissions = GetSubmissions(formType);
+
+            //filter the submissions 
+            if (!string.IsNullOrEmpty(pName))
+                submissions = submissions.Where(t => t.ProviderName.ToLower().Contains(pName.ToLower()));
+
+            if (!string.IsNullOrEmpty(cName))
+                submissions = submissions.Where(t => t.ClientName.ToLower().Contains(cName.ToLower()));
+
+            if (!string.IsNullOrEmpty(dateFrom))
+                submissions = submissions.Where(t => t.Submitted >= DateTime.Parse(dateFrom));
+
+            if (!string.IsNullOrEmpty(dateTo))
+                submissions = submissions.Where(t => t.Submitted <= DateTime.Parse(dateTo));
+
+            if (!string.IsNullOrEmpty(prime))
+                submissions = submissions.Where(t => t.ClientPrime == prime);
+
+            if (!string.IsNullOrEmpty(id))
+                submissions = submissions.Where(t => t.Id == int.Parse(id));
+
+            if (string.IsNullOrEmpty(status))
+                status = "pending";
+
+            if (!string.Equals(status, "all", StringComparison.CurrentCultureIgnoreCase))
+                submissions = submissions.Where(t => t.Status.Equals(status, StringComparison.CurrentCultureIgnoreCase));
+
+            var ms = new MemoryStream();
+            using (var archive = new ZipArchive(ms, ZipArchiveMode.Create, true))
+            {
+
+                foreach (var sub in submissions)
+                {
+                    var fileDownloadName = (sub.ClientName + "_" + sub.ClientPrime + "_" + sub.ProviderName + "_" +
+                                           sub.ProviderId + "_" + sub.Submitted.ToString("yyyy-mm-dd") + "_" + sub.FormType + ".pdf").Replace("/","_");
+                    sub.LoadEntries(_context);
+                    var zipEntry = archive.CreateEntry(fileDownloadName, CompressionLevel.Fastest);
+                    using var zipStream = zipEntry.Open();
+                    var pdfStream = new MemoryStream();
+                    sub.ToPdf().Save(pdfStream, false);
+                    zipStream.Write(pdfStream.ToArray(), 0, (int) pdfStream.Length);
+                    zipStream.Close();
+                }
+            }
+
+            return File(ms.ToArray(), "application/zip", DateTime.Now.ToString("yyyy-m-dd") + "_" + formType + "_pdfs" + ".zip");
+
         }
 
     }

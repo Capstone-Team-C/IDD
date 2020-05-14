@@ -4,6 +4,7 @@ namespace AdminUI.Models
 {
     public class HomeModel
     {
+        //submissions to display + pagination variables
         public IList<Submission> Submissions;
         public int TotalPages;
         public int TotalSubmissions;
@@ -22,5 +23,8 @@ namespace AdminUI.Models
         public string ProviderId;
         public string Status;
         public string FormType;
+
+        //do we need to warn the users we're low on pay periods?
+        public bool Warning;
     }
 }

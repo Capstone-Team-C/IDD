@@ -130,16 +130,19 @@ namespace Common.Models
 
             //END OF TABLE
 
+            // TODO: Adding images takes far too long. It takes about ~0.7s per image
+            // This means download ~1,600 PDFs with 2 images each takes ~45 minutes just to render : (
+            // Make this faster
             //This code section will add new pages with images.
             foreach (var uri in UriList)
             {
+
                 using var wc = new WebClient();
-                using var imgStream = new MemoryStream(wc.DownloadData(uri));
-                using var objImage = XImage.FromStream(imgStream);
+                using var objImage = XImage.FromStream(new MemoryStream(wc.DownloadData(uri)));
                 //do stuff with the image
                 var newPage = document.AddPage();
                 var gfx2 = XGraphics.FromPdfPage(newPage);
-                gfx2.DrawImage(objImage, 10, newPage.Height / 8, objImage.PointWidth * .5, objImage.PointHeight * .5);
+                gfx2.DrawImage(objImage, 0, 0, newPage.Width, newPage.Height);
             }
             return document;
         }
