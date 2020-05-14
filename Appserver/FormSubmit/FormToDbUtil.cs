@@ -85,10 +85,9 @@ namespace IDD
             {
                 // Convert from HH:MM to HH.hh
                 var stime = lsv.totalHours.Split(':');
-                string time = stime[0];
-                double phour = Math.Round(double.Parse(stime[1]) / 60.0, 2);
-                time += "." + phour.ToString();
-                tsf.addTimeRow(lsv.date, lsv.starttime, lsv.endtime, time, "true");
+                double phour = (double.Parse(stime[1]) / 60.0) + double.Parse(stime[0]);
+                
+                tsf.addTimeRow(lsv.date, lsv.starttime, lsv.endtime, string.Format("{0:0.00}", phour), "true");
             }
 
             return tsf;
