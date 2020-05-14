@@ -261,7 +261,7 @@ namespace AdminUI.Controllers
                 foreach (var sub in submissions)
                 {
                     var fileDownloadName = (sub.ClientName + "_" + sub.ClientPrime + "_" + sub.ProviderName + "_" +
-                                           sub.ProviderId + "_" + sub.Submitted.ToString("yyyy-mm-dd") + "_" + sub.FormType + ".pdf").Replace("/","_");
+                                           sub.ProviderId + "_" + sub.Submitted.ToString("yyyy-M-dd") + "_" + sub.FormType + ".pdf").Replace("/","_");
                     sub.LoadEntries(_context);
                     var zipEntry = archive.CreateEntry(fileDownloadName, CompressionLevel.Fastest);
                     using var zipStream = zipEntry.Open();
@@ -272,7 +272,7 @@ namespace AdminUI.Controllers
                 }
             }
 
-            return File(ms.ToArray(), "application/zip", DateTime.Now.ToString("yyyy-m-dd") + "_" + formType + "_pdfs" + ".zip");
+            return File(ms.ToArray(), "application/zip", DateTime.Now.ToString("yyyy-M-dd") + "_" + formType + "_pdfs" + ".zip");
 
         }
 
