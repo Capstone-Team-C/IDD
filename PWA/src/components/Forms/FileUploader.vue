@@ -20,62 +20,58 @@
         <v-row>
           <v-col>
             <div v-if="!submitted">
-            <div class="example-btn">
-              <file-upload
-                class="btn btn-primary"
-                :custom-action="customAction"
-                :multiple="true"
-                :drop="true"
-                :drop-directory="true"
-                :maximum="2"
-                :size="1024 * 1024 * 10"
-                accept="image/*, application/pdf"
-                @input-file="inputFile"
-                v-model="files"
-                ref="upload"
-              >
-                <i class="fa fa-plus"></i>
-                Select files
-              </file-upload>
+              <div class="example-btn">
+                <file-upload
+                  class="btn btn-primary"
+                  :custom-action="customAction"
+                  :multiple="true"
+                  :drop="true"
+                  :drop-directory="true"
+                  :maximum="2"
+                  :size="1024 * 1024 * 10"
+                  accept="image/*, application/pdf"
+                  @input-file="inputFile"
+                  v-model="files"
+                  ref="upload"
+                >
+                  <i class="fa fa-plus"></i>
+                  Select files
+                </file-upload>
 
-              <button
-                type="button"
-                class="btn btn-success"
-                v-if="!$refs.upload || !$refs.upload.active"
-                @click.prevent="$refs.upload.active = true"
-              >
-                <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                Start Upload
-              </button>
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  v-if="!$refs.upload || !$refs.upload.active"
+                  @click.prevent="$refs.upload.active = true"
+                >
+                  <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                  Start Upload
+                </button>
 
-              <button
-                type="button"
-                class="btn btn-danger"
-                v-else
-                @click.prevent="$refs.upload.active = false"
-              >
-                <i class="fa fa-stop" aria-hidden="true"></i>
-                Stop Upload
-              </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  v-else
+                  @click.prevent="$refs.upload.active = false"
+                >
+                  <i class="fa fa-stop" aria-hidden="true"></i>
+                  Stop Upload
+                </button>
               </div>
             </div>
             <div v-else>
               <div class="text-center">
-                <v-btn
-                  color="red"
-                  ref="files"
-									@click="reset"
-                >
-                  Reset Form
+                <v-btn color="red" ref="files" @click="reset">
+                  Reset Files
                 </v-btn>
-                </div>
-                </div>
-   
+              </div>
+            </div>
+
             <div v-if="files.length">
               <ul class="file-list">
                 <li v-for="file in files" :key="file.id">
                   <span data-testid="name">{{ file.name }}</span> -
-                  <!--span>{{ file.size | formatSize }}</span--> 
+                  <!--span>{{ file.size | formatSize }}</span-->
                   <span v-if="file.error">{{ file.error }}</span>
                   <span v-else-if="file.success">success</span>
                   <span v-else-if="file.active">active</span>
@@ -232,11 +228,10 @@
           return false;
         }
       },
-			reset() {
-        this.files = []
-      //  this.emitInput()
-        this.submitted = false
-        
+      reset() {
+        this.files = [];
+        //  this.emitInput()
+        this.submitted = false;
       },
       customAction() {
         let formData = new FormData();
@@ -261,7 +256,7 @@
             self.files.active = false;
             self.files.success = true;
             self.formID = response["data"]["id"];
-            self.submitted = true
+            self.submitted = true;
           })
           .catch(function (error) {
             console.log(error);
