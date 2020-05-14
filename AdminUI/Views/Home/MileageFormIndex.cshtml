@@ -39,7 +39,7 @@
             </div>
             <div class="col-md-3">
                 <label for="dateFrom">From:</label>
-                <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom">
+                <input type="date" name="dateFrom" id="dateFrom" value="@Model.DateFrom" required>
             </div>
             <div class="col-md-3">
                 <label for="status">Status:</label>
@@ -54,7 +54,7 @@
         <div class="row text-right">
             <div class="col-md-3">
                 <label for="pName">Provider ID:</label>
-                <input type="select" name="ProviderId" id="ProviderId" value="@Model.ProviderId">
+                <input type="text" name="ProviderId" id="ProviderId" value="@Model.ProviderId">
             </div>
             <div class="col-md-3">
                 <label for="prime">Client Prime:</label>
@@ -62,7 +62,7 @@
             </div>
             <div class="col-md-3">
                 <label for="dateTo">To:</label>
-                <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo"><br/>
+                <input type="date" name="dateTo" id="dateTo" value="@Model.DateTo" required><br/>
             </div>
             <div class="col-md-3">
                 <label for="formType">Form Type:</label>
