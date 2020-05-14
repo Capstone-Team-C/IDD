@@ -1,96 +1,104 @@
 <template>
   <div class="example-drag">
-    <div class="upload">
-      <ul v-if="!files.length">
-        <td colspan="7">
-          <div class="text-center p-5">
-            <h4>Drop files anywhere to upload<br />or</h4>
-            <label for="file" class="btn btn-lg btn-primary"
-              >Select Files</label
-            >
-          </div>
-        </td>
-      </ul>
-
-      <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
-        <h3>Drop files to upload</h3>
-      </div>
-
-      <v-container>
-        <v-row>
-          <v-col>
-            <div class="example-btn">
-              <file-upload
-                class="btn btn-primary"
-                :post-action="urlPost"
-                :multiple="true"
-                :drop="true"
-                :drop-directory="true"
-                :maximum="2"
-                :size="1024 * 1024 * 10"
-                accept="image/*, application/pdf"
-                @input-file="inputFile"
-                v-model="files"
-                ref="upload"
+    <template v-if="isOnline">
+      <div class="upload">
+        <ul v-if="!files.length">
+          <td colspan="7">
+            <div class="text-center p-5">
+              <h4>Drop files anywhere to upload<br />or</h4>
+              <label for="file" class="btn btn-lg btn-primary"
+                >Select Files</label
               >
-                <i class="fa fa-plus"></i>
-                Select files
-              </file-upload>
-
-              <button
-                type="button"
-                class="btn btn-success"
-                v-if="!$refs.upload || !$refs.upload.active"
-                @click.prevent="$refs.upload.active = true"
-              >
-                <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                Start Upload
-              </button>
-
-              <button
-                type="button"
-                class="btn btn-danger"
-                v-else
-                @click.prevent="$refs.upload.active = false"
-              >
-                <i class="fa fa-stop" aria-hidden="true"></i>
-                Stop Upload
-              </button>
             </div>
+          </td>
+        </ul>
 
-            <div v-if="files.length">
-              <ul class="file-list">
-                <li v-for="file in files" :key="file.id">
-                  <span data-testid="name">{{ file.name }}</span> -
-                  <span>{{ file.size | formatSize }}</span> -
-                  <span v-if="file.error">{{ file.error }}</span>
-                  <span v-else-if="file.success">success</span>
-                  <span v-else-if="file.active">active</span>
-                  <span v-else></span>
-                </li>
-              </ul>
-            </div>
-          </v-col>
+        <div
+          v-show="$refs.upload && $refs.upload.dropActive"
+          class="drop-active"
+        >
+          <h3>Drop files to upload</h3>
+        </div>
 
-          <div class="continue" v-if="check()">
+        <v-container>
+          <v-row>
             <v-col>
-              <div class="text-center">
-                <v-btn
-                  :loading="loading"
-                  :disabled="loading"
-                  color="blue-grey"
-                  class="ma-2 white-text"
-                  @click="loader = loading"
+              <div class="example-btn">
+                <file-upload
+                  class="btn btn-primary"
+                  :post-action="urlPost"
+                  :multiple="true"
+                  :drop="true"
+                  :drop-directory="true"
+                  :maximum="2"
+                  :size="1024 * 1024 * 10"
+                  accept="image/*, application/pdf"
+                  @input-file="inputFile"
+                  v-model="files"
+                  ref="upload"
                 >
-                  Complete Form
-                  <v-icon right dark>mdi-cloud-upload</v-icon>
-                </v-btn>
+                  <i class="fa fa-plus"></i>
+                  Select files
+                </file-upload>
+
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  v-if="!$refs.upload || !$refs.upload.active"
+                  @click.prevent="$refs.upload.active = true"
+                >
+                  <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                  Start Upload
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  v-else
+                  @click.prevent="$refs.upload.active = false"
+                >
+                  <i class="fa fa-stop" aria-hidden="true"></i>
+                  Stop Upload
+                </button>
+              </div>
+
+              <div v-if="files.length">
+                <ul class="file-list">
+                  <li v-for="file in files" :key="file.id">
+                    <span data-testid="name">{{ file.name }}</span> -
+                    <span>{{ file.size | formatSize }}</span> -
+                    <span v-if="file.error">{{ file.error }}</span>
+                    <span v-else-if="file.success">success</span>
+                    <span v-else-if="file.active">active</span>
+                    <span v-else></span>
+                  </li>
+                </ul>
               </div>
             </v-col>
-          </div>
-        </v-row>
-      </v-container>
-    </div>
+
+            <div class="continue" v-if="check()">
+              <v-col>
+                <div class="text-center">
+                  <v-btn
+                    :loading="loading"
+                    :disabled="loading"
+                    color="blue-grey"
+                    class="ma-2 white-text"
+                    @click="loader = loading"
+                  >
+                    Complete Form
+                    <v-icon right dark>mdi-cloud-upload</v-icon>
+                  </v-btn>
+                </div>
+              </v-col>
+            </div>
+          </v-row>
+        </v-container>
+      </div>
+    </template>
+    <template v-else>
+      OFFLINE: can't upload file unless you are online :(
+    </template>
   </div>
 </template>
 
@@ -195,6 +203,10 @@
       FileUpload,
     },
     props: {
+      isOnline: {
+        type: Boolean,
+        default: false,
+      },
       uploadFiles: {
         type: Array,
         defaut: () => [],
