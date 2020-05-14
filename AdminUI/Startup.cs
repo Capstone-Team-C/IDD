@@ -86,10 +86,11 @@ namespace AdminUI
             await SeedRoles(roleManager);
             await SeedUsers(userManager);
 
+
         }
         private async Task SeedUsers(UserManager<AdminUIUser> userManager)
         {
-            var user = await userManager.FindByNameAsync("Admin@AdminUI.com");
+            var user = await userManager.FindByNameAsync("Admin");
             if (user == null)
             {
                 user = new AdminUIUser
@@ -104,7 +105,7 @@ namespace AdminUI
                 if (result.Succeeded)
                     await userManager.AddToRoleAsync(user, "Administrator");
             }
-
+            
             user = await userManager.FindByNameAsync("Employee");
             if (user == null)
             {
