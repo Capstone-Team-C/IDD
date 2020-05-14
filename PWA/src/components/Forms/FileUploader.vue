@@ -63,6 +63,8 @@
               <div class="text-center">
                 <v-btn
                   color="red"
+                  ref="files"
+									@click="reset"
                 >
                   Reset Form
                 </v-btn>
@@ -229,6 +231,12 @@
         } else {
           return false;
         }
+      },
+			reset() {
+        this.files = []
+      //  this.emitInput()
+        this.submitted = false
+        
       },
       customAction() {
         let formData = new FormData();
