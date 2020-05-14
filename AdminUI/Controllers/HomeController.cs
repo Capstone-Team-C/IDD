@@ -67,7 +67,7 @@ namespace AdminUI.Controllers
             else if (GlobalVariables.CurrentPayPeriod != null)
             {
                 model.DateFrom = GlobalVariables.CurrentPayPeriod.DateFrom.ToString("yyyy-MM-dd");
-                submissions = submissions.Where(t => t.Submitted >= DateTime.Parse(model.DateFrom));
+                submissions = submissions.Where(t => t.Submitted >= GlobalVariables.CurrentPayPeriod.DateFrom);
             }
             if (!string.IsNullOrEmpty(dateTo))
             {
@@ -77,7 +77,7 @@ namespace AdminUI.Controllers
             else if (GlobalVariables.CurrentPayPeriod != null)
             {
                 model.DateTo = GlobalVariables.CurrentPayPeriod.DateTo.ToString("yyyy-MM-dd");
-                submissions = submissions.Where(t => t.Submitted >= DateTime.Parse(model.DateTo));
+                submissions = submissions.Where(t => t.Submitted <= GlobalVariables.CurrentPayPeriod.DateTo);
             }
 
             if(!string.Equals(status,"all",StringComparison.CurrentCultureIgnoreCase))
@@ -113,8 +113,8 @@ namespace AdminUI.Controllers
 
             foreach (var sub in submissions)
             {
-                sub.LoadEntries(_context);
                 _context.Entry(sub).Reference(s => s.LockInfo).Load();
+                sub.LoadEntries(_context);
             }
 
             model.Submissions = new List<Submission>(submissions);
@@ -131,8 +131,8 @@ namespace AdminUI.Controllers
         private IEnumerable<Submission> GetSubmissions(string formType)
         {
             if (formType.Equals("timesheet"))
-                return _context.Timesheets.AsEnumerable();
-            return _context.MileageForms.AsEnumerable();
+                return _context.Timesheets.ToList();
+            return _context.MileageForms.ToList();
         }
 
         public bool GetLockInfo(int id)
@@ -260,8 +260,8 @@ namespace AdminUI.Controllers
 
                 foreach (var sub in submissions)
                 {
-                    var fileDownloadName = sub.ClientName + "_" + sub.ClientPrime + "_" + sub.ProviderName + "_" +
-                                           sub.ProviderId + "_" + sub.Submitted.ToString("yyyy-mm-dd") + "_" + sub.FormType + ".pdf";
+                    var fileDownloadName = (sub.ClientName + "_" + sub.ClientPrime + "_" + sub.ProviderName + "_" +
+                                           sub.ProviderId + "_" + sub.Submitted.ToString("yyyy-mm-dd") + "_" + sub.FormType + ".pdf").Replace("/","_");
                     sub.LoadEntries(_context);
                     var zipEntry = archive.CreateEntry(fileDownloadName, CompressionLevel.Fastest);
                     using var zipStream = zipEntry.Open();

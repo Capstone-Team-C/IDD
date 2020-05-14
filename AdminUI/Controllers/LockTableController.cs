@@ -22,7 +22,7 @@ namespace AdminUI.Controllers
         public IActionResult Index(string sortOrder="id", int page = 1, int perPage = 20)
         {
             var model = new LockTableModel();
-            var submissions = _context.Submissions.Where(s => s.LockInfo != null);
+            var submissions = _context.Submissions.Include(s=>s.LockInfo).Where(s => s.LockInfo != null);
 
 
             //big ol' switch statement determines how to sort the data in the table
@@ -54,9 +54,6 @@ namespace AdminUI.Controllers
             model.PerPage = perPage;
             model.Page = page;
 
-            foreach (var sub in submissions)
-                _context.Entry(sub).Reference(s => s.LockInfo).Load();
-            
             model.Submissions = submissions.ToList();
 
             return View(model);

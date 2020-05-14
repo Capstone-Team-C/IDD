@@ -16,6 +16,7 @@ namespace AdminUI.Models
             using var context = new SubmissionContext(
                 serviceProvider.GetRequiredService<
                     DbContextOptions<SubmissionContext>>());
+
             if (context.Submissions.Any())
             {
                 return;   // DB has been seeded
@@ -35,8 +36,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/2/20 2:03PM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
-                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5642367_OR507_526_front.png," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5431700_OR507_526_back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -94,8 +95,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/2/20 1:45PM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
-                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5642367_OR507_526_front.png," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5431700_OR507_526_back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -137,8 +138,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/3/20 8:06AM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
-                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5642367_OR507_526_front.png," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5431700_OR507_526_back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -188,8 +189,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/4/20 5:13PM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
-                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5642367_OR507_526_front.png," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5431700_OR507_526_back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -239,8 +240,8 @@ namespace AdminUI.Models
                     Submitted = DateTime.Parse("4/2/20 10:20AM"),
                     RejectionReason = "",
                     Status = "Pending",
-                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
-                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
+                    UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5642367_OR507_526_front.png," +
+                                "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5431700_OR507_526_back.png",
                     TimeEntries = new List<TimeEntry>
                     {
                             new TimeEntry{
@@ -261,6 +262,7 @@ namespace AdminUI.Models
                             }
                     }
                 });
+                
             for (var i = 1; i <= 101; i++)
             {
                 context.Submissions.Add(
@@ -277,8 +279,8 @@ namespace AdminUI.Models
                         Submitted = DateTime.Parse("4/1/20 10:20AM"),
                         RejectionReason = "",
                         Status = "Pending",
-                        UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
-                                    "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
+                        UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5642367_OR507_526_front.png," +
+                                    "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5431700_OR507_526_back.png",
                         TimeEntries = new List<TimeEntry>
                         {
                                 new TimeEntry
@@ -330,22 +332,23 @@ namespace AdminUI.Models
                     }
 
                 );
+                var rand = new Random();
                 context.Submissions.Add(
                    new MileageForm
                    {
-                       ClientName = "Dalmation " + i,
-                       ClientPrime = "5P0T5",
-                       ProviderName = "Dalmation Dad",
-                       ProviderId = "T1R3D",
-                       TotalMiles = 101.0,
-                       ServiceGoal = "To make sure the kids survive",
-                       ProgressNotes = "Still alive",
+                       ClientName = "Hun Soldier " + i,
+                       ClientPrime = "M0NG0L",
+                       ProviderName = "Atila The Hun",
+                       ProviderId = "011700",
+                       TotalMiles = 200 - i,
+                       ServiceGoal = "To find Mulan",
+                       ProgressNotes = "Rumor has it that he may actually be a woman in disguise",
                        FormType = "OR004 Mileage",
-                       Submitted = DateTime.Parse("4/1/20 10:20AM"),
+                       Submitted = DateTime.Parse("5/" + rand.Next(1,30) + "/20 " + rand.Next(1,12) + ":00AM"),
                        RejectionReason = "",
                        Status = "Pending",
-                       UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-07-17-2326575_5DA28E78-EFD9-48A7-869E-D01010D20DF7.jpeg," +
-                                   "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-07-01-36-44-6998914_OR507_19-11-1.png",
+                       UriString = "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5642367_OR507_526_front.png," +
+                                   "https://iddstorageaccountdev.blob.core.windows.net/submissionfiles/2020-05-14-07-19-41-5431700_OR507_526_back.png",
                        MileageEntries = new List<MileageEntry>
                        {
                                 new MileageEntry
