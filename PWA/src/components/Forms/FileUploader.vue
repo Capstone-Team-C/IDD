@@ -19,49 +19,59 @@
       <v-container>
         <v-row>
           <v-col>
-            <div class="example-btn">
-              <file-upload
-                class="btn btn-primary"
-                :post-action="urlPost"
-                :multiple="true"
-                :drop="true"
-                :drop-directory="true"
-                :maximum="2"
-                :size="1024 * 1024 * 10"
-                accept="image/*, application/pdf"
-                v-model="files"
-                ref="upload"
-              >
-                <i class="fa fa-plus"></i>
-                Select files
-              </file-upload>
+            <div v-if="!submitted">
+              <div class="example-btn">
+                <file-upload
+                  class="btn btn-primary"
+                  :custom-action="customAction"
+                  :multiple="true"
+                  :drop="true"
+                  :drop-directory="true"
+                  :maximum="2"
+                  :size="1024 * 1024 * 10"
+                  accept="image/*, application/pdf"
+                  @input-file="inputFile"
+                  v-model="files"
+                  ref="upload"
+                >
+                  <i class="fa fa-plus"></i>
+                  Select files
+                </file-upload>
 
-              <button
-                type="button"
-                class="btn btn-success"
-                v-if="!$refs.upload || !$refs.upload.active"
-                @click.prevent="$refs.upload.active = true"
-              >
-                <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                Start Upload
-              </button>
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  v-if="!$refs.upload || !$refs.upload.active"
+                  @click.prevent="$refs.upload.active = true"
+                >
+                  <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                  Start Upload
+                </button>
 
-              <button
-                type="button"
-                class="btn btn-danger"
-                v-else
-                @click.prevent="$refs.upload.active = false"
-              >
-                <i class="fa fa-stop" aria-hidden="true"></i>
-                Stop Upload
-              </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  v-else
+                  @click.prevent="$refs.upload.active = false"
+                >
+                  <i class="fa fa-stop" aria-hidden="true"></i>
+                  Stop Upload
+                </button>
+              </div>
+            </div>
+            <div v-else>
+              <div class="text-center">
+                <v-btn color="red" ref="files" @click="reset">
+                  Reset Files
+                </v-btn>
+              </div>
             </div>
 
             <div v-if="files.length">
               <ul class="file-list">
                 <li v-for="file in files" :key="file.id">
                   <span data-testid="name">{{ file.name }}</span> -
-                  <span>{{ file.size | formatSize }}</span> -
+                  <!--span>{{ file.size | formatSize }}</span-->
                   <span v-if="file.error">{{ file.error }}</span>
                   <span v-else-if="file.success">success</span>
                   <span v-else-if="file.active">active</span>
@@ -73,13 +83,13 @@
 
           <div class="continue" v-if="check()">
             <v-col>
-              <div class="text-center">
+              <div class="text-right">
                 <v-btn
                   :loading="loading"
                   :disabled="loading"
-                  color="blue-grey"
+                  color="success"
                   class="ma-2 white-text"
-                  @click="loader = 'loading'"
+                  @click="loader = loading"
                 >
                   Complete Form
                   <v-icon right dark>mdi-cloud-upload</v-icon>
@@ -207,8 +217,8 @@
       check() {
         if (!this.files.length) return false;
 
-        var count = 0;
-        var x;
+        let count = 0;
+        let x;
         for (x in this.files) {
           if (this.files[x].success == true) count += 1;
         }
@@ -218,35 +228,97 @@
           return false;
         }
       },
+      reset() {
+        this.files = [];
+        //  this.emitInput()
+        this.submitted = false;
+      },
+      customAction() {
+        let formData = new FormData();
+
+        for (let i = 0; i < this.files.length; i++) {
+          let file = this.files[i].file;
+          formData.append("files[" + i + "]", file);
+        }
+        let self = this;
+        axios
+          .post(this.urlPost, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(function (response) {
+            console.log(response);
+            for (let i = 0; i < self.files.length; i++) {
+              self.files[i].active = false;
+              self.files[i].success = true;
+            }
+            self.files.active = false;
+            self.files.success = true;
+            self.formID = response["data"]["id"];
+            self.submitted = true;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        return;
+      },
+      inputFile: function (newFile, oldFile) {
+        let jsonResponse;
+        if (newFile.xhr) {
+          if (!newFile.active) {
+            jsonResponse = JSON.parse(newFile.xhr.response);
+            this.formID = jsonResponse["id"];
+          }
+        }
+
+        if (newFile && oldFile && !newFile.active && oldFile.active)
+          if (newFile.xhr) {
+            if (!newFile.active) {
+              jsonResponse = JSON.parse(newFile.xhr.response);
+              this.formID = jsonResponse["id"];
+            }
+          }
+      },
     },
     data() {
       return {
         files: [],
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
-        urlGet: process.env.VUE_APP_SERVER_URL.concat("Timesheet/Ready"), //Retrieve timesheet
+        formID: 0,
+        submitted: false,
+        getUpdated: false,
+        urlGet: process.env.VUE_APP_SERVER_URL.concat(
+          "Timesheet/ReadyTest?id="
+        ), //Retrieve timesheet
         urlPost: process.env.VUE_APP_SERVER_URL.concat("ImageUpload/DocAsForm"), //Post AppServer
       };
     },
-    //Watches for the user to press submit.
+    //Watches for the user to press submit. BAD!
     watch: {
       loader() {
         const l = this.loader;
         this[l] = !this[l];
-        var self = this;
+        let self = this;
 
         //Retrieves json response from timesheet.
-        axios
-          .get(this.urlGet)
-          .then(function (response) {
-            self.$emit("success", response["data"]);
-          })
-          .catch(function (error) {
-            console.log(error);
-            self.$emit("error", error);
-          });
+        if (!this.getUpdated) {
+          this.urlGet = this.urlGet.concat(this.formID);
+          this.getUpdated = true;
 
-        setTimeout(() => (this[l] = false), 3000);
+          axios
+            .get(this.urlGet)
+            .then(function (response) {
+              self.$emit("success", response["data"]);
+            })
+            .catch(function (error) {
+              console.log(error);
+              self.$emit("error", error);
+            });
+        }
+
+        setTimeout(() => (this[l] = false), 30000);
         this.loader = null;
       },
     },

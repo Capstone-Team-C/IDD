@@ -13,6 +13,7 @@ using IDD;
 using Microsoft.EntityFrameworkCore;
 using Common.Data;
 using Appserver.Data;
+using Appserver.TextractDocument;
 
 namespace FormSubmit.Tests
 {
@@ -108,16 +109,65 @@ namespace FormSubmit.Tests
         public void TextractToTimesheetTest()
         {
             // Setup Textract Document
-            var jsonFile = File.OpenText( "TextractDocument/textract.json" );
             var document = new Appserver.TextractDocument.TextractDocument();
-
-            using (StreamReader reader = jsonFile)
+            List<string> filelist = new List<string>(){ "TextractDocument/OR507_526_front.json", "TextractDocument/OR507_526_back.json"};
+            foreach( var file in filelist)
             {
-                document.FromJson((JObject)JToken.ReadFrom(new JsonTextReader(reader)));
+                var jsonFile = File.OpenText(file);
+                TextractDocument page;
+                using (StreamReader reader = jsonFile)
+                {
+                    page = new TextractDocument();
+                    page.FromJson((JObject)JToken.ReadFrom(new JsonTextReader(reader)));
+                }
+                document.AddPages(page);
             }
 
             var obj = AbstractFormObject.FromTextract(document);
             Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented).Replace("\r", "") + "\n");
+        }
+
+        [Test]
+        public void TextractDateParsingTest()
+        {
+            var dlist = new List<string>();
+            dlist.Add("20-1-12");
+            dlist.Add("2020-1-12");
+            dlist.Add("2020-01-12");
+            dlist.Add("1-12-20");
+            dlist.Add("1-12-2020");
+            dlist.Add("01-12-20");
+            dlist.Add("01-12-2020");
+            dlist.Add("January, 1st, 2020");
+            dlist.Add("Jan, 1st, 2020");
+            dlist.Add("January, 12th, 2020");
+            dlist.Add("Jan, 12th, 2020");
+            dlist.Add("April, 13th, 2020");
+            dlist.Add("Feb, 3rd, 2020");
+
+
+            // Incorrect spelling causes parse failure
+            dlist.Add("Janaury, 12th, 2020");
+
+            // Semicolon delimeters causes failure
+            //dlist.Add("20:1:12"); 
+
+            // Convert or raise exception
+            foreach (var x in dlist)
+            {
+                DateTime dt;
+                try
+                {
+                    dt = FormConversionUtils.DateStringConvertUtil(x);
+                    System.Console.WriteLine("Date: " + dt.ToString());
+                    Assert.IsInstanceOf(typeof(DateTime), dt);
+                }
+                catch (FormatException)
+                {
+                    System.Console.WriteLine("Couldn't Parse Date From: " + x);
+                }
+
+            }
         }
     }
 }
