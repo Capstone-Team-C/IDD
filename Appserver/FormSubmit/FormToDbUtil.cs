@@ -79,7 +79,7 @@ namespace IDD
             tsf.providerSignDate = pwasub.providerSignDate.value;
             tsf.authorization = convUtil.PWABoolConverter(pwasub.authorization.value);
             tsf.id = pwasub.id;
-
+            tsf.totalHours = pwasub.totalHours.value;
 
             foreach(PWAtimesheetVals lsv in pwasub.timesheet.value)
             {
@@ -97,7 +97,7 @@ namespace IDD
         // certain assumptions about start times, end times, and group. 
         public void PopulateTimesheetEntries(TimesheetForm tsf, Timesheet tsheet)
         {
-            double totalHours = 0;
+            tsheet.TotalHours = Convert.ToDouble(tsf.totalHours.Replace(":", "."));
             var tl = new List<TimeEntry>();
 
             foreach (TimesheetRowItem tsri in tsf.Times)
@@ -119,7 +119,6 @@ namespace IDD
                 {
                     x.Hours = 0;
                 }
-                totalHours += x.Hours;
 
                 // Assume Group field is 'N'
                 x.Group = true;
@@ -168,8 +167,6 @@ namespace IDD
 
                 tl.Add(x);
             }
-
-            tsheet.TotalHours = Math.Round(totalHours, 2);
             tsheet.TimeEntries = tl;   
         }
 
