@@ -68,11 +68,13 @@
 </template>
 
 <script>
+  import { mapFields } from 'vuex-map-fields';
+  
   import FileUploader from "@/components/Forms/FileUploader";
   import ServicesDelivered from "@/components/Forms/ServicesDelivered/ServicesDelivered";
   import Mileage from "@/components/Forms/Mileage/Mileage";
   import { FORM, FILE } from "@/components/Utility/Enums.js";
-
+import poopie from '@/components/Utility/happy_path.json';
   export default {
     name: "Timesheet",
     components: {
@@ -87,15 +89,20 @@
         FORM: FORM,
 
         // The uploaded timesheet, as a .json of parsed values from the backend
-        parsedFileData: null,
-        formChoice: null,
+        parsedFileData: poopie,
 
         // Possible statuses of the uploading the form
-        fileStatus: FILE.INIT,
+        fileStatus: FILE.SUCCESS,
 
         // Upload errors
         errors: [],
       };
+    },
+    computed: {
+      ...mapFields([
+          'formChoice',
+          'onlineStatus',
+      ]),
     },
     methods: {
       // Successfully received parsed .json from the backend

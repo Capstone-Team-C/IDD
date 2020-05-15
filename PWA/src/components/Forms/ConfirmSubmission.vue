@@ -157,6 +157,8 @@
 
 <script>
   import axios from "axios";
+  import { mapFields } from 'vuex-map-fields';
+  import { FORM } from "@/components/Utility/Enums.js";
 
   export default {
     name: "ConfirmSubmission",
@@ -171,17 +173,6 @@
       valid: {
         type: Boolean,
         default: false,
-      },
-
-      //ID to submit form with
-      formID: {
-        type: Number,
-        default: 0,
-      },
-
-      // The type of form being submitted
-      formChoice: {
-        type: Number,
       },
 
       // Signal that parent form has completed validation
@@ -250,6 +241,11 @@
           this.totalEdited > 0 && !(this.reSigned.length === 2) && this.isValid
         );
       },
+      ...mapFields([
+        'formChoice',
+        'formId',
+        'onlineStatus',
+      ]),
     },
 
     watch: {
@@ -334,12 +330,12 @@
 
         // Finally, prepare the form data and send to the backend
         this.submitData = this.formatData();
-
         if (this.errors.length === 0) {
-          this.submitData["id"] = this.formID;
-          this.submitData["formChoice"] = this.formChoice;
+          this.submitData["id"] = this.formId;
+          this.submitData["formChoice"] = FORM[this.formChoice];
+          console.log(this.submitData);
           axios
-            .post(this.url, this.submitData, {
+            .post("", this.submitData, {
               headers: {
                 "content-type": "application/json",
               },

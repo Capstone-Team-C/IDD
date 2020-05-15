@@ -11,6 +11,7 @@
 
     <!-- Main content of the page, controlled by the Vue Router -->
     <v-content>
+    FORM CHOISE: {{ formChoice }}
       <!-- Fade-in/Fade-out for smooth navigation transitions -->
       <transition mode="out-in" name="fade">
         <router-view />
@@ -26,6 +27,7 @@
   import AppBar from "@/components/AppShell/AppBar";
   import AppFooter from "@/components/AppShell/AppFooter";
   import NavigationDrawer from "@/components/AppShell/NavigationDrawer";
+  import { mapFields } from 'vuex-map-fields';
 
   export default {
     name: "App",
@@ -38,6 +40,11 @@
       // Stores the value for if the navigation drawer is open or not
       openNavigationDrawer: false,
     }),
+    computed: {
+      ...mapFields([
+          'formChoice',
+      ]),
+    },
     methods: {
       // Toggle displaying the navigation drawer
       handleDrawerChange(isOpen) {

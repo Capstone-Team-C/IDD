@@ -141,7 +141,6 @@
             :formFields="formFields"
             :totalEdited="totalEdited"
             :validationSignal="validationSignal"
-            :formID="formID"
             :formChoice="formChoice"
             @click="validateInputs"
           />
@@ -159,6 +158,7 @@
   import rules from "@/components/Utility/FormRules.js";
   import { TIME } from "@/components/Utility/Enums.js";
   import { subtractTime } from "@/components/Utility/TimeFunctions.js";
+  import { mapFields } from 'vuex-map-fields';
 
   export default {
     name: "ServicesDelivered",
@@ -182,7 +182,7 @@
     // Upon first loading on the page, bind parsed form data to each
     // IDD Timesheet form field
     created: function () {
-      this.formID = this.parsedFileData["id"];
+      this.formId = this.parsedFileData["id"];
       this.initialize();
       // Bind validation rules to each field that has a 'rules' string
       // specified
@@ -216,9 +216,6 @@
         // The amount of parsed fields that were edited
         totalEdited: 0,
 
-        // The unique ID associated with this form
-        formID: 0,
-
         // Hide form validation error messages by default
         valid: true,
 
@@ -239,6 +236,9 @@
       resetChild() {
         return this.resetChildField;
       },
+      ...mapFields([
+          'formId',
+      ]),
     },
 
     methods: {
