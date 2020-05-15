@@ -116,7 +116,7 @@ namespace Appserver.Controllers
                 }
             }
 
-            
+
             return Json(new
             {
                 file_count = c,
@@ -125,7 +125,7 @@ namespace Appserver.Controllers
                 //textract_stats = stats,
                 id = await saveSubmissisionStage(await UploadToBlob(files), textract_responses)
             }
-            );
+            ) ;
         }
 
 
@@ -187,35 +187,11 @@ namespace Appserver.Controllers
         // We could do this by page in the PDF, but how would we know
         // what type of page we're sending? Milage, hours, etc.?
         // Method argument is file sent with an HTTP Request (IFormFile)
-        private void process_pdf_upload(IFormFile file)
+        private void process_pdf(IFormFile file)
         {
             Debug.WriteLine("Would have processed a PDF");
             return;
         }
-
-        // Takes an IFormFile and sends it to AWS Textract for processing.
-        public async Task<string> pass_to_textract(IFormFile file)
-        {
-            // Convert file to bytes
-            MemoryStream ms = new MemoryStream();
-            file.CopyTo(ms);
-            var fileBytes = ms.ToArray();
-
-            // Bytes to ByteArray
-            var data = new ByteArrayContent(fileBytes);
-            data.Headers.Add("Content-Type", "application/json");
-            data.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
-
-            // Create HttpClient to call Azure Function
-            HttpClient client = new HttpClient();
-            string functionDomain = "https://clownedpineapple.azurewebsites.net";
-            string functionURI = "/api/HttpTrigger2?code=01sWzhyR/lezKX8pqrLGcbyRG26qgyM0VGxPfyYm9x3WeJXKjOeDsg==";
-
-            // Wait for Azure Function response
-            var response = await client.PostAsync(functionDomain + functionURI, data);
-            return response.Content.ReadAsStringAsync().Result.Replace("\"", "");
-        }
-
 
     }
 }
