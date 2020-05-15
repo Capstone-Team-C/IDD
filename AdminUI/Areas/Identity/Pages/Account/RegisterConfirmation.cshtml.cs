@@ -50,11 +50,10 @@ namespace AdminUI.Areas.Identity.Pages.Account
             //uses to send emails, then remove the block of code below it
             /*
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var subject = user.Name + " is requesting an account on AdminUI";
             var body = "<p><b>" + user.Name + "</b> is requesting an account on AdminUI with the Role <b>" +
                        await _userManager.GetRolesAsync(user) + "</b></p>." +  
-                       "<p>Please click the following link to confirm: " + code + "</p>";
+                       "<p>Please click the following link to confirm: <a href=" + code + ">Confirm Account</a></p>";
             foreach (var admin in await _userManager.GetUsersInRoleAsync("Administrator"))
                 SendEmailTo(admin.Email, subject, body);
             */
