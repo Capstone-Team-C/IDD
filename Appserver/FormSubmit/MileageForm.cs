@@ -5,7 +5,8 @@ namespace Appserver.FormSubmit
 {
     public class MileageForm : AbstractFormObject
     {
-        MileageForm() { }
+        private List<MileageRowItem> miles = new List<MileageRowItem>();
+        public MileageForm() { }
         public int id { get; set; }
         public string clientName { get; set; }
         public string prime { get; set; }
@@ -15,9 +16,9 @@ namespace Appserver.FormSubmit
         public string scpaName { get; set; }
         public string serviceAuthorized { get; set; }
 
-        [JsonProperty("timesheet")]
+        [JsonProperty("mileagesheet")]
         [JsonConverter(typeof(MileageRowConverter))]
-        internal List<MileageRowItem> Mileage { get => Mileage; set => Mileage = value; }
+        internal List<MileageRowItem> Mileage { get => miles; set => miles = value; }
         public string totalMiles { get; set; }
         public string serviceGoal { get; set; }
         public string progressNotes { get; set; }
@@ -28,7 +29,7 @@ namespace Appserver.FormSubmit
         public bool authorization { get; set; }
         public bool approval { get; set; }
         public string review_status { get; set; } = "Pending";
-        public void addTimeRow(string date, string miles, string group, string purpose) =>
+        public void addMileRow(string date, string miles, string group, string purpose) =>
             this.Mileage.Add(new MileageRowItem(date, miles, group, purpose));
     }
 }
