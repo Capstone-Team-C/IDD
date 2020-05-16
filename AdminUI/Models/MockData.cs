@@ -27,7 +27,7 @@ namespace AdminUI.Models
                 {
                     ClientName = "Minnie Mouse",
                     ClientPrime = "M0U5E",
-                    Edited = false,
+                    Edited = true,
                     ProviderName = "Mickey Mouse",
                     ProviderId = "B1GM0U53",
                     TotalHours = 10,
@@ -131,7 +131,7 @@ namespace AdminUI.Models
                 {
                     ClientName = "Cinderella",
                     ClientPrime = "5L1PP3R",
-                    Edited = false,
+                    Edited = true,
                     ProviderName = "Prince Charming",
                     ProviderId = "H0TT13",
                     TotalHours = 54.5,
