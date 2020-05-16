@@ -82,24 +82,40 @@ namespace Appserver.Controllers
             var stats = new List<string>();
 
             // MIME types for image processing
-            var image_types = new List<string>
+            var accepted_types = new List<string>
             {
                 "image/jpeg",
-                "image/png"
+                "image/png",
+                "application/pdf",
             };
 
 
             // Iterate of collection of file and send to Textract
             foreach (var file in files)
             {
-                // Only process image types Textract can handle
-                if (image_types.Contains(file.ContentType) && file.Length > 0)
+                // Nothing to work with, next!
+                if(file.Length == 0)
+                {
+                    skipped_files.Add("File name " + file.Name + " is empty");
+                    continue;
+                }
+                // Only process files that have acceptable types
+                if (accepted_types.Contains(file.ContentType))
                 {
                     //Time how long it takes Textract to process image
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Start();
 
-                    textract_responses.Add(process_image(file.OpenReadStream()));
+                    // Process PDF
+                    if(file.ContentType == "application/pdf")
+                    {
+                        textract_responses.Add(process_pdf(file));
+                    }
+                    // Process Image file
+                    else
+                    {
+                        textract_responses.Add(process_image(file));
+                    }
 
                     stopwatch.Stop();
                     TimeSpan ts = stopwatch.Elapsed;
@@ -176,9 +192,9 @@ namespace Appserver.Controllers
             return ss.Id;
         }
 
-        private AnalyzeDocumentResponse process_image(Stream file)
+        private AnalyzeDocumentResponse process_image(IFormFile file)
         {
-            return new TextractHandler().HandleAsyncJob(file);
+            return new TextractHandler().HandleAsyncJob(file, "image");
         }
 
 
@@ -187,10 +203,10 @@ namespace Appserver.Controllers
         // We could do this by page in the PDF, but how would we know
         // what type of page we're sending? Milage, hours, etc.?
         // Method argument is file sent with an HTTP Request (IFormFile)
-        private void process_pdf(IFormFile file)
+        private AnalyzeDocumentResponse process_pdf(IFormFile file)
         {
             Debug.WriteLine("Would have processed a PDF");
-            return;
+            return new TextractHandler().HandleAsyncJob(file, "pdf");
         }
 
     }
