@@ -35,9 +35,15 @@
             <div class="row">
                 @Html.ActionLink("Download PDF", "GenPDF", "Submission", new { id = Model.Id }, new { @class = "btn btn-info aToInput" })
                 <input type="hidden" name="id" value="@Model.Id" />
+<<<<<<< HEAD
                 <input class="btn btn-primary" name="status" value="Approved" type="submit" formnovalidate>
                 <input class="btn btn-danger" name="status" value="Rejected" type="submit">
                 <input type="text" name="rejectionReason" placeholder="Rejection reason..." required/>
+=======
+                <input class="btn btn-primary" name="status" value="Approve" type="submit">
+                <input class="btn btn-danger" name="status" value="Reject" type="submit">
+                <input type="text" name="rejectionReason" placeholder="Rejection reason..." />
+>>>>>>> Add Line Item Approval/Rejection
             </div>
         </form>
     </div>
