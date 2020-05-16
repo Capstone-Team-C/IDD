@@ -376,20 +376,24 @@
                                 <label asp-for="Status">Status:</label> @(string.IsNullOrEmpty(t.UserActivity) ? "Pending" : t.UserActivity)
                             </div>
                         </div>
+                        @if (t.Status.Equals("Rejected", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            <div class="row"><div class="column"><label>Rejection Reason:</label> @t.RejectionReason</div></div>
+                        }
                         <div class="row">
                             <div class="column">
                                 <label>Client Name:</label> @t.ClientName
                             </div>
                             <div class="column">
-                                <label>Client Prime:</label> @t.ClientPrime
+                                <label>Submitted on:</label> @t.Submitted.ToString("MM-dd-yyyy")
                             </div>
                         </div>
                         <div class="row">
                             <div class="column">
-                                <label>Total Hours:</label> @t.TotalHours
+                                <label>Client Prime:</label> @t.ClientPrime
                             </div>
                             <div class="column">
-                                <label>Submitted on:</label> @t.Submitted.ToString("MM-dd-yyyy")
+                                <label>Total Hours:</label> @t.TotalHours
                             </div>
                         </div>
                         <div class="table">
@@ -414,6 +418,13 @@
                                     </div>
                                 }
                             }
+                            <div class="row table-success font-weight-bold">
+                                <div class="col"></div>
+                                <div class="col"></div>
+                                <div class="col" style="text-align: right;">Total:</div>
+                                <div class="col" style="text-align: left;">@t.TotalHours Hours</div>
+                                <div class="col"></div>
+                            </div>
 
                         </div>
                     </div>
