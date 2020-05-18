@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center">
+  <v-container class="text-center">
     <v-btn color="success" dark @click.stop="signalParentValidate">
       Submit
     </v-btn>
@@ -64,7 +64,7 @@
                 Cancel
               </v-btn>
 
-              <template v-if="isOnline">
+              <template v-if="onlineStatus">
                 <v-btn
                   text
                   color="green darken-1"
@@ -142,7 +142,7 @@
         </v-card>
       </div>
     </v-dialog>
-  </v-row>
+  </v-container>
 </template>
 
 <style>
@@ -169,10 +169,6 @@
   export default {
     name: "ConfirmSubmission",
     props: {
-      isOnline: {
-        type: Boolean,
-        default: false,
-      },
       // The cols in the datatable
       cols: {
         type: Array,
@@ -199,18 +195,6 @@
 
       // The amount of errors from the parent's validation function
       numErrors: {
-        type: Number,
-        default: 0,
-      },
-
-      //User (edited) information.
-      formFields: {
-        type: Object,
-        default: null,
-      },
-
-      // The amount of parsed fields that were edited
-      totalEdited: {
         type: Number,
         default: 0,
       },
@@ -255,6 +239,10 @@
         'formChoice',
         'formId',
         'onlineStatus',
+      ]),
+      ...mapFields('ServiceDelivered', [
+        'formFields',
+        'totalEdited',
       ]),
     },
 
@@ -343,7 +331,6 @@
         if (this.errors.length === 0) {
           this.submitData["id"] = this.formId;
           this.submitData["formChoice"] = FORM[this.formChoice];
-          console.log(this.submitData);
           axios
             .post("", this.submitData, {
               headers: {

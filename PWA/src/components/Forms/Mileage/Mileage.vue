@@ -135,14 +135,11 @@
 
         <v-col>
           <ConfirmSubmission
-            :isOnline="isOnline"
             :cols="cols"
             :valid="valid"
             :errors="errors"
             :formFields="formFields"
-            :totalEdited="totalEdited"
             :validationSignal="validationSignal"
-            :formChoice="formChoice"
             @click="validateInputs"
           />
         </v-col>
@@ -170,17 +167,10 @@
     },
 
     props: {
-      isOnline: {
-        type: Boolean,
-        default: false,
-      },
       // A .json file that is the parsed uploaded IDD timesheet data
       parsedFileData: {
         type: Object,
         default: null,
-      },
-      formChoice: {
-        type: Number,
       },
     },
 

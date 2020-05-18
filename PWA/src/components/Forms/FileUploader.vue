@@ -1,6 +1,6 @@
 <template>
   <div class="example-drag">
-    <template v-if="isOnline">
+    <template v-if="onlineStatus">
       <div class="upload">
         <ul v-if="!files.length">
           <td colspan="7">
@@ -200,6 +200,7 @@
 </style>
 
 <script>
+  import { mapFields } from 'vuex-map-fields';
   import FileUpload from "vue-upload-component";
   import axios from "axios";
   export default {
@@ -208,10 +209,6 @@
       FileUpload,
     },
     props: {
-      isOnline: {
-        type: Boolean,
-        default: false,
-      },
       uploadFiles: {
         type: Array,
         defaut: () => [],
@@ -237,8 +234,8 @@
       },
       reset() {
         this.files = [];
-        //  this.emitInput()
         this.submitted = false;
+        this.$emit('reset');
       },
       customAction() {
         let formData = new FormData();
@@ -261,7 +258,7 @@
             }
             self.files.active = false;
             self.files.success = true;
-            self.formID = response["data"]["id"];
+            self.formId = response["data"]["id"];
             self.submitted = true;
           })
           .catch(function (error) {
@@ -274,14 +271,14 @@
         if (newFile.xhr) {
           if (!newFile.active) {
             jsonResponse = JSON.parse(newFile.xhr.response);
-            this.formID = jsonResponse["id"];
+            this.formId = jsonResponse["id"];
           }
         }
         if (newFile && oldFile && !newFile.active && oldFile.active)
           if (newFile.xhr) {
             if (!newFile.active) {
               jsonResponse = JSON.parse(newFile.xhr.response);
-              this.formID = jsonResponse["id"];
+              this.formId = jsonResponse["id"];
             }
           }
       },
@@ -291,7 +288,6 @@
         files: [],
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
-        formID: 0,
         submitted: false,
         getUpdated: false,
         urlGet: process.env.VUE_APP_SERVER_URL.concat(
@@ -299,6 +295,12 @@
         ), //Retrieve timesheet
         urlPost: process.env.VUE_APP_SERVER_URL.concat("ImageUpload/DocAsForm"), //Post AppServer
       };
+    },
+    computed: {
+      ...mapFields([
+        'formId',
+        'onlineStatus',
+      ]),
     },
     //Watches for the user to press submit. BAD!
     watch: {
@@ -308,7 +310,7 @@
         let self = this;
         //Retrieves json response from timesheet.
         if (!this.getUpdated) {
-          this.urlGet = this.urlGet.concat(this.formID);
+          this.urlGet = this.urlGet.concat(this.formId);
           this.getUpdated = true;
           axios
             .get(this.urlGet)

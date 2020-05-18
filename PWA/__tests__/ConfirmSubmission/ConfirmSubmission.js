@@ -2,6 +2,7 @@ import { mount } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import Vue from "vue";
 import Vuetify from "vuetify";
+import store from "@/store/index.js";
 import ConfirmSubmission from "@/components/Forms/ConfirmSubmission.vue";
 
 Vue.use(Vuetify);
@@ -10,6 +11,7 @@ describe("ConfirmSubmission", () => {
   //Given a valid form, the user should not get an error.
   it("Should not load message saying invalid form", () => {
     const wrapper = mount(ConfirmSubmission, {
+      store, 
       propsData: {
         valid: true,
         formFields: null,
@@ -22,6 +24,7 @@ describe("ConfirmSubmission", () => {
   //Given invalid form, it should notify the user.
   it("Should load message saying invalid form", () => {
     const wrapper = shallowMount(ConfirmSubmission, {
+      store, 
       propsData: {
         valid: false,
         formFields: null,
@@ -35,6 +38,7 @@ describe("ConfirmSubmission", () => {
   //want to submit.
   it("Should ask if user is sure they want to submit given valid form", () => {
     const wrapper = shallowMount(ConfirmSubmission, {
+      store, 
       propsData: {
         valid: true,
         formFields: null,

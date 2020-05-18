@@ -11,10 +11,9 @@
 
     <!-- Main content of the page, controlled by the Vue Router -->
     <v-content>
-    FORM CHOICE: {{ formChoice }}
       <!-- Update whether or not the client has Internet access -->
       <v-offline @detected-condition="handleConnectivityChange"></v-offline>
-      <template v-if="isOnline === false">
+      <template v-if="onlineStatus === false">
         <v-alert type="error" class="my-0">
           No Internet connection! Some features may be unavailable at this time.
         </v-alert>
@@ -22,7 +21,7 @@
 
       <!-- Fade-in/Fade-out for smooth navigation transitions -->
       <transition mode="out-in" name="fade">
-        <router-view :isOnline="isOnline" />
+        <router-view />
       </transition>
     </v-content>
 
@@ -49,11 +48,11 @@
     data: () => ({
       // Stores the value for if the navigation drawer is open or not
       openNavigationDrawer: false,
-      isOnline: false,
     }),
     computed: {
       ...mapFields([
-          'formChoice',
+        'formChoice',
+        'onlineStatus',
       ]),
     },
     methods: {
@@ -62,7 +61,7 @@
         this.openNavigationDrawer = isOpen;
       },
       handleConnectivityChange(status) {
-        this.isOnline = status;
+        this.onlineStatus = status;
       },
     },
   };
