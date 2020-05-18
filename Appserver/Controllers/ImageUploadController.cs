@@ -77,18 +77,18 @@ namespace Appserver.Controllers
         public async Task<IActionResult> PostImage(List<IFormFile> files)
         {
             var c = files.Count;
-            var textract_responses = new List<AnalyzeDocumentResponse>();
+            var image_responses = new List<AnalyzeDocumentResponse>();
+            var pdf_responses = new List<GetDocumentAnalysisResponse>();
             var skipped_files = new List<string>();
             var stats = new List<string>();
 
-            // MIME types for image processing
+            // MIME types we can send to textract
             var accepted_types = new List<string>
             {
                 "image/jpeg",
                 "image/png",
                 "application/pdf",
             };
-
 
             // Iterate of collection of file and send to Textract
             foreach (var file in files)
@@ -109,12 +109,12 @@ namespace Appserver.Controllers
                     // Process PDF
                     if(file.ContentType == "application/pdf")
                     {
-                        textract_responses.Add(process_pdf(file));
+                        pdf_responses.Add(process_pdf(file));
                     }
-                    // Process Image file
+                    // Process image
                     else
                     {
-                        textract_responses.Add(process_image(file));
+                        image_responses.Add(process_image(file));
                     }
 
                     stopwatch.Stop();
@@ -132,6 +132,17 @@ namespace Appserver.Controllers
                 }
             }
 
+            int stageId;
+            if (pdf_responses.Count > 0)
+            {
+                stageId = await saveSubmissionStagePDF(await UploadToBlob(files), pdf_responses);
+            }
+            else
+            {
+                stageId = await saveSubmissisionStage(await UploadToBlob(files), image_responses);
+            }
+
+
 
             return Json(new
             {
@@ -139,9 +150,9 @@ namespace Appserver.Controllers
                 //azfc_resp = textract_responses,
                 skipped = skipped_files,
                 //textract_stats = stats,
-                id = 3//await saveSubmissisionStage(await UploadToBlob(files), textract_responses)
+                id = stageId
             }
-            ) ;
+            ); ;
         }
 
 
@@ -192,6 +203,21 @@ namespace Appserver.Controllers
             return ss.Id;
         }
 
+        private async Task<int> saveSubmissionStagePDF(string uriString, List<GetDocumentAnalysisResponse> responses)
+        {
+            // Create a SubmissionStaging to upload to SubmissionStaging table
+            var ss = new SubmissionStaging
+            {
+                ParsedTextractJSON = System.Text.Json.JsonSerializer.Serialize(responses),
+                UriString = uriString
+            };
+
+            // Add SubmissionStaging to table and get the Id to add to JSON response return
+            _context.Add(ss);
+            await _context.SaveChangesAsync();
+            return ss.Id;
+        }
+
         private AnalyzeDocumentResponse process_image(IFormFile file)
         {
             return new TextractHandler().HandleAsyncJob(file, "image");
@@ -203,9 +229,9 @@ namespace Appserver.Controllers
         // We could do this by page in the PDF, but how would we know
         // what type of page we're sending? Milage, hours, etc.?
         // Method argument is file sent with an HTTP Request (IFormFile)
-        private AnalyzeDocumentResponse process_pdf(IFormFile file)
+        private GetDocumentAnalysisResponse process_pdf(IFormFile file)
         {
-            return new TextractHandler().HandleAsyncJob(file, "pdf");
+            return new TextractHandler().HandlePDFasync(file);
         }
 
     }
