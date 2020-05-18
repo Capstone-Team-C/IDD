@@ -34,7 +34,7 @@
   import AppBar from "@/components/AppShell/AppBar";
   import AppFooter from "@/components/AppShell/AppFooter";
   import NavigationDrawer from "@/components/AppShell/NavigationDrawer";
-  import { mapFields } from 'vuex-map-fields';
+  import { mapFields } from "vuex-map-fields";
   import VOffline from "v-offline";
 
   export default {
@@ -50,10 +50,7 @@
       openNavigationDrawer: false,
     }),
     computed: {
-      ...mapFields([
-        'formChoice',
-        'onlineStatus',
-      ]),
+      ...mapFields(["formChoice", "onlineStatus"]),
     },
     methods: {
       // Toggle displaying the navigation drawer

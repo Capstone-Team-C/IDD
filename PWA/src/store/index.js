@@ -1,13 +1,13 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import { getField, updateField } from 'vuex-map-fields';
+import Vue from "vue";
+import Vuex from "vuex";
+import { getField, updateField } from "vuex-map-fields";
 
-import Mileage from '@/store/modules/Forms/Mileage'
-import ServiceDelivered from '@/store/modules/Forms/ServiceDelivered'
+import Mileage from "@/store/modules/Forms/Mileage";
+import ServiceDelivered from "@/store/modules/Forms/ServiceDelivered";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-const debug = process.env.NODE_ENV !== 'production'
+const debug = process.env.NODE_ENV !== "production";
 const initialState = () => ({
   formChoice: null,
   formId: 0,
@@ -26,15 +26,15 @@ export default new Vuex.Store({
   },
   mutations: {
     updateField,
-    resetState (state) {
+    resetState(state) {
       // acquire initial state
-      const s = initialState()
-      const online = state['onlineStatus'];
-      Object.keys(s).forEach(key => {
-        state[key] = s[key]
-      })
-      state['onlineStatus'] = online;
-    }
+      const s = initialState();
+      const online = state["onlineStatus"];
+      Object.keys(s).forEach((key) => {
+        state[key] = s[key];
+      });
+      state["onlineStatus"] = online;
+    },
   },
   strict: debug,
-})
+});

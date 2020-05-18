@@ -13,7 +13,10 @@
           </td>
         </ul>
 
-        <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
+        <div
+          v-show="$refs.upload && $refs.upload.dropActive"
+          class="drop-active"
+        >
           <h3>Drop files to upload</h3>
         </div>
 
@@ -200,7 +203,7 @@
 </style>
 
 <script>
-  import { mapFields } from 'vuex-map-fields';
+  import { mapFields } from "vuex-map-fields";
   import FileUpload from "vue-upload-component";
   import axios from "axios";
   export default {
@@ -235,7 +238,7 @@
       reset() {
         this.files = [];
         this.submitted = false;
-        this.$emit('reset');
+        this.$emit("reset");
       },
       customAction() {
         let formData = new FormData();
@@ -297,10 +300,7 @@
       };
     },
     computed: {
-      ...mapFields([
-        'formId',
-        'onlineStatus',
-      ]),
+      ...mapFields(["formId", "onlineStatus"]),
     },
     //Watches for the user to press submit. BAD!
     watch: {

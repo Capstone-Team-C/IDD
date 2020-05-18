@@ -31,15 +31,15 @@
   },
   "scpaName": {
     "counter": 50,
-    "hint": "Name of the SC PA person",
+    "hint": "Name of the SC PA",
     "label": "SC/PA Name",
-    "rules": ["required", "name"]
+    "rules": ["required"]
   },
   "brokerage": {
     "counter": 100,
     "hint": "Organization name",
     "label": "CM Organization",
-    "rules": ["required", "name"]
+    "rules": ["required"]
   },
   "serviceAuthorized": {
     "counter": 100,

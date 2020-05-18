@@ -20,7 +20,7 @@
             <v-card-text v-if="this.totalEdited > 0">
               <em>
                 There were {{ totalEdited }} edited fields. Provider and
-                Employer must resign the timesheet form.
+                Employer must resign the form.
               </em>
 
               <!-- 
@@ -163,8 +163,9 @@
 
 <script>
   import axios from "axios";
-  import { mapFields } from 'vuex-map-fields';
-  import { FORM } from "@/components/Utility/Enums.js";
+  import store from "@/store/index.js";
+  import { mapFields } from "vuex-map-fields";
+  import { FORM, FORM_TYPE } from "@/components/Utility/Enums.js";
 
   export default {
     name: "ConfirmSubmission",
@@ -235,15 +236,20 @@
           this.totalEdited > 0 && !(this.reSigned.length === 2) && this.isValid
         );
       },
-      ...mapFields([
-        'formChoice',
-        'formId',
-        'onlineStatus',
-      ]),
-      ...mapFields('ServiceDelivered', [
-        'formFields',
-        'totalEdited',
-      ]),
+      ...mapFields(["formChoice", "formId", "onlineStatus"]),
+      formType: function () {
+        return FORM_TYPE[this.formChoice];
+      },
+      totalEdited: function () {
+        if (this.formType !== undefined && store.getters !== undefined)
+          return store.getters[this.formType + "/getField"]("totalEdited");
+        else return 0;
+      },
+      formFields: function () {
+        if (this.formType !== undefined && store.getters !== undefined)
+          return store.getters[this.formType + "/getField"]("formFields");
+        else return null;
+      },
     },
 
     watch: {
@@ -281,9 +287,15 @@
           submitData[key]["value"] = value["value"];
           submitData[key]["wasEdited"] = !value["disabled"];
         });
+        var sheetType = "";
         if ("timesheet" in this.formFields) {
-          submitData["timesheet"]["value"] = [];
-          Object.entries(this.formFields["timesheet"]["value"]).forEach(
+          sheetType = "timesheet";
+        } else if ("mileagesheet" in this.formFields) {
+          sheetType = "mileagesheet";
+        }
+        if (sheetType.localeCompare("") !== true) {
+          submitData[sheetType]["value"] = [];
+          Object.entries(this.formFields[sheetType]["value"]).forEach(
             ([key, value]) => {
               key;
               var row = {};
@@ -293,7 +305,7 @@
               });
               row["wasEdited"] = !value["disabled"];
 
-              submitData["timesheet"]["value"].push(row);
+              submitData[sheetType]["value"].push(row);
             }
           );
         }

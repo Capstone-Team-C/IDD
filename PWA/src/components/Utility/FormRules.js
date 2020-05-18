@@ -3,47 +3,48 @@
 // at the end, or else form validation will display the wrong error
 // message for an empty field
 const rules = {
-  required () { 
-    return (v) => !!v || "This field is required"; 
+  required() {
+    return (v) => !!v || "This field is required";
   },
   maxLength(max) {
     return (v) =>
       (v && v.toString().length <= max) ||
-      "This field can't be over " + (max) + " characters";
+      "This field can't be over " + max + " characters";
   },
-  alpha () {
+  alpha() {
     return (v) => /^[a-zA-Z]+$/.test(v) || "This field must be letters only";
-
   },
-  alphanumeric () {
-    return (v) => /^[a-zA-Z0-9]+$/.test(v) || "This field must be letters or numbers";
+  alphanumeric() {
+    return (v) =>
+      /^[a-zA-Z0-9]+$/.test(v) || "This field must be letters or numbers";
   },
-  numeric () {
+  numeric() {
     return (v) => /^[0-9]+(.[0-9]+)?$/.test(v) || "This field must be a number";
   },
-  name () {
-    return (v) => /^([a-zA-Z.',]+( [a-zA-Z.',]+)+)$/.test(v) || "Firstname Lastname";
+  name() {
+    return (v) =>
+      /^([a-zA-Z.',]+( [a-zA-Z.',]+)+)$/.test(v) || "Firstname Lastname";
   },
-  timeOfDay () {
+  timeOfDay() {
     return (v) =>
       /^[0-1][0-9]:[0-6][0-9] [AaPp][Mm]$/.test(v) ||
       "This field must be in format HH:mm AM/PM";
   },
-  time () {
+  time() {
     return (v) =>
       /^[0-9][0-9]:[0-6][0-9]$/.test(v) || "This field must be in format HH:mm";
   },
   monthYear() {
     return (v) =>
       /^[0-9]{4}-[01][0-9]$/.test(v) || "This field must be in format YYYY-MM";
-},
+  },
   date() {
     return (v) =>
       /^[0-9]{4}-[01][0-9]-[0123][0-9]$/.test(v) ||
       "This field must be in format YYYY-MM-DD";
   },
-  email() { 
-    return (v) => /.+@.+\..+/.test(v) || "E-mail must be valid"; 
+  email() {
+    return (v) => /.+@.+\..+/.test(v) || "E-mail must be valid";
   },
 };
 

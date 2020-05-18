@@ -18,9 +18,9 @@ describe("ServicesDelivered.js", () => {
     const localVue = createLocalVue();
     let wrapper = mount(ServicesDelivered, {
       localVue,
-      store, 
+      store,
       vuetify: new Vuetify(),
-      propsData: { 
+      propsData: {
         parsedFileData: happy_path,
         formChoice: FORM.OR507_RELIEF,
       },

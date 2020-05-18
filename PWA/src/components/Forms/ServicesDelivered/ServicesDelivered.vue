@@ -21,7 +21,7 @@
         :key="field"
         :reset="resetChild"
         @disable-change="handleDisableChange(field, $event)"
-        @input="setField(wrapSet('formFields.'+field+'.value', $event))"
+        @input="setField(wrapSet('formFields.' + field + '.value', $event))"
       />
     </v-layout>
 
@@ -34,15 +34,18 @@
         :reset="resetChild"
         :totalHours="formFields['totalHours']['value']"
         :willResign="willResign"
-        @update-totalHours="setField(wrapSet('formFields.totalHours.value', $event))"
+        @update-totalHours="
+          setField(wrapSet('formFields.totalHours.value', $event))
+        "
         @disable-change="handleDisableChange('timesheet', $event)"
         @input="
-        setField(
-          wrapSet(
-            'formFields.timesheet.value',
-            JSON.parse(JSON.stringify($event))
+          setField(
+            wrapSet(
+              'formFields.timesheet.value',
+              JSON.parse(JSON.stringify($event))
+            )
           )
-        )"
+        "
       />
     </v-card-text>
 
@@ -63,7 +66,7 @@
       :key="field"
       :reset="resetChild"
       @disable-change="handleDisableChange(field, $event)"
-      @input="setField(wrapSet('formFields.'+field+'.value', $event))"
+      @input="setField(wrapSet('formFields.' + field + '.value', $event))"
     />
 
     <hr />
@@ -89,7 +92,7 @@
         :key="field"
         :reset="resetChild"
         @disable-change="handleDisableChange(field, $event)"
-        @input="setField(wrapSet('formFields.'+field+'.value', $event))"
+        @input="setField(wrapSet('formFields.' + field + '.value', $event))"
       />
     </v-layout>
     <!-- End Employer Verification Section -->
@@ -119,24 +122,24 @@
         :key="field"
         :reset="resetChild"
         @disable-change="handleDisableChange(field, $event)"
-        @input="setField(wrapSet('formFields.'+field+'.value', $event))"
+        @input="setField(wrapSet('formFields.' + field + '.value', $event))"
       />
     </v-layout>
     <!-- END Provider Verification Section -->
 
     <hr />
-      <v-layout wrap>
-        <FormField
-          v-for="field in ['authorization', 'approval']"
-          v-bind="combineProps([fieldProps[field], formFields[field]])"
-          :value="formFields[field].value"
-          :willResign="willResign"
-          :key="field"
-          :reset="resetChild"
-          @disable-change="handleDisableChange(field, $event)"
-          @input="setField(wrapSet('formFields.'+field+'.value', $event))"
-        />
-      </v-layout>
+    <v-layout wrap>
+      <FormField
+        v-for="field in ['authorization', 'approval']"
+        v-bind="combineProps([fieldProps[field], formFields[field]])"
+        :value="formFields[field].value"
+        :willResign="willResign"
+        :key="field"
+        :reset="resetChild"
+        @disable-change="handleDisableChange(field, $event)"
+        @input="setField(wrapSet('formFields.' + field + '.value', $event))"
+      />
+    </v-layout>
 
     <strong class="subtitle-1">
       Providers submit this completed/signed form to the CDDP, Brokerage or CIIS
@@ -151,7 +154,7 @@
               Reset Form
             </v-btn>
           </v-container>
-        </v-col> 
+        </v-col>
         <v-col cols="6">
           <ConfirmSubmission
             :cols="cols"
@@ -160,7 +163,7 @@
             :validationSignal="validationSignal"
             @click="validateInputs"
           />
-        </v-col> 
+        </v-col>
       </v-row>
     </v-container>
   </v-form>
@@ -174,9 +177,9 @@
   import rules from "@/components/Utility/FormRules.js";
   import { TIME } from "@/components/Utility/Enums.js";
   import { subtractTime, isValid } from "@/components/Utility/TimeFunctions.js";
-  
-  import { mapFields } from 'vuex-map-fields';
-  import { mapMutations } from 'vuex';
+
+  import { mapFields } from "vuex-map-fields";
+  import { mapMutations } from "vuex";
 
   export default {
     name: "ServicesDelivered",
@@ -199,11 +202,11 @@
     created: function () {
       // If the user is working with new data, prepare the store
       if (this.newForm === true) {
-        this.bindData(); 
+        this.bindData();
         this.initialize();
-        this.set(this.wrapSet('newForm', false)); 
+        this.set(this.wrapSet("newForm", false));
       }
-      
+
       // Bind validation rules to each field that has a 'rules' string
       // specified
       Object.entries(this.fieldProps).forEach(([key, value]) => {
@@ -250,33 +253,34 @@
       resetChild() {
         return this.resetChildField;
       },
-      ...mapFields([
-        'formId',
-        'newForm',
-      ]),
-      ...mapFields('ServiceDelivered', [
-        'willResign',
-        'formFields',
-        'totalEdited',
+      ...mapFields(["formId", "newForm"]),
+      ...mapFields("ServiceDelivered", [
+        "willResign",
+        "formFields",
+        "totalEdited",
       ]),
     },
     methods: {
       // Expose and rename the mutations for changing vuex state
       ...mapMutations({
-        incrementEdited: 'ServiceDelivered/incrementEdited',
-        setField: 'ServiceDelivered/updateField',
-        setTimesheet: 'ServiceDelivered/updateTimesheet',
-        set: 'updateField',
+        incrementEdited: "ServiceDelivered/incrementEdited",
+        setField: "ServiceDelivered/updateField",
+        setTimesheet: "ServiceDelivered/updateTimesheet",
+        set: "updateField",
       }),
       bindData() {
         // Bind data from a .json IDD timesheet to forFields in the vuex store
         if (this.parsedFileData !== null) {
           Object.entries(this.parsedFileData).forEach(([key, value]) => {
             if (key in this.formFields) {
-              this.setField(this.wrapSet('formFields.'+key+'.parsed_value', value));
+              this.setField(
+                this.wrapSet("formFields." + key + ".parsed_value", value)
+              );
             } else {
-              if (key.localeCompare("id") !== 0 &&
-                  key.localeCompare("review_status") !== 0) {
+              if (
+                key.localeCompare("id") !== 0 &&
+                key.localeCompare("review_status") !== 0
+              ) {
                 console.log(
                   "Unrecognized parsed form field from server: " +
                     `${key} - ${value}`
@@ -291,7 +295,7 @@
       },
       initialize() {
         // Initialize some fields
-        this.set(this.wrapSet('willResign', false)); 
+        this.set(this.wrapSet("willResign", false));
 
         // Set values to their parsed parts or to empty
         Object.entries(this.formFields).forEach(([key, value]) => {
@@ -299,12 +303,18 @@
             // Set values to their parsed part, or keep as default value
             const parsed_val = this.formFields[key]["parsed_value"];
             if (parsed_val !== null) {
-              this.setField(this.wrapSet('formFields.'+key+'.value', parsed_val));
-              this.setField(this.wrapSet('formFields.'+key+'.disabled', true));
-            } 
+              this.setField(
+                this.wrapSet("formFields." + key + ".value", parsed_val)
+              );
+              this.setField(
+                this.wrapSet("formFields." + key + ".disabled", true)
+              );
+            }
           } else {
-            if (key.localeCompare("id") !== 0 &&
-                key.localeCompare("review_status") !== 0) {
+            if (
+              key.localeCompare("id") !== 0 &&
+              key.localeCompare("review_status") !== 0
+            ) {
               console.log(
                 "Unrecognized parsed form field from vuex store: " +
                   `${key} - ${value}`
@@ -312,7 +322,7 @@
             }
           }
         });
- 
+
         // Consider the amount of non-parsed fields
         // The provider and employer must resign the form
         Object.entries(this.formFields).forEach(([key, value]) => {
@@ -320,7 +330,7 @@
           if (!("parsed_value" in value)) {
             this.incrementEdited(1);
           }
-        }); 
+        });
       },
 
       // Check if the form fields have valid input
@@ -369,8 +379,14 @@
         // employer signature date are after the last service date
         if (this.totalEdited <= 0) {
           if (
-            isValid(this.formFields.providerSignDate.value, TIME.YEAR_MONTH_DAY) === true &&
-            isValid(this.formFields.employerSignDate.value, TIME.YEAR_MONTH_DAY) === true
+            isValid(
+              this.formFields.providerSignDate.value,
+              TIME.YEAR_MONTH_DAY
+            ) === true &&
+            isValid(
+              this.formFields.employerSignDate.value,
+              TIME.YEAR_MONTH_DAY
+            ) === true
           ) {
             // Only compare the earlier date
             var comparisonDate = this.formFields.providerSignDate.value;
@@ -400,11 +416,12 @@
             // Get the last date from the timesheet table
             var latestDateIdx = this.formFields.timesheet.value.length;
             if (latestDateIdx > 0) {
-              var latestDate = this.formFields.timesheet.value[latestDateIdx - 1][
-                "date"
-              ];
+              var latestDate = this.formFields.timesheet.value[
+                latestDateIdx - 1
+              ]["date"];
               if (
-                subtractTime(latestDate, comparisonDate, TIME.YEAR_MONTH_DAY) < 0
+                subtractTime(latestDate, comparisonDate, TIME.YEAR_MONTH_DAY) <
+                0
               ) {
                 this.errors.push(
                   `ERROR: the employer or provider sign date is before the latest service delivery date.`
@@ -434,8 +451,15 @@
       resetParsed(field) {
         if (this.formFields[field].parsed_value !== undefined) {
           if (this.formFields[field].disabled !== true) {
-            this.setField(this.wrapSet('formFields['+field+'].disabled', true));
-            this.setField(this.wrapSet('formFields['+field+'].value', this.formFields[field].parsed_value));
+            this.setField(
+              this.wrapSet("formFields[" + field + "].disabled", true)
+            );
+            this.setField(
+              this.wrapSet(
+                "formFields[" + field + "].value",
+                this.formFields[field].parsed_value
+              )
+            );
           }
         }
       },
@@ -444,10 +468,14 @@
       // Then, update the amount of parsed fields edited
       handleDisableChange(fieldName, amtEdited) {
         if (amtEdited > 0) {
-          this.setField(this.wrapSet('formFields['+fieldName+'].disabled', false));
-          this.setField(this.wrapSet('willResign', true));
+          this.setField(
+            this.wrapSet("formFields[" + fieldName + "].disabled", false)
+          );
+          this.setField(this.wrapSet("willResign", true));
         } else {
-          this.setField(this.wrapSet('formFields['+fieldName+'].disabled', true));
+          this.setField(
+            this.wrapSet("formFields[" + fieldName + "].disabled", true)
+          );
         }
         this.incrementEdited(amtEdited);
       },

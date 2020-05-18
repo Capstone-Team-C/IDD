@@ -11,7 +11,7 @@ describe("FileUpload", () => {
   //Checks if the upload status is not active since no files to upload
   it("upload status should be zero since no files", () => {
     const wrapper = mount(FileUpload, {
-      store, 
+      store,
       propsData: {
         files: [],
       },

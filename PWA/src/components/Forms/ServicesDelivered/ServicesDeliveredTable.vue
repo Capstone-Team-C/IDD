@@ -248,8 +248,10 @@
     data: function () {
       return {
         // Specify rules and hints for adding a new row to the table
-        colValidation: JSON.parse(JSON.stringify(fieldPropsFile["colValidation"])),
-        
+        colValidation: JSON.parse(
+          JSON.stringify(fieldPropsFile["colValidation"])
+        ),
+
         // Column headers and associated values for the table
         headers: fieldPropsFile["headers"],
 
@@ -330,17 +332,15 @@
           let _transRules = [];
           _rules.forEach((fieldRule) => {
             if (typeof fieldRule === "string") {
-              _transRules.push(rules[fieldRule]()); 
+              _transRules.push(rules[fieldRule]());
               this.colValidation[key].rules.push(rules[fieldRule]());
             }
           });
 
           if (this.colValidation[key].counter) {
-            _transRules.push( 
-              rules.maxLength(this.colValidation[key].counter)
-            );
+            _transRules.push(rules.maxLength(this.colValidation[key].counter));
           }
-          
+
           this.$set(this.colValidation[key], "rules", _transRules);
         }
       });
