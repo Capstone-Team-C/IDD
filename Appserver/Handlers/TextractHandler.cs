@@ -31,43 +31,21 @@ namespace Appserver.Controllers
 
 
         // Handler for image files
-		public AnalyzeDocumentResponse HandleAsyncJob(IFormFile file, string type)
+		public AnalyzeDocumentResponse HandleAsyncJob(Stream file)
 		{
-            if(type.ToLower() == "image")
-            {
-			    var job = StartDocumentAnalysis(file.OpenReadStream(), new List<string> { "TABLES", "FORMS" });
-				try
-				{
-					job.Wait();
-				}
-				catch (System.AggregateException e)
-				{
-					Console.WriteLine(e.Message);
-					throw;
-				}
-				var result = job.Result;
-
-				return result;
+			var job = StartDocumentAnalysis(file, new List<string> { "TABLES", "FORMS" });
+			try
+			{
+				job.Wait();
 			}
-
-            if(type.ToLower() == "pdf")
-            {
-				var job = StartDocumentPDFAnalysis(file, new List<string> { "TABLES", "FORMS" });
-				try
-				{
-					job.Wait();
-				}
-				catch (System.AggregateException e)
-				{
-					Console.WriteLine(e.Message);
-					throw;
-				}
-				var result = job.Result;
-
-				return result;// new AnalyzeDocumentResponse();//result;
+			catch (System.AggregateException e)
+			{
+				Console.WriteLine(e.Message);
+				throw;
 			}
+			var result = job.Result;
 
-			throw new System.Exception("Invalid file type " + type);
+			return result;
 		}
 
 

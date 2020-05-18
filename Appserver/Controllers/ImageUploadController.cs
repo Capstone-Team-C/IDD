@@ -220,7 +220,7 @@ namespace Appserver.Controllers
 
         private AnalyzeDocumentResponse process_image(IFormFile file)
         {
-            return new TextractHandler().HandleAsyncJob(file, "image");
+            return new TextractHandler().HandleAsyncJob(file.OpenReadStream());
         }
 
 
