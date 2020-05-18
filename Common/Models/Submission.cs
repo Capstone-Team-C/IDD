@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using PdfSharp.Pdf;
+using Microsoft.AspNetCore.Mvc;
+using Common.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Common.Models
 {
@@ -19,6 +23,7 @@ namespace Common.Models
         public string Status { get; set; } = "Pending";
         public string UserActivity { get; set; }
         public string RejectionReason { get; set; }
+        public Boolean Edited { get; set; }
         public Lock LockInfo { get; set; }
         [NotMapped]
         public IList<string> UriList { get; set; }
@@ -27,6 +32,9 @@ namespace Common.Models
             get => string.Join(",", UriList); 
             set => UriList = value.Split(',').ToList();
         }
+
+        public abstract PdfDocument ToPdf();
+        public abstract void LoadEntries(DbContext context);
 
     }
 }

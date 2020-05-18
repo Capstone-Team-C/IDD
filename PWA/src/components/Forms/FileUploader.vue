@@ -212,6 +212,10 @@
       FileUpload,
     },
     props: {
+      isOnline: {
+        type: Boolean,
+        default: false,
+      },
       uploadFiles: {
         type: Array,
         defaut: () => [],

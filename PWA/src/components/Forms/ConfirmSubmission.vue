@@ -170,6 +170,10 @@
   export default {
     name: "ConfirmSubmission",
     props: {
+      isOnline: {
+        type: Boolean,
+        default: false,
+      },
       // The cols in the datatable
       cols: {
         type: Array,

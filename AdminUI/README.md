@@ -9,11 +9,19 @@ In the Package Manager Console, run the following commands:
 ```
 	Update-Database -Context AdminUIUserContext
 	Update-Database -Context SubmissionContext
+	Update-Database -Context PayPeriodContext
 ```
 
 If you see an error along the lines of "Database xxx already exists, pick a different name",
 then go to view -> SQL Server Object Explorer -> (localdb)\MSSQL.... -> Databases -> Right Click AzureDB -> Delete.
 Now re-run the commands and it should work.
+
+If you're adding a field to the Submission.cs Mode, then you need to first Delete the AzureDB and then run:
+
+```
+Add-Migration -Context SubmissionContext
+Update-Database -Context SubmissionContext
+```
 
 ## How to run
 

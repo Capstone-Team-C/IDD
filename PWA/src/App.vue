@@ -21,7 +21,7 @@
 
       <!-- Fade-in/Fade-out for smooth navigation transitions -->
       <transition mode="out-in" name="fade">
-        <router-view />
+        <router-view :isOnline="isOnline" />
       </transition>
     </v-content>
 
@@ -48,6 +48,7 @@
     data: () => ({
       // Stores the value for if the navigation drawer is open or not
       openNavigationDrawer: false,
+      isOnline: false,
     }),
     computed: {
       ...mapFields(["formChoice", "onlineStatus"]),
