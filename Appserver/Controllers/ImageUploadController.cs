@@ -194,7 +194,8 @@ namespace Appserver.Controllers
             var ss = new SubmissionStaging
             {
                 ParsedTextractJSON = System.Text.Json.JsonSerializer.Serialize(responses),
-                UriString = uriString
+                UriString = uriString,
+                formType = AbstractFormObject.FormType.OR507_RELIEF
             };
 
             // Add SubmissionStaging to table and get the Id to add to JSON response return
