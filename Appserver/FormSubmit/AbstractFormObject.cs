@@ -5,6 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 public abstract class AbstractFormObject{
+    public enum FormType
+    {
+        OR004_MILEAGE = 1,
+        OR507_RELIEF = 2,
+        OR526_ATTENDANT = 3,
+    }
     public static AbstractFormObject FromTextract(TextractDocument doc)
     {
         // Here we'll Determine the type of object (timesheet or mileage form) and then
