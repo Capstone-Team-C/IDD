@@ -139,7 +139,7 @@ namespace Appserver.Controllers
                 //azfc_resp = textract_responses,
                 skipped = skipped_files,
                 //textract_stats = stats,
-                id = await saveSubmissisionStage(await UploadToBlob(files), textract_responses)
+                id = 3//await saveSubmissisionStage(await UploadToBlob(files), textract_responses)
             }
             ) ;
         }
@@ -205,7 +205,6 @@ namespace Appserver.Controllers
         // Method argument is file sent with an HTTP Request (IFormFile)
         private AnalyzeDocumentResponse process_pdf(IFormFile file)
         {
-            Debug.WriteLine("Would have processed a PDF");
             return new TextractHandler().HandleAsyncJob(file, "pdf");
         }
 
