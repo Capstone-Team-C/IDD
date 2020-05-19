@@ -23,6 +23,7 @@ using IDD;
 using Common.Models;
 using Common.Data;
 using Microsoft.Azure.Documents.SystemFunctions;
+using Microsoft.Extensions.Primitives;
 
 namespace Appserver.Controllers
 {
@@ -123,8 +124,17 @@ namespace Appserver.Controllers
         // Controller to accept images POSTed as bytes in the body
         [Route("ImageUpload/DocAsForm")]
         [HttpPost("ImageList")]
-        public async Task<IActionResult> ImageList(IFormCollection file_collection, AbstractFormObject.FormType formType)
+        public async Task<IActionResult> ImageList(IFormCollection file_collection)
         {
+            if (file_collection["formChoice"].Equals(StringValues.Empty))
+            {
+                return Json(new
+                {
+                    response = "invalid form type"
+                });
+            }
+            AbstractFormObject.FormType formType = (AbstractFormObject.FormType)Enum.Parse(typeof(AbstractFormObject.FormType),file_collection["formChoice"].ToString());
+
             return await PostImage(file_collection.Files.ToList(), formType);
         }
 
