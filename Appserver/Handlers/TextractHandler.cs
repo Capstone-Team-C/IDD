@@ -84,35 +84,6 @@ namespace Appserver.Controllers
 			return response;
 		}
 
-		// In order for textract to process PDFs, they must come from an S3 bucket
-		// that is in the same region that textract is in. The file is no longer
-		// needed in S3 after being processed by textract as the file is still
-		// being stored in azure blob.
-        // TODO make this work? Seems less complicated if it can.....
-		private async Task<AnalyzeDocumentResponse> StartDocumentPDFAnalysis(IFormFile file, List<string> featureTypes)
-		{
-			// Upload PDF to S3, with guid as file key
-			var k = Guid.NewGuid();
-			PDFtoS3Bucket(file, k.ToString()).Wait();
-
-
-			var s3 = new Amazon.Textract.Model.S3Object();
-            s3.Bucket = "multcapstone";
-            s3.Name = k.ToString();
-
-            var request = new AnalyzeDocumentRequest();
-            request.Document = new Document
-            {
-                S3Object = s3
-            };
-            request.FeatureTypes = featureTypes;
-            var response = await this.textractClient.AnalyzeDocumentAsync(request);
-
-            // Remove PDF from S3
-            RemoveFromS3Bucket(k.ToString()).Wait();
-			return response;
-		}
-
 
         // Does the work of analyzing PDFs. Start by saving the file to S3, as this is currently the only
         // way for textract to analyze PDFs. Then, point the analysis request to the S3 bucket and begin
@@ -125,7 +96,7 @@ namespace Appserver.Controllers
 
 			// Create S3 obj to hand to Textract
 			var s3 = new Amazon.Textract.Model.S3Object();
-			s3.Bucket = "multcapstone";
+			s3.Bucket = Environment.GetEnvironmentVariable("BUCKET_NAME");
 			s3.Name = k.ToString();
 			var r = new StartDocumentAnalysisRequest();
 
@@ -185,7 +156,7 @@ namespace Appserver.Controllers
             {
                 // Set Params for upload request
 				file.CopyTo(mem);
-				req.BucketName = "multcapstone";
+				req.BucketName = Environment.GetEnvironmentVariable("BUCKET_NAME");
 				req.InputStream = mem;
 				req.Key = filekey;
 
@@ -202,7 +173,7 @@ namespace Appserver.Controllers
         {
 			var deleteObj = new DeleteObjectRequest
 			{
-				BucketName = "multcapstone",
+				BucketName = Environment.GetEnvironmentVariable("BUCKET_NAME"),
 				Key = key
 			};
 
