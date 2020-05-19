@@ -17,9 +17,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using SQLitePCL;
+using System.Text.RegularExpressions;
 
 namespace AdminUI.Controllers
 {
+
     [Authorize]
     public class SubmissionController : Controller
     {
@@ -71,8 +73,11 @@ namespace AdminUI.Controllers
             // Save the document
             submission.ToPdf().Save(stream, true);
 
-            var fileDownloadName = submission.ClientName + "_" + submission.ClientPrime + "_" + submission.ProviderId + "_" +
-                                   submission.ProviderName + "_" + submission.Submitted + "_" + submission.FormType + ".pdf";
+            //ClientName_Prime_ProviderID_ProviderName_yyyyMMdd_FormNumber
+            string fileDownloadName = submission.ClientName + "_" + submission.ClientPrime + "_" + submission.ProviderId + "_" +
+                                   submission.ProviderName + "_" + submission.Submitted.ToString("yyyyMMdd") + "_" + submission.FormType.Split(" ")[0] + ".pdf";
+
+            fileDownloadName = fileDownloadName.Replace(" ", String.Empty);
 
             return File(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Pdf, fileDownloadName);
         }
