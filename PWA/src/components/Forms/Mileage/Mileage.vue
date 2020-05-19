@@ -157,7 +157,6 @@
         </v-col>
         <v-col cols="6">
           <ConfirmSubmission
-            :isOnline="isOnline"
             :cols="cols"
             :valid="valid"
             :errors="errors"

@@ -206,16 +206,14 @@
   import { mapFields } from "vuex-map-fields";
   import FileUpload from "vue-upload-component";
   import axios from "axios";
+  import { FORM } from "@/components/Utility/Enums.js";
+  
   export default {
     name: "file_uploader",
     components: {
       FileUpload,
     },
     props: {
-      isOnline: {
-        type: Boolean,
-        default: false,
-      },
       uploadFiles: {
         type: Array,
         defaut: () => [],
@@ -250,6 +248,7 @@
           let file = this.files[i].file;
           formData.append("files[" + i + "]", file);
         }
+        formData.append("formChoice", FORM[this.formChoice]);
         let self = this;
         axios
           .post(this.urlPost, formData, {
@@ -304,7 +303,7 @@
       };
     },
     computed: {
-      ...mapFields(["formId", "onlineStatus"]),
+      ...mapFields(["formChoice", "formId", "onlineStatus"]),
     },
     //Watches for the user to press submit. BAD!
     watch: {
