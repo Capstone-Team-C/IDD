@@ -47,11 +47,11 @@ public class TimesheetForm: AbstractFormObject{
         {
             try
             {
-                totalHours = FixHours(lastrow[2].ToString()).Trim();
+                totalHours = FixHours(lastrow[3].ToString()).Trim();
             }
             catch (FormatException)
             {
-                totalHours = lastrow[2].ToString();
+                totalHours = lastrow[3].ToString();
             }
         }
     }

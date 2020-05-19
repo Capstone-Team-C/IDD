@@ -38,40 +38,6 @@ namespace Appserver.Controllers
             _scontext = scontext;
         }
 
-
-        public int FormSubmissionTest()
-        {
-
-            TimesheetForm model = new TimesheetForm();
-            model.prime = "A1234";
-            model.providerName = "Donald P. Duck";
-            model.providerNum = "N6543";
-            model.providerSignature = true;
-            model.providerSignDate = DateTime.Now.ToString();
-            model.progressNotes = "Looking good for a retired hero.\nNeeds a new hobby.";
-            model.scpaName = "SCPA";
-            model.serviceAuthorized = "Feeding";
-            model.serviceGoal = "Feed fish";
-            model.authorization = true;
-            model.type = "House call";
-            model.brokerage = "Daffy";
-            model.approval = true;
-            model.clientName = "Darkwing Duck";
-            model.employerSignature = true;
-            model.employerSignDate = DateTime.Now.ToString();
-            model.frequency = "Daily";
-            model.addTimeRow("2020-04-02", "09:00", "10:00", "1.0", "true");
-            model.addTimeRow("2020-04-03", "09:00", "10:00", "1.0", "true");
-            model.addTimeRow("2020-04-04", "09:00", "10:00", "1.0", "true");
-
-            var dbutil = new FormToDbUtil(_scontext, _context);
-
-            Timesheet ts = dbutil.PopulateTimesheet(model);
-            dbutil.PopulateTimesheetEntries(model, ts);
-
-            return dbutil.TimesheetEFtoDB(ts);
-        }
-
         // POST: /home/timesheet/
         [HttpPost("ImageUpload")]
         public async Task<IActionResult> PostImage(List<IFormFile> files, AbstractFormObject.FormType formType)
@@ -150,7 +116,7 @@ namespace Appserver.Controllers
                 skipped = skipped_files,
                 id = stageId
             }
-            ); ;
+            );
         }
 
 
