@@ -60,16 +60,18 @@ namespace Appserver.Controllers
 
             var textractform = new TextractDocument.TextractDocument();
 
-            foreach( var a in JArray.Parse(stage.ParsedTextractJSON))
+            foreach (var a in JArray.Parse(stage.ParsedTextractJSON))
             {
                 var childform = new TextractDocument.TextractDocument();
                 childform.FromJson(a);
                 textractform.AddPages(childform);
             }
-            TimesheetForm ts;
+
+            AbstractFormObject ts;
+
             try
             {
-                ts = (TimesheetForm)AbstractFormObject.FromTextract(textractform);
+                ts = AbstractFormObject.FromTextract(textractform, stage.formType);
             }
             catch (Exception)
             {
@@ -80,27 +82,6 @@ namespace Appserver.Controllers
 
             return Json(ts);
         }
-
-        private class JsonResponse
-        {
-            public JsonResponse(string res = "ok")
-            {
-                response = res;
-            }
-            public string response;
-        }
-
-        [Route("Timesheet/Validate")]
-        [HttpPost("Validate")]
-        [Produces("application/json")]
-        public IActionResult Validate(TimesheetForm ?form )
-        {
-            // Do something with form
-
-            JsonResponse model = new JsonResponse();
-            return Json(model);
-        }
-
 
         [Route("Timesheet/SubmitTest")]
         [HttpGet]
@@ -121,7 +102,7 @@ namespace Appserver.Controllers
                 childform.FromJson(a);
                 textractform.AddPages(childform);
             }
-            var ts = (TimesheetForm)AbstractFormObject.FromTextract(textractform);
+            var ts = (TimesheetForm)AbstractFormObject.FromTextract(textractform, stage.formType);
 
             ts.id = id;
             Func<string, PWAsubmissionVals> PWAConv = (x) =>
@@ -202,6 +183,19 @@ namespace Appserver.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        /*******************************************************************************
+        /// Classes
+        *******************************************************************************/
+        private class JsonResponse
+        {
+            public JsonResponse(string res = "ok")
+            {
+                response = res;
+            }
+            public string response;
         }
     }
 }

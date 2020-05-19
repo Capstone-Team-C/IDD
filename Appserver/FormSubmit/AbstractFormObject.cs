@@ -5,115 +5,60 @@ using System.Collections.Generic;
 using System.Linq;
 
 public abstract class AbstractFormObject{
+
+    /*******************************************************************************
+    /// Enums
+    *******************************************************************************/
     public enum FormType
     {
         OR004_MILEAGE = 1,
         OR507_RELIEF = 2,
         OR526_ATTENDANT = 3,
     }
-    public static AbstractFormObject FromTextract(TextractDocument doc)
+
+    /*******************************************************************************
+    /// Fields
+    *******************************************************************************/
+    /// Front Fields
+    public int id { get; set; }
+    public string clientName { get; set; }
+    public string prime { get; set; }
+    public string providerName { get; set; }
+    public string providerNum { get; set; }
+    public string brokerage { get; set; }
+    public string scpaName { get; set; }
+    public string serviceAuthorized { get; set; }
+    /// Back Fields
+    public string serviceGoal { get; set; }
+    public string progressNotes { get; set; }
+    public bool employerSignature { get; set; }
+    public string employerSignDate { get; set; }
+    public bool providerSignature { get; set; }
+    public string providerSignDate { get; set; }
+    public bool authorization { get; set; }
+    public bool approval { get; set; }
+    public string review_status { get; set; } = "Pending";
+
+    /*******************************************************************************
+    /// Static Methods
+    *******************************************************************************/
+
+    public static AbstractFormObject FromTextract(TextractDocument doc, FormType formType)
     {
         // Here we'll Determine the type of object (timesheet or mileage form) and then
         // return the correct type.
         // For now, assume TimesheetForm
 
-        TimesheetForm t = new TimesheetForm();
-
-        // Grab the first page and make sure it is the front
-        if( doc.PageCount() < 2)
+        AbstractFormObject form;
+        switch (formType)
         {
-            throw new ArgumentException();
+            case FormType.OR507_RELIEF:
+                form = new TimesheetForm();
+                break;
+            default:
+                throw new ArgumentException();
         }
-
-        // Do a silly assignment because C# won't let me assign the variable in the foreach loop instead
-        // and there is no default constructor
-        Page frontpage = doc.GetPage(0);
-        bool frontfound = false;
-        List<Page> backpages = new List<Page>();
-
-        foreach( var page in doc.Pages)
-        {
-            if (page.GetTables().Count >= 1)
-            {
-                frontpage = page;
-                frontfound = true;
-            }
-            else
-            {
-                backpages.Add(page);
-            }
-        }
-
-        if( !frontfound )
-        {
-            throw new ArgumentException();
-        }
-
-        var formitems = frontpage.GetFormItems();
-
-        // Top Form Information
-        
-        t.clientName        = formitems[0].Value.ToString().Trim(); // Customer Name 
-        t.prime             = formitems[1].Value.ToString().Trim(); // Prime 
-        t.providerName      = formitems[2].Value.ToString().Trim(); // Provider Name 
-        t.providerNum       = formitems[3].Value.ToString().Trim(); // Provider Num 
-        t.brokerage         = formitems[4].Value.ToString().Trim(); // CM Organization
-        t.scpaName          = formitems[5].Value.ToString().Trim(); // SC/PA Name
-        t.serviceAuthorized = formitems[6].Value.ToString().Trim(); // Service
-
-        // Table
-        var tables = frontpage.GetTables();
-        if(tables.Count == 0)
-        {
-            Console.WriteLine("No Table Information");
-            return t;
-        }
-
-        var table = tables[0].GetTable();
-        // Remove first row
-        table.RemoveAt(0);
-
-        // Grab last row for total
-        var lastrow = table.Last();
-        // Now remove it
-        table.RemoveAt(table.Count - 1);
-
-        foreach( var row in table)
-        {
-            t.addTimeRow(row[0].ToString().Trim(),
-                FixHours(row[1].ToString()).ToString().Trim(),
-                FixHours(row[2].ToString()).ToString().Trim(),
-                FixHours(row[3].ToString()).ToString().Trim(), 
-                ConvertInt(row[4].ToString()).ToString().Trim());
-        }
-
-        if (lastrow.Count > 3)
-        {
-            try
-            {
-                t.totalHours = FixHours(lastrow[2].ToString()).Trim();
-            }catch(FormatException)
-            {
-                t.totalHours = lastrow[2].ToString();
-            }
-        }
-
-        // Populate back form objects
-        formitems = backpages[0].GetFormItems();
-
-        t.serviceGoal = formitems[6].Value.ToString().Trim();
-        t.progressNotes = formitems[7].Value.ToString().Trim();
-        t.employerSignDate = formitems[8].Value.ToString().Trim();
-        t.employerSignature = !string.IsNullOrEmpty(t.employerSignDate);
-        t.providerSignDate = formitems[10].Value.ToString().Trim();
-        t.providerSignature = !string.IsNullOrEmpty(t.providerSignDate);
-        // t.authorization
-
-        return t;
-    }
-    public static DateTime ConvertDate( string s )
-    {
-        return DateTime.Now;
+        return form.FromTextract(doc);
     }
     public static string FixHours( string s )
     {
@@ -127,4 +72,6 @@ public abstract class AbstractFormObject{
             return 1;
         return 0;
     }
+
+    protected abstract AbstractFormObject FromTextract(TextractDocument doc);
 }
