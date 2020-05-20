@@ -128,7 +128,7 @@ namespace AdminUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ModalProcess(int id, string status, string rejectionReason, string sortOrder, string dateFrom, string dateTo, string pName, string cName, string prime, string formType, int page)
+        public async Task<IActionResult> ModalProcess(int id, string status, string rejectionReason, string sortOrder, string dateFrom, string dateTo, string pName, string cName, string prime, string formType, int page, string providerId)
         {
             status = status.Equals("Approve") ? "Approved" : "Rejected";
             var submission = _context.Submissions.Find(id);
@@ -170,7 +170,7 @@ namespace AdminUI.Controllers
                 }
             }
 
-            return RedirectToAction("Index", "Home", new { SortOrder = sortOrder, DateTo = dateTo, DateFrom = dateFrom, PName = pName, CName = cName, Prime = prime, FormType = formType, Page = page});
+            return RedirectToAction("Index", "Home", new { SortOrder = sortOrder, DateTo = dateTo, DateFrom = dateFrom, PName = pName, CName = cName, Prime = prime, FormType = formType, Page = page, ProviderId = providerId});
         }
 
         [HttpPost]

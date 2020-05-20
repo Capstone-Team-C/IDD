@@ -445,11 +445,7 @@
                         @Html.HiddenFor(Model=>Model.Status)
                         @Html.HiddenFor(Model=>Model.FormType)
                         @Html.HiddenFor(Model=>Model.Page)
-                        @{ 
-                            TempData["SortOrder"] = Model.SortOrder;
-                            TempData["DateTo"] = Model.DateTo;
-                            TempData["DateFrom"] = Model.DateFrom;
-                        }
+                        @Html.HiddenFor(Model=>Model.ProviderId)
                     </form>
                 </div>
             </div>
