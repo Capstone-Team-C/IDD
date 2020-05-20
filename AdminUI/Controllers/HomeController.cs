@@ -262,7 +262,8 @@ namespace AdminUI.Controllers
                 {
                     //ClientName_Prime_ProviderID_ProviderName_yyyyMMdd_FormNumber
                     var fileDownloadName = (submission.ClientName + "_" + submission.ClientPrime + "_" + submission.ProviderId + "_" +
-                                           submission.ProviderName + "_" + submission.Submitted.ToString("yyyyMMdd") + "_" + submission.FormType.Split(" ")[0] + ".pdf").Replace("/","_");
+                                           submission.ProviderName + "_" + submission.Submitted.ToString("yyyyMMdd") + "_" + 
+                                           submission.FormType.Split(" ")[0] + ".pdf").Replace("/",string.Empty).Replace(" ",string.Empty);
                     submission.LoadEntries(_context);
                     var zipEntry = archive.CreateEntry(fileDownloadName, CompressionLevel.Fastest);
                     using var zipStream = zipEntry.Open();
