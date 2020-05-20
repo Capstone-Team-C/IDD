@@ -31,7 +31,7 @@ namespace Appserver.FormSubmit
             foreach (var row in table)
             {
                 addMileRow(
-                  row[0].ToString().Trim(), // Date
+                  ConvertDate(row[0].ToString().Trim()), // Date
                   row[1].ToString().Trim(), // Miles
                   ConvertInt(row[2].ToString()).ToString().Trim(), // Group
                   row[3].ToString().Trim() // Purpose
@@ -49,9 +49,9 @@ namespace Appserver.FormSubmit
 
             serviceGoal = formitems[7].Value.ToString().Trim();
             progressNotes = formitems[8].Value.ToString().Trim();
-            employerSignDate = formitems[9].Value.ToString().Trim();
+            employerSignDate = ConvertDate(formitems[9].Value.ToString().Trim());
             employerSignature = !string.IsNullOrEmpty(employerSignDate);
-            providerSignDate = formitems[11].Value.ToString().Trim();
+            providerSignDate = ConvertDate(formitems[11].Value.ToString().Trim());
             providerSignature = !string.IsNullOrEmpty(providerSignDate);
         }
     }

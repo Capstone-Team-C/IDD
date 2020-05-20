@@ -129,6 +129,18 @@ public abstract class AbstractFormObject{
         return 0;
     }
 
+    public static string ConvertDate(string s)
+    {
+        string date;
+        try
+        {
+            return DateTime.Parse(s).ToString("yyyy-MM-dd");
+        }
+        catch (FormatException)
+        {
+            return s;
+        }
+    }
     protected abstract void AddTables(List<Table> tables);
     protected abstract void AddBackForm(Page page);
 }

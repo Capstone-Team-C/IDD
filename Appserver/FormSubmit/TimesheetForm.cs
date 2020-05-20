@@ -36,7 +36,8 @@ public class TimesheetForm: AbstractFormObject{
 
         foreach (var row in table)
         {
-            addTimeRow(row[0].ToString().Trim(),
+            addTimeRow(
+              ConvertDate(row[0].ToString().Trim()),
               FixHours(row[1].ToString()).ToString().Trim(),
               FixHours(row[2].ToString()).ToString().Trim(),
               FixHours(row[3].ToString()).ToString().Trim(),
@@ -61,9 +62,9 @@ public class TimesheetForm: AbstractFormObject{
 
         serviceGoal = formitems[6].Value.ToString().Trim();
         progressNotes = formitems[7].Value.ToString().Trim();
-        employerSignDate = formitems[8].Value.ToString().Trim();
+        employerSignDate = ConvertDate(formitems[8].Value.ToString().Trim());
         employerSignature = !string.IsNullOrEmpty(employerSignDate);
-        providerSignDate = formitems[10].Value.ToString().Trim();
+        providerSignDate = ConvertDate(formitems[10].Value.ToString().Trim());
         providerSignature = !string.IsNullOrEmpty(providerSignDate);
     }
 }
