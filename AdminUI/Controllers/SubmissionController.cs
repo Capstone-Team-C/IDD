@@ -74,7 +74,7 @@ namespace AdminUI.Controllers
             submission.ToPdf().Save(stream, true);
 
             //ClientName_Prime_ProviderID_ProviderName_yyyyMMdd_FormNumber
-            string fileDownloadName = submission.ClientName + "_" + submission.ClientPrime + "_" + submission.ProviderId + "_" +
+            var fileDownloadName = submission.ClientName + "_" + submission.ClientPrime + "_" + submission.ProviderId + "_" +
                                    submission.ProviderName + "_" + submission.Submitted.ToString("yyyyMMdd") + "_" + submission.FormType.Split(" ")[0] + ".pdf";
 
             fileDownloadName = fileDownloadName.Replace(" ", String.Empty);
