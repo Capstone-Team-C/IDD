@@ -14,8 +14,7 @@
           <v-btn
             text
             color="deep-purple accent-4"
-            link
-            to="https://multco.us/dd"
+            href="https://multco.us/dd"
             target="_blank"
           >
             Learn More
