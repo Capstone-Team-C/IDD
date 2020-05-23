@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Newtonsoft.Json;
 public abstract class AbstractFormObject{
 
     /*******************************************************************************
@@ -157,6 +157,44 @@ public abstract class AbstractFormObject{
             return s;
         }
     }
+
+    public static int minimum(int x, int y, int z)
+    {
+        if (x <= y && x <= z)
+            return x;
+        if (y <= x && y <= z)
+            return y;
+        return z;
+    }
+    public static int LevenshteinDistance(string s, string t)
+    {
+        //
+        
+        // Initialize rows
+        List<int> v0 = new List<int>(Enumerable.Range(0, t.Length+1).ToList<int>());
+        List<int> v1 = new List<int>(Enumerable.Repeat(0,t.Length+1).ToList<int>());
+
+        for ( int i = 0; i < s.Length; ++i)
+        {
+            // Calculate distances to v1, first column is number of deletions compared
+            // to an empty string
+
+            v1[0] = i + 1;
+
+            for( int j = 0; j < t.Length; ++j)
+            {
+                int sub = s[i] == t[j] ? v0[j] : v0[j] + 1;
+                v1[j + 1] = minimum( v0[j + 1] + 1, v1[j] + 1, s[i] == t[j] ? v0[j] : v0[j] + 1);
+            }
+
+            // Copy current row to previous row
+            // No need to swap as v1 is invalidated
+            v0 = new List<int>(v1);
+        }
+
+        return v0[t.Length];
+    }
+
     protected abstract void AddTables(List<Table> tables);
     protected abstract void AddBackForm(Page page);
 }
