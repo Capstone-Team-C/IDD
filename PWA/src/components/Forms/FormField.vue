@@ -24,8 +24,6 @@
             you will need to edit before sumbitting. This will ensure that your
             timesheet is not returned as incorrect. Please make any corrections
             to match your timesheet exactly by selecting "Edit Field".
-
-            <em>must</em> re-sign this form at the bottom before submission.
           </v-card-text>
 
           <v-card-actions>

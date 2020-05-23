@@ -98,9 +98,24 @@
             <div v-else>
               <!-- Display submission status -->
               <div v-if="submissionStatus">
-                <v-card-title class="headline text-center" id="submited">
+                <v-dialog value="true" hide-overlay persistent width="300">
+                  <v-card color="primary" dark>
+                    <v-card-title class="headline text-center" id="submited">
+                      Your form has been submitted!
+                    </v-card-title>
+                    <v-card-text class="text-center" id="submission-complete">
+                      Thank you for submitting your timesheet. Please keep your
+                      copy for your records. If there are any issues, IDD staff
+                      will contact you via email.
+                      <v-btn color="success" outlined to="/">
+                        Return home
+                      </v-btn>
+                    </v-card-text>
+                  </v-card>
+                </v-dialog>
+                <!--v-card-title class="headline text-center" id="submited">
                   Your form has been submitted!
-                </v-card-title>
+                </v-card-title-->
 
                 <v-card-text class="text-center" id="submissionError">
                   Some text on what will come next for the employee.
