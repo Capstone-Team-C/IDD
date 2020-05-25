@@ -30,12 +30,13 @@
                 <v-card-text class="text-center">
                     To install this app onto your mobile device,
                 </v-card-text>
-                    <ol class="text-left d-inline-block">
-                        <li>Open the settings of the browser</li>
-                        <li>Click 'Add to Home screen'</li>
-                        <li>Navigate to the home screen of your phone</li>
-                        <li>Open the 'IDD App'</li>
-                    </ol>
+                <ol class="text-left d-inline-block">
+                    <li>Open the settings of the browser</li>
+                    <li>Click 'Add to Home screen'</li>
+                    <li>Navigate to the home screen of your phone</li>
+                    <li>Open the 'IDD App'</li>
+                    <li>Installation completed</li>
+                </ol>
             </div>
         </v-card>
 
@@ -44,32 +45,117 @@
                 Contributors
             </v-card-title>
 
-            <div class="text-center">
-                <v-card-text>
+            <div>
+                <v-card-text  class="text-center">
                     Built in Collaboration with Portland State University Capstone Program and Multnomah County.
                 </v-card-text>
                 <v-card-text>
-                    <ul>
+                    <ul class="text-center">
                         <li class="d-inline-block mx-5">
-                            <a href="https://www.linkedin.com/in/larrychiem/">Larry Chiem</a>
+                            <v-card class="mx-auto"
+                                    max-width="320"
+                                    outlined>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="headline mb-1">Larry Chiem</v-list-item-title>
+                                        <v-list-item-subtitle>Admin UI</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-card-actions>
+                                    <v-btn target="_blank" href="https://www.linkedin.com/in/larrychiem/">LinkedIn</v-btn>
+                                </v-card-actions>
+                            </v-card>
                         </li>
                         <li class="d-inline-block mx-5">
-                            <a href="https://www.linkedin.com/in/johnbrusaw/">John Brusaw</a>
+                            <v-card class="mx-auto"
+                                    max-width="320"
+                                    outlined>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="headline mb-1">John Brusaw</v-list-item-title>
+                                        <v-list-item-subtitle>Admin UI</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-card-actions>
+                                    <v-btn target="_blank" href="https://www.linkedin.com/in/johnbrusaw/">LinkedIn</v-btn>
+                                </v-card-actions>
+                            </v-card>
                         </li>
                         <li class="d-inline-block mx-5">
-                            <a href="https://www.linkedin.com/in/keaton-kraiger/">Keaton Kraiger</a>
+                            <v-card class="mx-auto"
+                                    max-width="320"
+                                    outlined>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="headline mb-1">Keaton Kraiger</v-list-item-title>
+                                        <v-list-item-subtitle>Client UI</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-card-actions>
+                                    <v-btn target="_blank" href="https://www.linkedin.com/in/keaton-kraiger/">LinkedIn</v-btn>
+                                </v-card-actions>
+                            </v-card>
                         </li>
                         <li class="d-inline-block mx-5">
-                            <a href="https://www.linkedin.com/in/yves-wienecke/">Yves Wienecke</a>
+                            <v-card class="mx-auto"
+                                    max-width="320"
+                                    outlined>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="headline mb-1">Yves Wienecke</v-list-item-title>
+                                        <v-list-item-subtitle>Client UI</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-card-actions>
+                                    <v-btn target="_blank" href="https://www.linkedin.com/in/yves-wienecke/">LinkedIn</v-btn>
+                                </v-card-actions>
+                            </v-card>
                         </li>
                         <li class="d-inline-block mx-5">
-                            <a href="https://www.linkedin.com/in/ohyonghao/">David Post</a>
+                            <v-card class="mx-auto"
+                                    max-width="320"
+                                    outlined>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="headline mb-1">David Post
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>Client UI</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-card-actions>
+                                    <v-btn target="_blank" href="https://www.linkedin.com/in/ohyonghao/">LinkedIn</v-btn>
+                                </v-card-actions>
+                            </v-card>
                         </li>
                         <li class="d-inline-block mx-5">
-                            <a href="https://www.linkedin.com/in/brian-lee-pdx/">Brian Lee</a>
+                            <v-card class="mx-auto"
+                                    max-width="320"
+                                    outlined>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="headline mb-1">Brian Lee</v-list-item-title>
+                                        <v-list-item-subtitle>Client UI</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-card-actions>
+                                    <v-btn target="_blank" href="https://www.linkedin.com/in/brian-lee-pdx/">LinkedIn</v-btn>
+                                </v-card-actions>
+                            </v-card>
                         </li>
                         <li class="d-inline-block">
-                            <a href="https://www.linkedin.com/in/curtis-james-lewis/">Curtis Lewis</a>
+                            <v-card class="mx-auto"
+                                    max-width="320"
+                                    outlined>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="headline mb-1">Curtis Lewis</v-list-item-title>
+                                        <v-list-item-subtitle>Client UI</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-card-actions>
+                                    <v-btn target="_blank" href="https://www.linkedin.com/in/curtis-james-lewis/">LinkedIn</v-btn>
+                                </v-card-actions>
+                            </v-card>
                         </li>
                     </ul>
                 </v-card-text>
