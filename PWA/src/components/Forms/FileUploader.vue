@@ -33,7 +33,7 @@
                     :drop-directory="true"
                     :maximum="2"
                     :size="1024 * 1024 * 10"
-                    accept="image/*, application/pdf"
+                    accept="image/*, application/pdf, image/heic"
                     @input-file="inputFile"
                     v-model="files"
                     ref="upload"
