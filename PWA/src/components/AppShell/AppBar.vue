@@ -11,17 +11,6 @@
     </v-toolbar-title>
 
     <v-spacer></v-spacer>
-
-    <!-- Link to user help manuals -->
-    <v-btn
-      color="indigo lighten-1"
-      depressed
-      href="https://github.com/Capstone-Team-C/IDD"
-      target="_blank"
-    >
-      Help
-      <v-icon>mdi-open-in-new</v-icon>
-    </v-btn>
   </v-app-bar>
 </template>
 
