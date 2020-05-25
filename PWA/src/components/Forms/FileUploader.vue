@@ -6,9 +6,9 @@
           <td colspan="7">
             <div class="text-center p-5">
               <h4>Drop files anywhere to upload<br />or</h4>
-              <label for="file" class="btn btn-lg btn-primary"
-                >Select Files</label
-              >
+              <label for="file" class="btn btn-lg btn-primary">
+                  Select Files or Take a Picture
+              </label>
             </div>
           </td>
         </ul>
@@ -78,7 +78,28 @@
                     <!--span>{{ file.size | formatSize }}</span-->
                     <span v-if="file.error">{{ file.error }}</span>
                     <span v-else-if="file.success">success</span>
-                    <span v-else-if="file.active">active</span>
+                    <span v-else-if="file.active">
+                      <v-dialog
+                        value="true"
+                        hide-overlay
+                        persistent
+                        width="300"
+                      >
+                        <v-card
+                          color="primary"
+                          dark
+                        >
+                          <v-card-text>
+                            Processing your files...
+                            <v-progress-linear
+                              indeterminate
+                              color="white"
+                              class="mb-0"
+                            ></v-progress-linear>
+                          </v-card-text>
+                        </v-card>
+                      </v-dialog>
+                    </span>
                     <span v-else></span>
                   </li>
                 </ul>
@@ -106,7 +127,7 @@
       </div>
     </template>
     <template v-else>
-      OFFLINE: can't upload file unless you are online :(
+      OFFLINE: Can't upload file unless you are online.
     </template>
   </div>
 </template>
