@@ -65,7 +65,8 @@
               </div>
               <div v-else>
                 <div class="text-center">
-                  <v-btn color="red" ref="files" @click="reset">
+                  <v-btn class="white-text"
+                  color="red" ref="files" @click="reset">
                     Reset Files
                   </v-btn>
                 </div>

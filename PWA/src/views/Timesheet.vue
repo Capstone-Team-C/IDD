@@ -19,7 +19,7 @@
               <v-btn
                 class="white--text"
                 color="green"
-                @click="willContinue = true"
+                @click="setWillContinue()"
               >
                 continue
               </v-btn>
@@ -33,7 +33,7 @@
       <v-row class="mt-9 mx-9">
         <v-col align="center">
           <p class="title">
-            Select the type of form that you would like to submit:
+            Select the type of form that you would like to submit
           </p>
           <v-select
             :items="Object.keys(FORM)"
@@ -182,8 +182,7 @@
         }
 
         // Hide the image upload and display the pre-populated IDD form
-        this.fileStatus = FILE.SUCCESS;
-        this.willContinue = true;
+        this.setWillContinue();
       },
       handleError(error) {
         this.errors = error;
@@ -197,6 +196,11 @@
         this.array = [];
         this.willContinue = false;
         this.invalidForm = false;
+      },
+      setWillContinue() {
+        this.willContinue = true;
+        this.fileStatus = FILE.SUCCESS;
+console.log("parsed data", this.parsedFileData);
       },
     },
   };
