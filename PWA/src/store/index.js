@@ -13,6 +13,7 @@ const initialState = () => ({
   formId: 0,
   onlineStatus: true,
   newForm: true,
+  invalidForm: false,
 });
 
 export default new Vuex.Store({

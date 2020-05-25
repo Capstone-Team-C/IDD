@@ -54,6 +54,21 @@
           </v-select>
         </v-col>
       </v-row>
+      
+      <!-- Display warning at top if textract can't parse the uploaded imae -->
+      <v-row v-if="invalidForm === true" align="center">
+        <v-col align="center">
+          <v-alert 
+            border="left"
+            type="warning" 
+            text 
+            outlined
+          >
+            Warning: Couldn't parse text from the uploaded image. You will have to manually enter all of the form fields.
+          </v-alert>
+        </v-col>
+      </v-row>
+      
 
       <!-- Page Title -->
       <v-row class="mt-9">
@@ -62,7 +77,7 @@
             {{ formChoice ? formChoice : "Please select a form type!" }} <br />
           </p>
         </v-col>
-      </v-row>
+      </v-row> 
 
       <!-- Render either file upload or form -->
       <v-row v-if="formChoice !== null">
@@ -148,7 +163,7 @@
       };
     },
     computed: {
-      ...mapFields(["formId", "formChoice", "newForm"]),
+      ...mapFields(["formId", "formChoice", "newForm", "invalidForm"]),
       askContinue() {
         return this.newForm === false && this.willContinue === false;
       },
@@ -160,6 +175,11 @@
       fillForm(response) {
         // Save the parsed .json
         this.parsedFileData = response;
+        
+        // Check if textract had trouble parsing the form
+        if (response.response === "invalid") {
+          this.invalidForm = true;
+        }
 
         // Hide the image upload and display the pre-populated IDD form
         this.fileStatus = FILE.SUCCESS;
@@ -176,6 +196,7 @@
         this.fileStatus = FILE.INIT;
         this.array = [];
         this.willContinue = false;
+        this.invalidForm = false;
       },
     },
   };
