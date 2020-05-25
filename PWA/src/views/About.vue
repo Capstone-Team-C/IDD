@@ -51,7 +51,7 @@
                 </v-card-text>
                 <v-card-text>
                     <ul class="text-center">
-                        <li class="d-inline-block mx-5">
+                        <li class="d-inline-block mx-5 mb-3">
                             <v-card class="mx-auto"
                                     max-width="180"
                                     outlined>
@@ -66,7 +66,7 @@
                                 </v-card-actions>
                             </v-card>
                         </li>
-                        <li class="d-inline-block mx-5">
+                        <li class="d-inline-block mx-5 mb-3">
                             <v-card class="mx-auto"
                                     max-width="180"
                                     outlined>
@@ -81,7 +81,7 @@
                                 </v-card-actions>
                             </v-card>
                         </li>
-                        <li class="d-inline-block mx-5">
+                        <li class="d-inline-block mx-5 mb-3">
                             <v-card class="mx-auto"
                                     max-width="200"
                                     outlined>
@@ -96,7 +96,7 @@
                                 </v-card-actions>
                             </v-card>
                         </li>
-                        <li class="d-inline-block mx-5">
+                        <li class="d-inline-block mx-5 mb-3">
                             <v-card class="mx-auto"
                                     max-width="200"
                                     outlined>
@@ -111,7 +111,7 @@
                                 </v-card-actions>
                             </v-card>
                         </li>
-                        <li class="d-inline-block mx-5">
+                        <li class="d-inline-block mx-5 mb-3">
                             <v-card class="mx-auto"
                                     max-width="160"
                                     outlined>
@@ -127,7 +127,7 @@
                                 </v-card-actions>
                             </v-card>
                         </li>
-                        <li class="d-inline-block mx-5">
+                        <li class="d-inline-block mx-5 mb-3">
                             <v-card class="mx-auto"
                                     max-width="140"
                                     outlined>
