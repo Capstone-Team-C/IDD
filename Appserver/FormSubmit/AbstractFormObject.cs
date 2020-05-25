@@ -214,6 +214,8 @@ public abstract class AbstractFormObject{
         // For each key we want to find minimum along the row
         // First create distance matrix
         List<List<double>> matrix = new List<List<double>>(keys.Count);
+        List<int> matchedIndex = new List<int>(keys.Count);
+
         for(int i = 0; i < keys.Count; ++i)
         {
             matrix.Add(new List<double>(Enumerable.Repeat(double.MaxValue, values.Count)));
@@ -233,8 +235,35 @@ public abstract class AbstractFormObject{
 
             // Add to matches
             matches.Add(new KeyValuePair<string, string>(keys[i], values[minIndex]));
+            matchedIndex.Add(minIndex);
         }
 
+        // If fewer values than keys, keep only the best match, replacing others with
+        // empty string
+        if (values.Count < keys.Count) {
+            for (int i = 0; i < keys.Count - 1; ++i)
+            {
+                // This is going to be inefficient as we'll assign twice to the one which
+                // is further away, once the first time we find it, and again the second time
+                // we encounter it
+                var index1 = matchedIndex.IndexOf(i);
+                if (index1 != keys.Count - 1)
+                {
+                    var index2 = matchedIndex.IndexOf(i, index1 + 1);
+                    if( index2 != -1)
+                    {
+                        if( matrix[index1][i] < matrix[index2][i])
+                        {
+                            matches[index2] = new KeyValuePair<string, string>(matches[index2].Key,"");
+                        }
+                        else
+                        {
+                            matches[index1] = new KeyValuePair<string, string>(matches[index1].Key, "");
+                        }
+                    }
+                }
+            }
+        }
         return matches;
     }
 

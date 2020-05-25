@@ -199,20 +199,23 @@ namespace AppserverTest.FormSubmit
                 "Customer Name:",
                 "Provider Name:",
                 "CM Organization:",
-                "Service:",
-                "Prime:",
                 "Provider Num:",
-                "SC/PA Name:",
-                "Progress",
-                "Service Delivered On:",
-                "Date",
-                "Start/Time IN",
-                "End/Time OUT"
+                "SC/PA Name:"
+            };
+
+            var output = new List<string>() {
+                "Customer Name:",
+                "Provider Name:",
+                "CM Organization:",
+                "",
+                "",
+                "Provider Num:",
+                "SC/PA Name:"
             };
             var expected = new List<KeyValuePair<string, string>>(input1.Count);
-            foreach (var s in input1)
+            for (int i = 0; i < input1.Count; ++i)
             {
-                expected.Add(new KeyValuePair<string, string>(s, s));
+                expected.Add(new KeyValuePair<string, string>(input1[i], output[i]));
             }
             Assert.AreEqual(expected, AFO.MatchKeyValuePairs(input1, input2));
         }
