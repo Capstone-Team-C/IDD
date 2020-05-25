@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
+
 public abstract class AbstractFormObject{
 
     /*******************************************************************************
@@ -158,13 +161,15 @@ public abstract class AbstractFormObject{
         }
     }
 
-    public static int minimum(int x, int y, int z)
+    public static int minimum(params int[] rest)
     {
-        if (x <= y && x <= z)
-            return x;
-        if (y <= x && y <= z)
-            return y;
-        return z;
+        int min = int.MaxValue;
+        foreach( var y in rest)
+        {
+            if (y < min)
+                min = y;
+        }
+        return min;
     }
     public static int LevenshteinDistance(string s, string t)
     {
@@ -193,6 +198,44 @@ public abstract class AbstractFormObject{
         }
 
         return v0[t.Length];
+    }
+
+    public static double NGLD(string s, string t)
+    {
+        double gld = LevenshteinDistance(s, t);
+        return (2.0 * gld/((double)(s.Length + t.Length + gld)));
+    }
+    public static List<KeyValuePair<string,string>> MatchKeyValuePairs(List<string> keys, List<string> values)
+    {
+        var matches = new List<KeyValuePair<string, string>>(keys.Count);
+
+        // NGLD forms a metric on the space which means that NGLD(X,Y)==NGLD(Y,X)
+
+        // For each key we want to find minimum along the row
+        // First create distance matrix
+        List<List<double>> matrix = new List<List<double>>(keys.Count);
+        for(int i = 0; i < keys.Count; ++i)
+        {
+            matrix.Add(new List<double>(Enumerable.Repeat(double.MaxValue, values.Count)));
+        }
+
+        // Now calculate distances
+        for( int i = 0; i < keys.Count; ++i)
+        {
+            // Track minimum index
+            int minIndex = 0;
+            for( int j = 0; j < values.Count; ++j)
+            {
+                matrix[i][j] = NGLD(keys[i], values[j]);
+                if (matrix[i][j] < matrix[i][minIndex])
+                    minIndex = j;
+            }
+
+            // Add to matches
+            matches.Add(new KeyValuePair<string, string>(keys[i], values[minIndex]));
+        }
+
+        return matches;
     }
 
     protected abstract void AddTables(List<Table> tables);
