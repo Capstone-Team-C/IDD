@@ -64,7 +64,7 @@
             text 
             outlined
           >
-            Warning: Couldn't parse text from the uploaded image. You will have to manually enter all of the form fields.
+            Warning: We couldn’t read the text from the file you uploaded. You will have to manually enter all of the form fields.
           </v-alert>
         </v-col>
       </v-row>
