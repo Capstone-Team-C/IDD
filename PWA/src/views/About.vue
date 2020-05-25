@@ -61,7 +61,7 @@
                                         <v-list-item-subtitle>Admin UI</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-card-actions>
+                                <v-card-actions class="d-flex justify-content-center">
                                     <v-btn target="_blank" href="https://www.linkedin.com/in/larrychiem/">LinkedIn</v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -76,7 +76,7 @@
                                         <v-list-item-subtitle>Admin UI</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-card-actions>
+                                <v-card-actions class="d-flex justify-content-center">
                                     <v-btn target="_blank" href="https://www.linkedin.com/in/johnbrusaw/">LinkedIn</v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -91,7 +91,7 @@
                                         <v-list-item-subtitle>Client UI</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-card-actions>
+                                <v-card-actions class="d-flex justify-content-center">
                                     <v-btn target="_blank" href="https://www.linkedin.com/in/keaton-kraiger/">LinkedIn</v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -106,7 +106,7 @@
                                         <v-list-item-subtitle>Client UI</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-card-actions>
+                                <v-card-actions class="d-flex justify-content-center">
                                     <v-btn target="_blank" href="https://www.linkedin.com/in/yves-wienecke/">LinkedIn</v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -122,7 +122,7 @@
                                         <v-list-item-subtitle>Backend</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-card-actions>
+                                <v-card-actions class="d-flex justify-content-center">
                                     <v-btn target="_blank" href="https://www.linkedin.com/in/ohyonghao/">LinkedIn</v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -137,7 +137,7 @@
                                         <v-list-item-subtitle>Backend</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-card-actions>
+                                <v-card-actions class="d-flex justify-content-center">
                                     <v-btn target="_blank" href="https://www.linkedin.com/in/brian-lee-pdx/">LinkedIn</v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -152,7 +152,7 @@
                                         <v-list-item-subtitle>Team Lead</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-card-actions>
+                                <v-card-actions class="d-flex justify-content-center">
                                     <v-btn target="_blank" href="https://www.linkedin.com/in/curtis-james-lewis/">LinkedIn</v-btn>
                                 </v-card-actions>
                             </v-card>
