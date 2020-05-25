@@ -1,7 +1,7 @@
 <template>
     <v-col>
         <v-card>
-            <v-card-title class="headline blue white--text" primary-title>
+            <v-card-title class="headline blue white--text d-flex justify-content-center" primary-title>
                 Learn more
             </v-card-title>
 
@@ -10,7 +10,7 @@
                     To learn more about the Multnomah County Intellectual and
                     Developmental Disabilites department, you can visit our website.
                 </v-card-text>
-                <v-card-actions>
+                <v-card-actions class="d-flex justify-content-center">
                     <v-btn text
                            color="deep-purple accent-4"
                            href="https://multco.us/dd"
@@ -22,7 +22,7 @@
         </v-card>
 
         <v-card>
-            <v-card-title class="headline blue white--text" primary-title>
+            <v-card-title class="headline blue white--text d-flex justify-content-center" primary-title>
                 How to Install
             </v-card-title>
 
@@ -41,7 +41,7 @@
         </v-card>
 
         <v-card>
-            <v-card-title class="headline blue white--text" primary-title>
+            <v-card-title class="headline blue white--text d-flex justify-content-center" primary-title>
                 Contributors
             </v-card-title>
 
@@ -53,7 +53,7 @@
                     <ul class="text-center">
                         <li class="d-inline-block mx-5">
                             <v-card class="mx-auto"
-                                    max-width="320"
+                                    max-width="180"
                                     outlined>
                                 <v-list-item two-line>
                                     <v-list-item-content>
@@ -68,7 +68,7 @@
                         </li>
                         <li class="d-inline-block mx-5">
                             <v-card class="mx-auto"
-                                    max-width="320"
+                                    max-width="180"
                                     outlined>
                                 <v-list-item two-line>
                                     <v-list-item-content>
@@ -83,7 +83,7 @@
                         </li>
                         <li class="d-inline-block mx-5">
                             <v-card class="mx-auto"
-                                    max-width="320"
+                                    max-width="200"
                                     outlined>
                                 <v-list-item two-line>
                                     <v-list-item-content>
@@ -98,7 +98,7 @@
                         </li>
                         <li class="d-inline-block mx-5">
                             <v-card class="mx-auto"
-                                    max-width="320"
+                                    max-width="200"
                                     outlined>
                                 <v-list-item two-line>
                                     <v-list-item-content>
@@ -113,13 +113,13 @@
                         </li>
                         <li class="d-inline-block mx-5">
                             <v-card class="mx-auto"
-                                    max-width="320"
+                                    max-width="160"
                                     outlined>
                                 <v-list-item two-line>
                                     <v-list-item-content>
                                         <v-list-item-title class="headline mb-1">David Post
                                         </v-list-item-title>
-                                        <v-list-item-subtitle>Client UI</v-list-item-subtitle>
+                                        <v-list-item-subtitle>Backend</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
                                 <v-card-actions>
@@ -129,12 +129,12 @@
                         </li>
                         <li class="d-inline-block mx-5">
                             <v-card class="mx-auto"
-                                    max-width="320"
+                                    max-width="140"
                                     outlined>
                                 <v-list-item two-line>
                                     <v-list-item-content>
                                         <v-list-item-title class="headline mb-1">Brian Lee</v-list-item-title>
-                                        <v-list-item-subtitle>Client UI</v-list-item-subtitle>
+                                        <v-list-item-subtitle>Backend</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
                                 <v-card-actions>
@@ -144,12 +144,12 @@
                         </li>
                         <li class="d-inline-block">
                             <v-card class="mx-auto"
-                                    max-width="320"
+                                    max-width="170"
                                     outlined>
                                 <v-list-item two-line>
                                     <v-list-item-content>
                                         <v-list-item-title class="headline mb-1">Curtis Lewis</v-list-item-title>
-                                        <v-list-item-subtitle>Client UI</v-list-item-subtitle>
+                                        <v-list-item-subtitle>Team Lead</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
                                 <v-card-actions>
