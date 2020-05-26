@@ -61,13 +61,16 @@
               <v-spacer></v-spacer>
 
               <!-- Confirm if user is ready to submit -->
-              <v-btn color="red" text @click="displaySubmit = false">
+              <v-btn 
+                class="white--text"
+                color="red" 
+                @click="displaySubmit = false">
                 Cancel
               </v-btn>
 
               <template v-if="onlineStatus">
                 <v-btn
-                  text
+                  class="white--text"
                   color="green darken-1"
                   :disabled="canSubmit"
                   @click="submit"
@@ -84,42 +87,61 @@
           <div v-else>
             <div v-if="!returnHome">
               <!-- Submitting the form -->
-              <div class="text-center">
-                <v-progress-circular
-                  indeterminate
+              <v-dialog
+                value="true"
+                hide-overlay
+                persistent
+                width="300"
+              >
+                <v-card
                   color="primary"
-                  id="progress"
-                  :size="50"
-                ></v-progress-circular>
-                <p class="text--disabled">Submitting form</p>
-              </div>
+                  dark
+                >
+                  <v-card-text class="text-center">
+                    <v-progress-circular
+                      indeterminate
+                      color="white"
+                      id="progress"
+                      class="mb-0"
+                      :size="50"
+                    ></v-progress-circular>
+                  </v-card-text>
+                  <v-card-text class="text-center">
+                    Submitting form...
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
             </div>
 
             <div v-else>
               <!-- Display submission status -->
               <div v-if="submissionStatus">
-                <v-dialog value="true" hide-overlay persistent width="300">
-                  <v-card color="primary" dark>
-                    <v-card-title class="headline text-center" id="submited">
+                <v-dialog 
+                  value="true" 
+                  hide-overlay 
+                  persistent 
+                  width="300"
+                >
+                  <v-card 
+                    color="success" 
+                  >
+                    <v-card-title 
+                      class="headline text-center" 
+                      id="submited"
+                    >
                       Your form has been submitted!
                     </v-card-title>
                     <v-card-text class="text-center" id="submission-complete">
                       Thank you for submitting your timesheet. Please keep your
                       copy for your records. If there are any issues, IDD staff
                       will contact you via email.
-                      <v-btn color="success" outlined to="/">
+                      
+                      <v-btn color="indigo" @click.stop="resetForm" outlined to="/">
                         Return home
                       </v-btn>
                     </v-card-text>
                   </v-card>
                 </v-dialog>
-                <!--v-card-title class="headline text-center" id="submited">
-                  Your form has been submitted!
-                </v-card-title-->
-
-                <v-card-text class="text-center" id="submissionError">
-                  Some text on what will come next for the employee.
-                </v-card-text>
               </div>
               <div v-else>
                 <v-card-title class="headline" id="failure">
@@ -181,6 +203,7 @@
   import axios from "axios";
   import store from "@/store/index.js";
   import { mapFields } from "vuex-map-fields";
+  import { mapMutations } from "vuex";
   import { FORM, FORM_TYPE } from "@/components/Utility/Enums.js";
 
   export default {
@@ -292,6 +315,11 @@
     },
 
     methods: {
+      ...mapMutations({
+        resetState: "resetState",
+        resetConfirmSubmission: "ConfirmSubmission/resetState",
+        resetMileage: "Mileage/resetState",
+      }),
       // Reset all submission values
       resetValid() {
         this.reSigned = [];

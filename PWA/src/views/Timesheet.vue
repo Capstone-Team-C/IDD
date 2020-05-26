@@ -1,30 +1,42 @@
 <template>
-  <v-container :fill-height="askContinue" fluid>
+  <v-container :fill-height="askContinue" fluid 
+  :class="continueColor"
+  >
     <!-- If there is already parsed form data, ask if the user wants to continue -->
-    <template v-if="askContinue">
+    <template v-if="askContinue" >
       <v-row align="center" justify="center">
-        <v-col cols="12" md="4" sm="8">
-          <v-card>
-            <v-card-title>
-              Continue existing form?
-            </v-card-title>
-            <v-card-text>
-              Form already exists! You are working on form id#{{ formId }}<br />
-              Do you want to continue or start new? <br />
-            </v-card-text>
-            <v-card-actions>
-              <v-btn class="white--text" color="red" @click="resetForm()">
-                reset
-              </v-btn>
-              <v-btn
-                class="white--text"
-                color="green"
-                @click="setWillContinue()"
-              >
-                continue
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+        <v-col cols="12" md="6" sm="8">
+          <v-dialog
+            value="true"
+            hide-overlay
+            persistent
+            width="50%"
+          >
+            <v-card>
+              <v-card-title class="indigo white--text">
+                Continue existing form?
+              </v-card-title>
+              <v-card-content>
+                <v-card-text class="text-center subtitle-1">
+                  Form already exists! You are working on form <strong>id #{{ formId }}</strong><br />
+                  Do you want to continue or start new? <br />
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn class="white--text" color="red" @click="resetForm()">
+                    reset
+                  </v-btn>
+                  <v-btn
+                    class="white--text"
+                    color="green"
+                    @click="setWillContinue()"
+                  >
+                    continue
+                  </v-btn>
+                </v-card-actions>
+              </v-card-content>
+            </v-card>
+          </v-dialog>
         </v-col>
       </v-row>
     </template>
@@ -71,11 +83,27 @@
       
 
       <!-- Page Title -->
+      <v-divider />
       <v-row class="mt-9">
         <v-col align="center">
-          <p class="headline">
-            {{ formChoice ? formChoice : "Please select a form type!" }} <br />
-          </p>
+          <v-alert 
+            class="headline pa-5" 
+            color="light-blue"
+            text 
+            outlined
+            v-if="formChoice"
+          >
+            {{ formChoice }} 
+          </v-alert>
+          <v-alert 
+            class="headline pa-5 mx-9" 
+            type="warning"
+            text 
+            outlined
+            v-else
+          >
+            Please select a form type above.
+          </v-alert>
         </v-col>
       </v-row> 
 
@@ -167,6 +195,9 @@
       askContinue() {
         return this.newForm === false && this.willContinue === false;
       },
+      continueColor() {
+        return this.askContinue ? "grey darken-1" : "";
+      }
     },
     methods: {
       ...mapMutations(["resetState"]),

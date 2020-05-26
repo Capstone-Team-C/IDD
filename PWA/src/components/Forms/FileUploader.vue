@@ -4,12 +4,23 @@
       <div class="upload">
         <ul v-if="!files.length">
           <td colspan="7">
-            <div class="text-center p-5">
-              <h4>Drop files anywhere to upload<br />or</h4>
+            <v-alert
+              class="p-5"
+              color="info"
+              outlined
+              dense
+              text
+            >
+              <v-card-title>
+                Drop files anywhere to upload
+              </v-card-title>
+              <v-card-text class="text-center title">
+                or
+              </v-card-text>
               <label for="file" class="btn btn-lg btn-primary">
                   Select Files or Take a Picture
               </label>
-            </div>
+            </v-alert>
           </td>
         </ul>
 
@@ -65,7 +76,7 @@
               </div>
               <div v-else>
                 <div class="text-center">
-                  <v-btn class="white-text"
+                  <v-btn class="white--text"
                   color="red" ref="files" @click="reset">
                     Reset Files
                   </v-btn>
@@ -114,7 +125,7 @@
                     :loading="loading"
                     :disabled="loading"
                     color="success"
-                    class="ma-2 white-text"
+                    class="ma-2 white--text"
                     @click="loader = loading"
                   >
                     Complete Form
@@ -171,7 +182,7 @@
     z-index: 9999;
     opacity: 0.6;
     text-align: center;
-    background: #000;
+    color: red;
   }
   .example-drag.drop-active h3 {
     margin: -0.5em 0 0;
@@ -183,7 +194,7 @@
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     font-size: 40px;
-    color: #fff;
+    color: red;
     padding: 0;
   }
   .custom-loader {
