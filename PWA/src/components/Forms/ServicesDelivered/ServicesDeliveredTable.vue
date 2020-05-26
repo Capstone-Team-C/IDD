@@ -48,7 +48,7 @@
               <!-- Lock/unlock addding a row to the table -->
               <v-btn @click="askTableEdit($event)">
                 <v-icon color="primary" v-if="amtEdited < 1">mdi-lock</v-icon>
-                <v-icon v-else>mdi-lock-open</v-icon>
+                <v-icon v-else>refresh</v-icon>
               </v-btn>
 
               <!-- Add a row button -->
@@ -174,7 +174,7 @@
           class="ma-0 ma-0"
           color="primary"
           hide-details
-          off-icon="lock_open"
+          off-icon="refresh"
           on-icon="lock"
           tabindex="0"
           v-if="item.parsed === true"
