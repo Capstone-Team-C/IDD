@@ -104,8 +104,8 @@
 
                 <v-checkbox
                   label="Group? (y/n)"
-                  true-value="Yes"
-                  false-value="No"
+                  true-value="1"
+                  false-value="0"
                   :input-value="editedItem.group"
                   @change="flipGroup(editedItem)"
                   @keyup.native.enter.stop="flipGroup(editedItem)"
@@ -156,6 +156,12 @@
     <template v-slot:item.totalHours="{ item }">
       <v-container flat :class="getColor(item.errors, 'totalHours')">
         {{ item.totalHours }}
+      </v-container>
+    </template>
+
+    <template v-slot:item.group="{ item }">
+      <v-container flat :class="getColor(item.errors, 'group')">
+        {{ item.group == "1" ? "Yes" : "No" }}
       </v-container>
     </template>
 
@@ -281,7 +287,7 @@
           starttime: "",
           endtime: "",
           totalHours: "",
-          group: "No",
+          group: "0",
           disabled: false,
           parsed: false,
           errors: {}
@@ -294,7 +300,7 @@
           starttime: "",
           endtime: "",
           totalHours: "",
-          group: "No",
+          group: "0",
           disabled: false,
           parsed: false,
           errors: {}
@@ -428,10 +434,10 @@
 
       // Flip the true/false value of the 'group' for a given item
       flipGroup(item) {
-        if (item.group === "Yes") {
-          item.group = "No";
+        if (item.group === "1") {
+          item.group = "0";
         } else {
-          item.group = "Yes";
+          item.group = "1";
         }
       },
 

@@ -239,7 +239,7 @@
         errors: [],
 
         cols: ["date", "starttime", "endtime", "totalHours", "group"],
-        valCols: ["date", "starttime", "endtime", "totalHours"],
+        valCols: ["date", "starttime", "endtime", "totalHours", "group"],
 
         // Expose the field props, so we can reference it in the HTML
         fieldProps: JSON.parse(JSON.stringify(fieldPropsFile)),
