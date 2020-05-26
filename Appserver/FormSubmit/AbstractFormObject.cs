@@ -31,7 +31,7 @@ public abstract class AbstractFormObject {
                 "Provider Num:",
                 "SC/PA Name:"
         };
-    public static double tolerance = 0.21; // Allows for 6 edits
+    public static double tolerance = 0.25; // Allows for 6 edits
     /*******************************************************************************
     /// Properties
     *******************************************************************************/
@@ -94,18 +94,27 @@ public abstract class AbstractFormObject {
         {
             if (!frontfound)
             {
+                bool servicefound = false;
                 // Search for Service Delivered On:
                 foreach (var line in page.GetLines())
                 {
                     // Ever form has "Service Delivered On:" on the front page, so we use
                     // this to determine if this is the front or back.
-                    // We check if the distance of the string si within 0.2 NGLD.
-                    frontfound = NGLD("Service Delivered On:", line.ToString()) < tolerance;
-                    if (frontfound)
+                    // We check if the distance of the string is within tolerance of NGLD.
+                    if( !servicefound )
+                        servicefound = NGLD("Service Delivered On:", line.ToString()) < tolerance;
+
+                    // To protect against accidentally finding service delivered on the back we check
+                    // if this is the back also
+                    if( NGLD("PROVIDER/EMPLOYEE VERIFICATION:", line.ToString()) < tolerance)
+                    {
+                        servicefound = false;
                         break;
+                    }
                 }
-                if (frontfound)
+                if (servicefound)
                 {
+                    frontfound = true;
                     frontpage = page;
                 }
                 else
