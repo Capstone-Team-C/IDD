@@ -326,7 +326,8 @@ public abstract class AbstractFormObject {
             catch (ArgumentException)
             {
                 // Assuming this is the second date on the form.
-                providerSignDate = ConvertDate(item.Value.ToString().Trim());
+                if (String.IsNullOrEmpty( providerSignDate))
+                    providerSignDate = ConvertDate(item.Value.ToString().Trim());
             }
         }
         formDict.Add("", ""); // Add in empty string match for missing items
