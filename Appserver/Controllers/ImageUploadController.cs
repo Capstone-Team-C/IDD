@@ -24,6 +24,8 @@ using Common.Models;
 using Common.Data;
 using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Primitives;
+using ImageMagick;
+using OpenCvSharp;
 
 namespace Appserver.Controllers
 {
@@ -54,8 +56,32 @@ namespace Appserver.Controllers
             {
                 "image/jpeg",
                 "image/png",
+                "image/heic",
                 "application/pdf",
             };
+            // Detect blur for each image
+            double threshold = 1000.0;
+            foreach (var file in files)
+            { 
+				if(file.Length == 0) {
+                    skipped_files.Add("File name " + file.Name + "is empty");
+                    continue;
+                }
+                if (accepted_types.Contains(file.ContentType) && file.ContentType != "application/pdf") {
+                    double variance = detect_blur(file);
+
+                    if (variance < threshold)
+                    { //too blurry
+                        return Json(new
+                        {
+                            response = "too blurry"
+
+                        }
+                        );
+                    }
+                                       
+				}
+            }
 
             // Iterate of collection of file and send to Textract
             foreach (var file in files)
@@ -194,5 +220,44 @@ namespace Appserver.Controllers
             return new TextractHandler().HandlePDFasync(file);
         }
 
-    }
+        // Method to find the focus measure or how "blurry" an image is.
+        // This is accomplished by taking the variance of the Laplacian
+		// of an image.
+		private double detect_blur(IFormFile file)
+        {
+            Mat src = new Mat();
+
+            if(file.ContentType == "image/hiec") {
+                // Initial settings
+                var settings = new MagickReadSettings { Format = MagickFormat.Heic, ColorSpace = ColorSpace.Gray };
+
+                //Open file as Magick Image and convert to jpeg
+                var data = file.OpenReadStream();
+                var image = new MagickImage(data, settings)
+                {
+                    Format = MagickFormat.Jpeg
+                };
+                byte[] byteData = image.ToByteArray();
+
+                src = Cv2.ImDecode(byteData, ImreadModes.Grayscale); 
+                //var src = new Mat(byteData.height);
+                //var src = new Mat(image., ImreadModes.Grayscale); 
+			}
+
+            //var image = new Mat(file.OpenReadStream());
+
+
+            //using (var laplacian = new Mat())
+            //{
+            var laplacian = new Mat();
+            Cv2.Laplacian(src, laplacian, MatType.CV_64FC1);
+            Cv2.MeanStdDev(laplacian, out var mean, out var stddev);
+            return stddev.Val0 * stddev.Val0;
+           //}
+
+            //double variance = 0.00;
+
+            //return variance;
+        }
+        
 }
