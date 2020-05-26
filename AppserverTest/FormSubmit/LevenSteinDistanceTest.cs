@@ -98,6 +98,23 @@ namespace AppserverTest.FormSubmit
             Assert.AreEqual(AFO.NGLD(s,t), AFO.NGLD(t,s));
         }
 
+        [TestCase("Service Provided On:", "ervice Provided On")]
+        [TestCase("Service Provided On:", "ervice Provide")]
+        public void ToleranceTest(string s, string t)
+        {
+            var dist = AFO.NGLD(s, t);
+            Assert.IsTrue( dist < AFO.tolerance);
+        }
+
+        [TestCase("Service Provided On:", "Service:")]
+        [TestCase("Service Provided On:", "Provider")]
+        [TestCase("Service Provided On:", "Provider Name")]
+        public void ExceedsToleranceTest(string s, string t)
+        {
+
+            Assert.IsTrue(AFO.NGLD(s, t) > AFO.tolerance);
+        }
+
         [Test]
         public void MatchingSameStringsTest()
         {

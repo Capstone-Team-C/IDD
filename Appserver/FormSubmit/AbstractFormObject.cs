@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 
-public abstract class AbstractFormObject{
+public abstract class AbstractFormObject {
 
     /*******************************************************************************
     /// Enums
@@ -22,6 +22,19 @@ public abstract class AbstractFormObject{
 
     /*******************************************************************************
     /// Fields
+    *******************************************************************************/
+    private static  List<string> keys = new List<string>{
+                "Customer Name:",
+                "Provider Name:",
+                "CM Organization:",
+                "Service:",
+                "Prime:",
+                "Provider Num:",
+                "SC/PA Name:"
+        };
+    public static double tolerance = 0.31; // Allows for 6 edits
+    /*******************************************************************************
+    /// Properties
     *******************************************************************************/
     /// Front Fields
     public int id { get; set; }
@@ -87,7 +100,8 @@ public abstract class AbstractFormObject{
                 {
                     // Ever form has "Service Delivered On:" on the front page, so we use
                     // this to determine if this is the front or back.
-                    frontfound = line.ToString().Contains("vice Delivered O");
+                    // We check if the distance of the string si within 0.2 NGLD.
+                    frontfound = NGLD("Service Delivered On:", line.ToString()) < 0.3;
                     if (frontfound)
                         break;
                 }
@@ -110,18 +124,27 @@ public abstract class AbstractFormObject{
         {
             throw new ArgumentException();
         }
-        var formitems = frontpage.GetFormItems();
-
         // Top Form Information
+        // grab the list of form keys and match
+        var matches = MatchKeyValuePairs(keys, frontpage.GetKeys());
+        var mapping = new Dictionary<string, string>(matches);
 
-        form.clientName = formitems[0].Value.ToString().Trim(); // Customer Name 
-        form.prime = formitems[1].Value.ToString().Trim(); // Prime 
-        form.providerName = formitems[2].Value.ToString().Trim(); // Provider Name 
-        form.providerNum = formitems[3].Value.ToString().Trim(); // Provider Num 
-        form.brokerage = formitems[4].Value.ToString().Trim(); // CM Organization
-        form.scpaName = formitems[5].Value.ToString().Trim(); // SC/PA Name
-        form.serviceAuthorized = formitems[6].Value.ToString().Trim(); // Service
-        
+        var formitems = frontpage.GetFormItems();
+        var formDict = new Dictionary<string, string>(formitems.Count);
+        foreach(var item in formitems)
+        {
+            formDict.Add(item.Key.ToString(), item.Value.ToString().Trim());
+        }
+        formDict.Add("", ""); // Add in empty string match for missing items
+
+        form.clientName         = formDict[mapping[keys[0]]]; // Customer Name 
+        form.providerName       = formDict[mapping[keys[1]]]; // Provider Name 
+        form.brokerage          = formDict[mapping[keys[2]]]; // CM Organization
+        form.serviceAuthorized  = formDict[mapping[keys[3]]]; // Service
+        form.prime              = formDict[mapping[keys[4]]]; // Prime 
+        form.providerNum        = formDict[mapping[keys[5]]]; // Provider Num 
+        form.scpaName           = formDict[mapping[keys[6]]]; // SC/PA Name
+
         // Table
         var tables = frontpage.GetTables();
         if (tables.Count == 0)
@@ -148,9 +171,9 @@ public abstract class AbstractFormObject{
         return 0;
     }
 
+    // Converts a date if possible, or returns the string for user to edit
     public static string ConvertDate(string s)
     {
-        string date;
         try
         {
             return DateTime.Parse(s).ToString("yyyy-MM-dd");
@@ -171,10 +194,11 @@ public abstract class AbstractFormObject{
         }
         return min;
     }
+    // This takes two strings and returns the generalized levenshtein distance which is
+    // the number of edits (inserts, deletions, and substitutions) required to convert 
+    // one string to the other.
     public static int LevenshteinDistance(string s, string t)
     {
-        //
-        
         // Initialize rows
         List<int> v0 = new List<int>(Enumerable.Range(0, t.Length+1).ToList<int>());
         List<int> v1 = new List<int>(Enumerable.Repeat(0,t.Length+1).ToList<int>());
@@ -200,11 +224,16 @@ public abstract class AbstractFormObject{
         return v0[t.Length];
     }
 
+    // Takes two strings and returns the Normalized General Levenshtein Distance
     public static double NGLD(string s, string t)
     {
         double gld = LevenshteinDistance(s, t);
         return (2.0 * gld/((double)(s.Length + t.Length + gld)));
     }
+
+    // This takes two lists of strings and creates a mapping between keys and values.
+    // If the set of values is less than the set of keys then it removes duplicates
+    // and replaces them with an empty string.
     public static List<KeyValuePair<string,string>> MatchKeyValuePairs(List<string> keys, List<string> values)
     {
         var matches = new List<KeyValuePair<string, string>>(keys.Count);
@@ -250,6 +279,8 @@ public abstract class AbstractFormObject{
                 if (index1 != keys.Count - 1)
                 {
                     var index2 = matchedIndex.IndexOf(i, index1 + 1);
+
+                    // No second index was found then continue on, or else find best index
                     if( index2 != -1)
                     {
                         if( matrix[index1][i] < matrix[index2][i])
@@ -268,5 +299,43 @@ public abstract class AbstractFormObject{
     }
 
     protected abstract void AddTables(List<Table> tables);
-    protected abstract void AddBackForm(Page page);
+    protected void AddBackForm(Page page)
+    {
+        var keys = new List<string>()
+        {
+            "SERVICE GOAL:",
+            "PROGRESS NOTES (attach additional pages if needed):",
+            "Date:",
+            "Date:"
+        };
+        // We'll need to take care of the repeated "Date" key
+        var matches = MatchKeyValuePairs(keys, page.GetKeys());
+        matches[keys.Count - 1] = new KeyValuePair<string,string>("Date2:",matches[keys.Count-1].Value);
+        var mapping = new Dictionary<string, string>(matches);
+
+        // We'll need to handle the repeated key here also
+        var formitems = page.GetFormItems();
+        var formDict = new Dictionary<string, string>(formitems.Count);
+
+        foreach (var item in formitems)
+        {
+            try
+            {
+                formDict.Add(item.Key.ToString(), item.Value.ToString().Trim());
+            }
+            catch (ArgumentException)
+            {
+                // Assuming this is the second date on the form.
+                providerSignDate = ConvertDate(item.Value.ToString().Trim());
+            }
+        }
+        formDict.Add("", ""); // Add in empty string match for missing items
+
+        serviceGoal = formDict[mapping[keys[0]]];
+        progressNotes = formDict[mapping[keys[1]]];
+        employerSignDate = ConvertDate(formDict[mapping[keys[2]]]);
+        employerSignature = !string.IsNullOrEmpty(employerSignDate);
+        //providerSignDate = ConvertDate(formDict[mapping[keys[3]]]);
+        providerSignature = !string.IsNullOrEmpty(providerSignDate);
+    }
 }
