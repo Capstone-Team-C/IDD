@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore.Internal;
 
 public abstract class AbstractFormObject {
 
@@ -328,7 +329,9 @@ public abstract class AbstractFormObject {
                     providerSignDate = ConvertDate(item.Value.ToString().Trim());
             }
         }
-        formDict.Add("", ""); // Add in empty string match for missing items
+
+        if( !formDict.ContainsKey("") )
+            formDict.Add("", ""); // Add in empty string match for missing items
 
         serviceGoal = formDict[mapping[keys[0]]];
         progressNotes = formDict[mapping[keys[1]]];
