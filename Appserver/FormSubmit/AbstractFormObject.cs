@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 
 public abstract class AbstractFormObject {
 
@@ -336,7 +334,7 @@ public abstract class AbstractFormObject {
         progressNotes = formDict[mapping[keys[1]]];
         employerSignDate = ConvertDate(formDict[mapping[keys[2]]]);
         employerSignature = !string.IsNullOrEmpty(employerSignDate);
-        //providerSignDate = ConvertDate(formDict[mapping[keys[3]]]);
+        // Provider Sign Date taken care of above
         providerSignature = !string.IsNullOrEmpty(providerSignDate);
     }
 }
