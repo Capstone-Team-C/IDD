@@ -31,7 +31,7 @@ public abstract class AbstractFormObject {
                 "Provider Num:",
                 "SC/PA Name:"
         };
-    public static double tolerance = 0.31; // Allows for 6 edits
+    public static double tolerance = 0.21; // Allows for 6 edits
     /*******************************************************************************
     /// Properties
     *******************************************************************************/
@@ -100,7 +100,7 @@ public abstract class AbstractFormObject {
                     // Ever form has "Service Delivered On:" on the front page, so we use
                     // this to determine if this is the front or back.
                     // We check if the distance of the string si within 0.2 NGLD.
-                    frontfound = NGLD("Service Delivered On:", line.ToString()) < 0.3;
+                    frontfound = NGLD("Service Delivered On:", line.ToString()) < tolerance;
                     if (frontfound)
                         break;
                 }
@@ -134,7 +134,9 @@ public abstract class AbstractFormObject {
         {
             formDict.Add(item.Key.ToString(), item.Value.ToString().Trim());
         }
-        formDict.Add("", ""); // Add in empty string match for missing items
+
+        if (!formDict.ContainsKey(""))
+            formDict.Add("", ""); // Add in empty string match for missing items
 
         form.clientName         = formDict[mapping[keys[0]]]; // Customer Name 
         form.providerName       = formDict[mapping[keys[1]]]; // Provider Name 

@@ -99,7 +99,7 @@ namespace AppserverTest.FormSubmit
         }
 
         [TestCase("Service Provided On:", "ervice Provided On")]
-        [TestCase("Service Provided On:", "ervice Provide")]
+        [TestCase("Service Provided On:", "ervice Provided ")]
         public void ToleranceTest(string s, string t)
         {
             var dist = AFO.NGLD(s, t);
