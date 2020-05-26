@@ -16,25 +16,23 @@
               <v-card-title class="indigo white--text">
                 Continue existing form?
               </v-card-title>
-              <v-card-content>
-                <v-card-text class="text-center subtitle-1">
-                  Form already exists! You are working on form <strong>id #{{ formId }}</strong><br />
-                  Do you want to continue or start new? <br />
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn class="white--text" color="red" @click="resetForm()">
-                    reset
-                  </v-btn>
-                  <v-btn
-                    class="white--text"
-                    color="green"
-                    @click="setWillContinue()"
-                  >
-                    continue
-                  </v-btn>
-                </v-card-actions>
-              </v-card-content>
+              <v-card-text class="text-center subtitle-1 mt-3">
+                Form already exists! You are working on form <strong>id #{{ formId }}</strong><br />
+                Do you want to continue or start new? <br />
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn class="white--text" color="red" @click="resetForm()">
+                  reset
+                </v-btn>
+                <v-btn
+                  class="white--text"
+                  color="green"
+                  @click="setWillContinue()"
+                >
+                  continue
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-dialog>
         </v-col>

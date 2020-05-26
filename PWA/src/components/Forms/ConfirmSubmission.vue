@@ -4,11 +4,11 @@
       Submit
     </v-btn>
 
-    <v-dialog v-model="displaySubmit">
-      <div v-if="isValid">
+    <v-dialog v-model="displaySubmit" max-width="75%">
+      <template v-if="isValid">
         <v-card>
           <div v-if="!loading">
-            <v-card-title class="headline" id="confirm">
+            <v-card-title class="headline" id="confirm" >
               Are you sure want to submit the form?
             </v-card-title>
 
@@ -122,31 +122,46 @@
                   persistent 
                   width="300"
                 >
-                  <v-card 
-                    color="success" 
-                  >
+                  <v-card>
                     <v-card-title 
-                      class="headline text-center" 
+                      class="headline text-center success white--text" 
                       id="submited"
                     >
                       Your form has been submitted!
                     </v-card-title>
-                    <v-card-text class="text-center" id="submission-complete">
-                      Thank you for submitting your timesheet. Please keep your
-                      copy for your records. If there are any issues, IDD staff
-                      will contact you via email.
-                      
-                      <v-btn color="indigo" @click.stop="resetForm" outlined to="/">
-                        Return home
-                      </v-btn>
+                    <v-card-text>
+                      <v-card-text 
+                        class="text-center" 
+                        id="submission-complete"
+                      >
+                        Thank you for submitting your timesheet. Please keep your
+                        copy for your records. If there are any issues, IDD staff
+                        will contact you via email.
+                        
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn 
+                          class="mt-3 center"
+                          color="indigo" 
+                          @click="resetForm()" 
+                          dark
+                        >
+                          Return home
+                        </v-btn>
+                      </v-card-actions>
                     </v-card-text>
                   </v-card>
                 </v-dialog>
               </div>
               <div v-else>
-                <v-card-title class="headline" id="failure">
+                <v-alert 
+                  class="headline" 
+                  id="failure"
+                  type="error"
+                >
                   Something has gone wrong
-                </v-card-title>
+                </v-alert>
 
                 <v-card-text>
                   Please try again.
@@ -155,10 +170,10 @@
             </div>
           </div>
         </v-card>
-      </div>
+      </template>
 
       <!-- The form is not valid -->
-      <div v-else>
+      <template v-else>
         <v-card>
           <v-card-title class="headline text-danger" id="invalid">
             Your form is not valid.
@@ -178,7 +193,7 @@
             </v-card>
           </v-card-text>
         </v-card>
-      </div>
+      </template>
     </v-dialog>
   </v-container>
 </template>
@@ -317,7 +332,7 @@
     methods: {
       ...mapMutations({
         resetState: "resetState",
-        resetConfirmSubmission: "ConfirmSubmission/resetState",
+        resetServiceDelivered: "ServiceDelivered/resetState",
         resetMileage: "Mileage/resetState",
       }),
       // Reset all submission values
@@ -411,7 +426,14 @@
               console.log(error);
             });
         }
-      }
+      },
+      resetForm() {
+        // Reset the vuex store
+        this.resetState();
+        this.resetServiceDelivered();
+        this.resetMileage();
+        window.location.href = '/';
+      },
     }
   };
 </script>
