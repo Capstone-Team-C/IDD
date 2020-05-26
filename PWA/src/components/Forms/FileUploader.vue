@@ -290,7 +290,7 @@
             },
           })
           .then(function (response) {
-            console.log(response);
+            console.log("Response from Appserver, FileUploader:293", response);
             for (let i = 0; i < self.files.length; i++) {
               self.files[i].active = false;
               self.files[i].success = true;

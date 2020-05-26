@@ -407,6 +407,7 @@
         if (this.errors.length === 0) {
           this.submitData["id"] = this.formId;
           this.submitData["formChoice"] = FORM[this.formChoice];
+          console.log("submitData form ConfirmSubmission:410", this.submitData);
           axios
             .post(this.url, this.submitData, {
               headers: {

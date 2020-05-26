@@ -1,6 +1,8 @@
 <template>
-  <v-container :fill-height="askContinue" fluid 
-  :class="continueColor"
+  <v-container 
+    :fill-height="askContinue" 
+    :class="continueColor"
+    fluid 
   >
     <!-- If there is already parsed form data, ask if the user wants to continue -->
     <template v-if="askContinue" >
@@ -18,7 +20,7 @@
               </v-card-title>
               <v-card-text class="text-center subtitle-1 mt-3">
                 Form already exists! You are working on form <strong>id #{{ formId }}</strong><br />
-                Do you want to continue or start new? <br />
+                Do you want to continue or start a new form? <br />
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -40,27 +42,35 @@
     </template>
     <template v-else>
       <!-- Have the user choose which form they want to upload -->
-      <v-row class="mt-9 mx-9">
-        <v-col align="center">
+      <v-row class="mt-n="center">
           <p class="title">
             Select the type of form that you would like to submit
           </p>
+        </v-col>
+      </v-row>
+      <v-row class="mt-9 mx-9">
+        <v-col 
+          cols="1" 
+          v-if="newForm === false"
+        >
+          <v-btn
+            icon
+            color="red"
+            class="white--text"
+            slot="prepend"
+            @click="resetForm()"
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </v-col>
+        <v-col>
           <v-select
             :items="Object.keys(FORM)"
+            :disabled="!newForm"
             label="Timesheet"
             v-model="formChoice"
             outlined
           >
-            <v-btn
-              icon
-              color="red"
-              class="white--text"
-              v-if="newForm === false"
-              slot="prepend"
-              @click="resetForm()"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
           </v-select>
         </v-col>
       </v-row>
@@ -229,7 +239,7 @@
       setWillContinue() {
         this.willContinue = true;
         this.fileStatus = FILE.SUCCESS;
-console.log("parsed data", this.parsedFileData);
+        console.log("parsedFileData from Timesheet:236", this.parsedFileData);
       },
     },
   };
