@@ -22,6 +22,12 @@ namespace Common.Models
     {
         public double TotalHours { get; set; }
         public ICollection<TimeEntry> TimeEntries { get; set; }
+
+        /*
+         *  Creates a PDF representation of the Timesheet
+         *  No Parameters
+         *  Returns a PDF
+         */
         public override PdfDocument ToPdf()
         {
             var watch = new Stopwatch();

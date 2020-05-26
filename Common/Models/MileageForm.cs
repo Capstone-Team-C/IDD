@@ -18,6 +18,11 @@ namespace Common.Models
         public double TotalMiles { get; set; }
         public ICollection<MileageEntry> MileageEntries { get; set; }
 
+        /*
+         *  Creates a PDF representation of the MileageForm
+         *  No Parameters
+         *  Returns a PDF
+         */
         public override PdfDocument ToPdf()
         {
             //http://www.pdfsharp.net/wiki/Unicode-sample.ashx
