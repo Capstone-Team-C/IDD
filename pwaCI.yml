@@ -16,6 +16,11 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+
+variables:
+    VUE_APP_BUG_REPORT: $(issuesLink) # Mapping secret var
+
+
 steps:
 - task: NodeTool@0
   inputs:
