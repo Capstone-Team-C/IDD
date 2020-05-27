@@ -55,17 +55,16 @@
       </v-container>
     <div class="text-center">
       <v-bottom-sheet 
-        value="askDownload" 
-        persistent 
         hide-overlay
+        :value="modalOpen" 
       >
         <v-alert
-          value="modalOpen"
           color="light-green darken-3"
           class="py-3 my-0 pr-6" 
           border="top"
-          dismissible
           tile
+          dismissible
+          v-model="modalOpen"
         >
           <template v-slot:prepend>
             <div
@@ -113,7 +112,7 @@
 </style>
 
 <script>
-  import { VuePwaInstallMixin, BeforeInstallPromptEvent } from "vue-pwa-install";
+  import { VuePwaInstallMixin } from "vue-pwa-install";
   
   const pic_timesheet = require("@/assets/card_timesheet.jpg");
   const pic_burnside = require("@/assets/card_burnside.jpg");
@@ -142,15 +141,10 @@
           iconColor: "warning",
         },
       ],
-      deferredPrompt: BeforeInstallPromptEvent | null,
-      modalOpen: true,
+      deferredPrompt: false,
+      modalOpen: false,
       pic_logo: pic_logo,
     }),
-    computed: {
-      askDownload() {
-        return this.deferredPrompt && this.modalOpen;
-      },
-    },
     created() {
       this.$on("canInstall", (event) => {
         // Prevent Chrome 67 and earlier from automatically showing the prompt:
@@ -158,6 +152,7 @@
 
         // Stash the event so it can be triggered later:
         this.deferredPrompt = event;
+        this.modalOpen = true;
       });
     },
     methods: {
@@ -174,6 +169,7 @@
           }
    
           this.deferredPrompt = null;
+          this.modalOpen = false;
         });
       },
     },
