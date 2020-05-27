@@ -104,11 +104,12 @@ public abstract class AbstractFormObject {
                         servicefound = NGLD("Service Delivered On:", line.ToString()) < tolerance;
 
                     // To protect against accidentally finding service delivered on the back we check
-                    // if this is the back also
-                    if( NGLD("PROVIDER/EMPLOYEE VERIFICATION:", line.ToString()) < tolerance)
+                    // if this is the back also. We take the first 14 characters as this is common on
+                    // all versions of the back sheet.
+                    if( NGLD("PROGRESS NOTES", Substring( line.ToString(),0,13)) < tolerance)
                     {
                         servicefound = false;
-                        break;
+                        break; // Quit the loop as we found something on the back page.
                     }
                 }
                 if (servicefound)
@@ -349,5 +350,31 @@ public abstract class AbstractFormObject {
         employerSignature = !string.IsNullOrEmpty(employerSignDate);
         // Provider Sign Date taken care of above
         providerSignature = !string.IsNullOrEmpty(providerSignDate);
+    }
+
+    // This returns a substring starting at start and ending at either end
+    // or Count.
+    public static string Substring(string s, int start, int end)
+    {
+        if( start < 0 || end < 0)
+        {
+            throw new ArgumentException();
+        }
+        if( s.Length < start)
+        {
+            throw new IndexOutOfRangeException();
+        }
+
+        if( end == 0)
+        {
+            return "";
+        }
+        if( start + end >= s.Length)
+        {
+            return s.Substring(start, s.Length - start);
+        }
+        return s.Substring(start, end);
+
+        // Calculate end
     }
 }

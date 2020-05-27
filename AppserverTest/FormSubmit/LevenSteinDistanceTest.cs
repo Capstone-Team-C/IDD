@@ -237,5 +237,16 @@ namespace AppserverTest.FormSubmit
             }
             Assert.AreEqual(expected, AFO.MatchKeyValuePairs(input1, input2));
         }
-    }
+
+        [TestCase("0123456789", "012345", 0, 6)]
+        [TestCase("0123456789", "123456", 1, 6)]
+        [TestCase("0123456789", "123456789", 1, 9)]
+        [TestCase("0123456789", "89", 8, 10)]
+        [TestCase("0123456789", "89", 8, 20)]
+        [TestCase("0123456789", "", 8, 0)]
+        public void SubString(string s, string t, int start, int end)
+        {
+            Assert.AreEqual(t, AFO.Substring(s, start, end));
+        }
+    } // Class
 }
