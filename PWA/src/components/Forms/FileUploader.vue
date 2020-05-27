@@ -6,7 +6,7 @@
           <v-row class="pa-0 ma-0">
             <v-col class="text-center pa-0 ma-0">
               <v-alert
-                class="text-center title pa-3 ma-0"
+                class="text-center title px-3 py-5 ma-0"
                 width=80vw
                 color="info"
                 outlined
