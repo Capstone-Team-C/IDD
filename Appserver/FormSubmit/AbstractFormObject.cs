@@ -35,23 +35,23 @@ public abstract class AbstractFormObject {
     /// Properties
     *******************************************************************************/
     /// Front Fields
-    public int id { get; set; }
-    public string clientName { get; set; }
-    public string prime { get; set; }
-    public string providerName { get; set; }
-    public string providerNum { get; set; }
-    public string brokerage { get; set; }
-    public string scpaName { get; set; }
-    public string serviceAuthorized { get; set; }
+    public int id { get; set; } = -1;
+    public string clientName { get; set; } = "";
+    public string prime { get; set; } = "";
+    public string providerName { get; set; } = "";
+    public string providerNum { get; set; } = "";
+    public string brokerage { get; set; } = "";
+    public string scpaName { get; set; } = "";
+    public string serviceAuthorized { get; set; } = "";
     /// Back Fields
-    public string serviceGoal { get; set; }
-    public string progressNotes { get; set; }
-    public bool employerSignature { get; set; }
-    public string employerSignDate { get; set; }
-    public bool providerSignature { get; set; }
-    public string providerSignDate { get; set; }
-    public bool authorization { get; set; }
-    public bool approval { get; set; }
+    public string serviceGoal { get; set; } = "";
+    public string progressNotes { get; set; } = "";
+    public bool employerSignature { get; set; } = false;
+    public string employerSignDate { get; set; } = "";
+    public bool providerSignature { get; set; } = false;
+    public string providerSignDate { get; set; } = "";
+    public bool authorization { get; set; } = false;
+    public string approval { get; set; } = "";
     public string review_status { get; set; } = "Pending";
 
     /*******************************************************************************
