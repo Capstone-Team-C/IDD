@@ -42,7 +42,8 @@
     </template>
     <template v-else>
       <!-- Have the user choose which form they want to upload -->
-      <v-row class="mt-n="center">
+      <v-row class="mt-9 mx-9">
+        <v-col align="center">
           <p class="title">
             Select the type of form that you would like to submit
           </p>
