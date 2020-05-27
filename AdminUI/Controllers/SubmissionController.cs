@@ -55,7 +55,7 @@ namespace AdminUI.Controllers
 
             submission.LoadEntries(_context);
 
-            return View(submission.GetType().Name, submission);
+            return View(submission);
         }
 
         public async Task<IActionResult> GenPDF(int id)
