@@ -2,34 +2,34 @@
   <div class="example-drag">
     <template v-if="onlineStatus">
       <div class="upload">
-        <ul v-if="!files.length">
-          <td colspan="7">
-            <v-alert
-              class="p-5"
-              color="info"
-              outlined
-              dense
-              text
+        <v-container v-if="!files.length" class="pa-0 mx-0" fluid>
+          <v-row class="pa-0 ma-0">
+            <v-col class="text-center pa-0 ma-0">
+              <v-alert
+                class="text-center title pa-3 ma-0"
+                width=80vw
+                color="info"
+                outlined
+                dense
+                text
+              >
+                Drop files anywhere to upload<br/>
+                or<br/>
+                <label for="file" class="btn btn-primary">
+                    Select Files or Take a Picture
+                </label>
+              </v-alert>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              v-show="$refs.upload && $refs.upload.dropActive"
+              class="drop-active"
             >
-              <v-card-title>
-                Drop files anywhere to upload
-              </v-card-title>
-              <v-card-text class="text-center title">
-                or
-              </v-card-text>
-              <label for="file" class="btn btn-lg btn-primary">
-                  Select Files or Take a Picture
-              </label>
-            </v-alert>
-          </td>
-        </ul>
-
-        <div
-          v-show="$refs.upload && $refs.upload.dropActive"
-          class="drop-active"
-        >
-          <h3>Drop files to upload</h3>
-        </div>
+              <h3>Drop files to upload</h3>
+            </v-col>
+          </v-row>
+        </v-container>
 
         <v-container>
           <v-row>
