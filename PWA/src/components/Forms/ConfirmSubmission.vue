@@ -20,8 +20,8 @@
 
             <v-card-text v-if="this.totalEdited > 0">
               <em>
-                There were {{ totalEdited }} edited fields. Please confirm these
-                edit(s).
+                There are edited fields. Please confirm these
+                edits.
               </em>
 
               <!-- 

@@ -204,7 +204,8 @@
   import { TIME } from "@/components/Utility/Enums.js";
   import {
     subtractTime,
-    milliToFormat
+    milliToFormat,
+    isValid
   } from "@/components/Utility/TimeFunctions.js";
   var moment = require("moment");
 
@@ -667,12 +668,15 @@
           var end = entry["date"] + " " + entry["endtime"];
 
           if (index !== 0) {
-            // If the start is before the end of the prev's end, there is an overlap
-            var timeDiff = subtractTime(prev_end, start, TIME.FULL_DATE);
-            if (timeDiff <= 0) {
-              ret += 1;
-              entry["errors"]["starttime"].push("Invalid time interval");
-              entry["errors"]["endtime"].push("Invalid time interval");
+            if (isValid(prev_end, TIME.FULL_DATE) &&
+              isValid(start, TIME.FULL_DATE)) {
+              // If the start is before the end of the prev's end, there is an overlap
+              var timeDiff = subtractTime(prev_end, start, TIME.FULL_DATE);
+              if (timeDiff <= 0) {
+                ret += 1;
+                entry["errors"]["starttime"].push("Overlapping time interval");
+                entry["errors"]["endtime"].push("Overlapping time interval");
+              }
             }
           }
 
