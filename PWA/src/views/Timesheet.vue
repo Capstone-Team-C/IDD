@@ -172,6 +172,7 @@
   import ServicesDelivered from "@/components/Forms/ServicesDelivered/ServicesDelivered";
   import Mileage from "@/components/Forms/Mileage/Mileage";
   import { FORM, FILE } from "@/components/Utility/Enums.js";
+  import mockServiceDelivered from "@/components/Utility/happy_path.json";
   
   export default {
     name: "Timesheet",
@@ -187,10 +188,14 @@
         FORM: FORM,
 
         // The uploaded timesheet, as a .json of parsed values from the backend
-        parsedFileData: null,
+        parsedFileData: process.env.NODE_ENV === 'development'
+                        ? mockServiceDelivered
+                        : null,
 
         // Possible statuses of the uploading the form
-        fileStatus: FILE.INIT,
+        fileStatus: process.env.NODE_ENV === 'development'
+                    ? FILE.SUCCESS 
+                    : FILE.INIT,
 
         // Upload errors
         errors: [],
