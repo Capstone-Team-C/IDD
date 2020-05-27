@@ -34,7 +34,8 @@
     "vuelidate": "^0.7.5",
     "vuetify": "^2.2.27",
     "vuex": "^3.4.0",
-    "vuex-map-fields": "^1.4.0"
+    "vuex-map-fields": "^1.4.0",
+    "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
