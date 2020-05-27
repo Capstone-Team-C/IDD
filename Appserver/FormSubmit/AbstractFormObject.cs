@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using Microsoft.EntityFrameworkCore.Internal;
 
 public abstract class AbstractFormObject {
 
@@ -31,7 +30,7 @@ public abstract class AbstractFormObject {
                 "Provider Num:",
                 "SC/PA Name:"
         };
-    public static double tolerance = 0.25; // Allows for 6 edits
+    public static double tolerance = 0.25; // Allows for 5 edits
     /*******************************************************************************
     /// Properties
     *******************************************************************************/
