@@ -126,7 +126,7 @@
                     :disabled="loading"
                     color="success"
                     class="ma-2 white--text"
-                    @click="loader = loading"
+                    @click="completeForm()"
                   >
                     Complete Form
                     <v-icon right dark>mdi-cloud-upload</v-icon>
@@ -256,6 +256,28 @@
       },
     },
     methods: {
+      completeForm() {
+        this.loading = true;
+        const l = this.loader;
+        this[l] = !this[l];
+        let self = this;
+        //Retrieves json response from timesheet.
+        if (!this.getUpdated) {
+          this.urlGet = this.urlGet.concat(this.formId);
+          this.getUpdated = true;
+          axios
+            .get(this.urlGet)
+            .then(function (response) {
+              self.$emit("success", response["data"]);
+            })
+            .catch(function (error) {
+              console.log(error);
+              self.$emit("error", error);
+            });
+        }
+        setTimeout(() => (this[l] = false), 30000);
+        this.loader = null;
+      },
       //Checks if all of the files are ready to be submitted.
       check() {
         if (!this.files.length) return false;
@@ -273,6 +295,9 @@
       reset() {
         this.files = [];
         this.submitted = false;
+        this.loader = null;
+        this.loading = false;
+        this.getUpdated = false;
         this.$emit("reset");
       },
       customAction() {
@@ -337,30 +362,6 @@
     },
     computed: {
       ...mapFields(["formChoice", "formId", "onlineStatus"]),
-    },
-    //Watches for the user to press submit. BAD!
-    watch: {
-      loader() {
-        const l = this.loader;
-        this[l] = !this[l];
-        let self = this;
-        //Retrieves json response from timesheet.
-        if (!this.getUpdated) {
-          this.urlGet = this.urlGet.concat(this.formId);
-          this.getUpdated = true;
-          axios
-            .get(this.urlGet)
-            .then(function (response) {
-              self.$emit("success", response["data"]);
-            })
-            .catch(function (error) {
-              console.log(error);
-              self.$emit("error", error);
-            });
-        }
-        setTimeout(() => (this[l] = false), 30000);
-        this.loader = null;
-      },
     },
   };
 </script>
