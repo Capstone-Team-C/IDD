@@ -62,12 +62,14 @@ namespace Appserver.Controllers
             // Detect blur for each image
             double threshold = 1000.0;
             foreach (var file in files)
-            { 
-				if(file.Length == 0) {
+            {
+                if (file.Length == 0)
+                {
                     skipped_files.Add("File name " + file.Name + "is empty");
                     continue;
                 }
-                if (accepted_types.Contains(file.ContentType) && file.ContentType != "application/pdf") {
+                if (accepted_types.Contains(file.ContentType) && file.ContentType != "application/pdf")
+                {
                     double variance = detect_blur(file);
 
                     if (variance < threshold)
@@ -79,15 +81,15 @@ namespace Appserver.Controllers
                         }
                         );
                     }
-                                       
-				}
+
+                }
             }
 
             // Iterate of collection of file and send to Textract
             foreach (var file in files)
             {
                 // Nothing to work with, next!
-                if(file.Length == 0)
+                if (file.Length == 0)
                 {
                     skipped_files.Add("File name " + file.Name + " is empty");
                     continue;
@@ -100,7 +102,7 @@ namespace Appserver.Controllers
                     stopwatch.Start();
 
                     // Process PDF
-                    if(file.ContentType == "application/pdf")
+                    if (file.ContentType == "application/pdf")
                     {
                         pdf_responses.Add(process_pdf(file));
                     }
@@ -128,7 +130,7 @@ namespace Appserver.Controllers
             int stageId;
             if (pdf_responses.Count > 0)
             {
-                stageId = await saveSubmissionStage(await UploadToBlob(files), pdf_responses , formType);
+                stageId = await saveSubmissionStage(await UploadToBlob(files), pdf_responses, formType);
             }
             else
             {
@@ -145,6 +147,44 @@ namespace Appserver.Controllers
             }
             );
         }
+        // Method to find the focus measure or how "blurry" an image is.
+        // This is accomplished by taking the variance of the Laplacian
+        // of an image.
+        private double detect_blur(IFormFile file)
+        {
+            Mat src = new Mat();
+            if (file.ContentType == "image/hiec")
+            {
+                // Initial settings
+                var settings = new MagickReadSettings { Format = MagickFormat.Heic, ColorSpace = ColorSpace.Gray };
+
+                //Open file as Magick Image and convert to jpeg
+                var data = file.OpenReadStream();
+                var image = new MagickImage(data, settings)
+                {
+                    Format = MagickFormat.Jpeg
+                };
+                byte[] byteData = image.ToByteArray();
+
+                src = Cv2.ImDecode(byteData, ImreadModes.Grayscale);
+                //var src = new Mat(byteData.height);
+                //var src = new Mat(image., ImreadModes.Grayscale); 
+            }
+
+            //var image = new Mat(file.OpenReadStream());
+
+
+            //using (var laplacian = new Mat())
+            //{
+            var laplacian = new Mat();
+            Cv2.Laplacian(src, laplacian, MatType.CV_64FC1);
+            Cv2.MeanStdDev(laplacian, out var mean, out var stddev);
+            return stddev.Val0 * stddev.Val0;
+            //}
+            //double variance = 0.00;
+
+            //return variance;
+        }
 
 
         // Controller to accept images POSTed as bytes in the body
@@ -159,7 +199,7 @@ namespace Appserver.Controllers
                     response = "invalid form type"
                 });
             }
-            AbstractFormObject.FormType formType = (AbstractFormObject.FormType)Enum.Parse(typeof(AbstractFormObject.FormType),file_collection["formChoice"].ToString());
+            AbstractFormObject.FormType formType = (AbstractFormObject.FormType)Enum.Parse(typeof(AbstractFormObject.FormType), file_collection["formChoice"].ToString());
 
             return await PostImage(file_collection.Files.ToList(), formType);
         }
@@ -175,7 +215,7 @@ namespace Appserver.Controllers
 
 
             // Upload images to container and save UriStrings
-            var uriString ="";
+            var uriString = "";
             foreach (var f in files)
             {
                 if (!string.IsNullOrEmpty(uriString))
@@ -219,45 +259,5 @@ namespace Appserver.Controllers
         {
             return new TextractHandler().HandlePDFasync(file);
         }
-
-        // Method to find the focus measure or how "blurry" an image is.
-        // This is accomplished by taking the variance of the Laplacian
-		// of an image.
-		private double detect_blur(IFormFile file)
-        {
-            Mat src = new Mat();
-
-            if(file.ContentType == "image/hiec") {
-                // Initial settings
-                var settings = new MagickReadSettings { Format = MagickFormat.Heic, ColorSpace = ColorSpace.Gray };
-
-                //Open file as Magick Image and convert to jpeg
-                var data = file.OpenReadStream();
-                var image = new MagickImage(data, settings)
-                {
-                    Format = MagickFormat.Jpeg
-                };
-                byte[] byteData = image.ToByteArray();
-
-                src = Cv2.ImDecode(byteData, ImreadModes.Grayscale); 
-                //var src = new Mat(byteData.height);
-                //var src = new Mat(image., ImreadModes.Grayscale); 
-			}
-
-            //var image = new Mat(file.OpenReadStream());
-
-
-            //using (var laplacian = new Mat())
-            //{
-            var laplacian = new Mat();
-            Cv2.Laplacian(src, laplacian, MatType.CV_64FC1);
-            Cv2.MeanStdDev(laplacian, out var mean, out var stddev);
-            return stddev.Val0 * stddev.Val0;
-           //}
-
-            //double variance = 0.00;
-
-            //return variance;
-        }
-        
+    }
 }
