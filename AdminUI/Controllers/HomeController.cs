@@ -38,7 +38,7 @@ namespace AdminUI.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(string sortOrder = "id", string pName="", string cName="", string dateFrom="", string dateTo="", string prime="", string providerId="", string status="pending", int page = 1, int perPage = 20, string formType="timesheet")
+        public IActionResult Index(string sortOrder = "id", string pName="", string cName="", string dateFrom="", string dateTo="", string prime="", string providerId="", string status="pending", int page = 1, int perPage = 20, string formType="timesheet")
         {
             var submissions = GetSubmissions(formType);
 
