@@ -154,37 +154,35 @@ namespace Appserver.Controllers
         public static double detect_blur(IFormFile file)
         {
             Mat src = new Mat();
-            if (file.ContentType == "image/heic" || file.ContentType == "application/octet-stream")
+            MagickImage image;
+            MagickReadSettings settings;
+            switch (file.ContentType)
             {
-                // Initial settings
-                var settings = new MagickReadSettings { Format = MagickFormat.Heic, ColorSpace = ColorSpace.Gray };
-
-                //Open file as Magick Image and convert to jpeg
-                var data = file.OpenReadStream();
-                var image = new MagickImage(data, settings)
-                {
-                    Format = MagickFormat.Jpeg
-                };
-                byte[] byteData = image.ToByteArray();
-
-                src = Cv2.ImDecode(byteData, ImreadModes.Grayscale);
-                //var src = new Mat(byteData.height);
-                //var src = new Mat(image., ImreadModes.Grayscale); 
+                case "image/heic":
+                case "application/octet-stream":
+                    settings = new MagickReadSettings { Format = MagickFormat.Heic, ColorSpace = ColorSpace.Gray };
+                    break;
+                case "image/jpeg":
+                    settings = new MagickReadSettings { Format = MagickFormat.Jpeg, ColorSpace = ColorSpace.Gray };
+                    break;
+                case "image/png":
+                    settings = new MagickReadSettings { Format = MagickFormat.Png, ColorSpace = ColorSpace.Gray };
+                    break;
+                default:
+                    throw new ArgumentException();
             }
+            var data = file.OpenReadStream();
+            image = new MagickImage(data, settings)
+            {
+                Format = MagickFormat.Jpeg
+            };
+            byte[] byteData = image.ToByteArray();
 
-            //var image = new Mat(file.OpenReadStream());
-
-
-            //using (var laplacian = new Mat())
-            //{
+            src = Cv2.ImDecode(byteData, ImreadModes.Grayscale);
             var laplacian = new Mat();
             Cv2.Laplacian(src, laplacian, MatType.CV_64FC1);
             Cv2.MeanStdDev(laplacian, out var mean, out var stddev);
             return stddev.Val0 * stddev.Val0;
-            //}
-            //double variance = 0.00;
-
-            //return variance;
         }
 
 
