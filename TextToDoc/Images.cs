@@ -55,7 +55,7 @@ namespace TextToDoc
                             Headers = new HeaderDictionary(),
                             ContentType = contenttype
                         });
-                        Console.WriteLine("{0} {1}",imageFile.Name, blur);
+                        Console.WriteLine("{0} {1}", Path.GetFileName(imageFile.Name), blur);
                     }
                 }
             }
