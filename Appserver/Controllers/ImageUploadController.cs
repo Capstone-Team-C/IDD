@@ -58,6 +58,7 @@ namespace Appserver.Controllers
                 "image/png",
                 "image/heic",
                 "application/pdf",
+                "application/octet-stream"
             };
             // Detect blur for each image
             double threshold = 1000.0;
@@ -150,10 +151,10 @@ namespace Appserver.Controllers
         // Method to find the focus measure or how "blurry" an image is.
         // This is accomplished by taking the variance of the Laplacian
         // of an image.
-        private double detect_blur(IFormFile file)
+        public static double detect_blur(IFormFile file)
         {
             Mat src = new Mat();
-            if (file.ContentType == "image/hiec")
+            if (file.ContentType == "image/heic" || file.ContentType == "application/octet-stream")
             {
                 // Initial settings
                 var settings = new MagickReadSettings { Format = MagickFormat.Heic, ColorSpace = ColorSpace.Gray };
