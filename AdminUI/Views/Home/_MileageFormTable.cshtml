@@ -319,9 +319,10 @@
                         </div>
                     </div>
                     <div class="modal-footer @("modal-footer" + @m.Id)">
-                        <form asp-controller="Submission" asp-action="ModalProcess">
+                        <form asp-controller="Submission" asp-action="Process">
                             <a class="btn btn-secondary" asp-controller="Submission" asp-action="Index" asp-route-id="@m.Id">More Details</a>
                             <input type="hidden" name="id" value="@m.Id"/>
+                            <input type="hidden" name="modal" value="true"/>
                             <input class="btn btn-primary" name="Status" value="Approve" type="submit" formnovalidate>
                             <input class="btn btn-danger" name="Status" value="Reject" type="submit">
                             <input type="text" name="RejectionReason" placeholder="Rejection Reason" required/>
