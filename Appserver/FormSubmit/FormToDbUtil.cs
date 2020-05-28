@@ -37,7 +37,6 @@ namespace IDD
         }
 
         // Give a timesheetform obj, get back a partially populated timesheet obj.
-        // TODO fix UriString, confirm vals for // marks
         public Timesheet PopulateTimesheet(PWATimesheet tsf, Timesheet tsheet=null)
         {
             if(tsheet == null){tsheet = new Timesheet();}
@@ -49,10 +48,10 @@ namespace IDD
             tsheet.ServiceGoal = tsf.serviceGoal.value;
             tsheet.ProgressNotes = tsf.progressNotes.value;
             tsheet.FormType = tsf.serviceAuthorized.value;
-            tsheet.RejectionReason = ""; //
-            tsheet.Submitted = DateTime.UtcNow; //
+            tsheet.RejectionReason = "";
+            tsheet.Submitted = DateTime.UtcNow;
             tsheet.LockInfo = null;
-            tsheet.UserActivity = ""; //
+            tsheet.UserActivity = "";
             tsheet.Edited = convUtil.wasPWAedited(tsf);
             
             tsheet.UriString = _sscontext.Stagings.Find(tsf.id).UriString;
