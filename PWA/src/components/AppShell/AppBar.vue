@@ -69,6 +69,7 @@
           'en': { flag: 'us', language: 'en', title: 'English' },
           'ru': { flag: 'ru', language: 'ru', title: 'Русский' },
           'es': { flag: 'es', language: 'es', title: 'Español' },
+          'zh-tw': { flag: 'tw', language: 'zh-tw', title: '繁體中文' }
         },
         languageDrawerOpen: false,
         i18n: i18n,
