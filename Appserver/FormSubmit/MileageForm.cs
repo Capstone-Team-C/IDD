@@ -13,7 +13,7 @@ namespace Appserver.FormSubmit
         [JsonProperty("mileagesheet")]
         [JsonConverter(typeof(MileageRowConverter))]
         internal List<MileageRowItem> Mileage { get => miles; set => miles = value; }
-        public string totalMiles { get; set; }
+        public string totalMiles { get; set; } = "0";
         public void addMileRow(string date, string miles, string group, string purpose) =>
             this.Mileage.Add(new MileageRowItem(date, miles, group, purpose));
 
@@ -30,12 +30,15 @@ namespace Appserver.FormSubmit
 
             foreach (var row in table)
             {
-                addMileRow(
-                  ConvertDate(row[0].ToString().Trim()), // Date
-                  row[1].ToString().Trim(), // Miles
-                  ConvertInt(row[2].ToString()).ToString().Trim(), // Group
-                  row[3].ToString().Trim() // Purpose
-                );
+                if(!isEmptyMileageRow(row))
+                {
+                    addMileRow(
+                      ConvertDate(row[0].ToString().Trim()), // Date
+                      row[1].ToString().Trim(), // Miles
+                      ConvertInt(row[2].ToString()).ToString().Trim(), // Group
+                      row[3].ToString().Trim() // Purpose
+                    );
+                }
             }
 
             if (lastrow.Count > 3)
