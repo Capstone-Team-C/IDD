@@ -73,14 +73,13 @@
                     <i class="fa fa-stop" aria-hidden="true"></i>
                     {{ $t('components_Forms_FileUploader_stopupload') }}
                   </button>
-                </div>
-              </div>
-              <div v-else>
-                <div class="text-center">
-                  <v-btn class="white--text"
-                  color="red" ref="files" @click="reset">
+                  <button 
+                    type="button" 
+                    class="mx-5 btn btn-danger"
+                    ref="files" 
+                    @click="reset">
                     {{ $t('components_Forms_FileUploader_resetfiles') }}
-                  </v-btn>
+                  </button>
                 </div>
               </div>
 
@@ -272,7 +271,7 @@
               self.$emit("success", response["data"]);
             })
             .catch(function (error) {
-              console.log(error);
+              console.log("FileUploader:275", error);
               self.$emit("error", error);
             });
         }
@@ -328,7 +327,8 @@
             self.submitted = true;
           })
           .catch(function (error) {
-            console.log(error);
+            console.log("FileUploader:331", error);
+            self.$emit("error", error);
           });
         return;
       },

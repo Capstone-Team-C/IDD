@@ -19,7 +19,7 @@
               </v-card-title>
               <v-card-text class="text-center subtitle-1 mt-3">
                 {{ $t('views_Timesheet_continue_desc0') }}
-                <strong> #{{ formId }}</strong><br />
+                <br />
                 {{ $t('views_Timesheet_continue_desc1') }}
               </v-card-text>
               <v-divider></v-divider>
@@ -87,6 +87,18 @@
             outlined
           >
             {{ $t('views_Timesheet_invalid') }}
+          </v-alert>
+        </v-col>
+      </v-row>
+      <v-row v-else-if="blurryForm === true" align="center">
+        <v-col align="center">
+          <v-alert 
+            border="left"
+            type="warning" 
+            text 
+            outlined
+          >
+            {{ $t('views_Timesheet_blurry') }}
           </v-alert>
         </v-col>
       </v-row>
@@ -200,9 +212,11 @@
 
         // Upload errors
         errors: [],
+        blurryForm: false,
 
         // Will continue editing an existing timesheet or no
         willContinue: false,
+        
       };
     },
     computed: {
@@ -223,16 +237,21 @@
 
       // Successfully received parsed .json from the backend
       fillForm(response) {
-        // Save the parsed .json
-        this.parsedFileData = response;
-        
-        // Check if textract had trouble parsing the form
-        if (response.response === "invalid") {
-          this.invalidForm = true;
-        }
+        if (response.response === "too blury") {
+          this.resetForm();
+          this.blurryForm = true;
+        } else {
+          // Check if textract had trouble parsing the form
+          if (response.response === "invalid") {
+            this.invalidForm = true;
+          }
 
-        // Hide the image upload and display the pre-populated IDD form
-        this.setWillContinue();
+          // Save the parsed .json
+          this.parsedFileData = response;
+
+          // Hide the image upload and display the pre-populated IDD form
+          this.setWillContinue();
+        }
       },
       handleError(error) {
         this.errors = error;
@@ -248,6 +267,7 @@
         this.array = [];
         this.willContinue = false;
         this.invalidForm = false;
+        this.blurryForm = false;
       },
       setWillContinue() {
         this.willContinue = true;
