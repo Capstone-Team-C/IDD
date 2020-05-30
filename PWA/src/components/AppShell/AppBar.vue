@@ -9,7 +9,7 @@
     </v-toolbar-title>
 
     <v-spacer></v-spacer>
-      <div>
+      <div v-if="enableLanguageFeature">
         <label
           class="pa-0 ma-0 display-1" 
           @click="languageDrawerOpen = true" 
@@ -73,6 +73,7 @@
         },
         languageDrawerOpen: false,
         i18n: i18n,
+        enableLanguageFeature: false,
       };
     },
     // Parent -> Child communication
