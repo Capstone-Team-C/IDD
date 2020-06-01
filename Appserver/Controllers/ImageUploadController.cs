@@ -49,7 +49,8 @@ namespace Appserver.Controllers
                 "application/octet-stream"
             };
             // Detect blur for each image
-            double threshold = 1000.0;
+            double threshold = double.Parse(Environment.GetEnvironmentVariable("BLUR_THRESHOLD"));
+                
             foreach (var file in files)
             {
                 if (file.Length == 0)
