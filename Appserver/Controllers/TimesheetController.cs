@@ -147,8 +147,13 @@ namespace Appserver.Controllers
             Timesheet ts = dbutil.PopulateTimesheet(submittedform);
 
             var submission = _subcontext;
-            submission.Add(ts);
-            submission.SaveChanges();
+            using (var transaction = submission.Database.BeginTransaction())
+            {
+                submission.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Submissions ON");
+                submission.Add(ts);
+                submission.SaveChanges();
+                transaction.Commit();
+            }
 
             // Do something with form
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
