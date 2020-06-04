@@ -18,6 +18,10 @@
                   {{ $t('components_Forms_FileUploader_selectfiles') }}
                 </label>
               </v-alert>
+                <p class="text-center">
+                    TIP: Uploading timesheets downloaded from Exprs will be more accurate than photos from your camera. To learn how, 
+                    <a :href="howToDownloadeXPRSTimesheetUrl" target="_blank" title="Link to How to Print/Download eXPRS Timesheet">click here.</a>
+                </p>
             </v-col>
           </v-row>
           <v-row>
@@ -353,6 +357,7 @@
     },
     data() {
       return {
+        howToDownloadeXPRSTimesheetUrl: 'https://apps.state.or.us/exprsDocs/HowToPrintPSWTimesheetsFromeXPRS.pdf',
         files: [],
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
