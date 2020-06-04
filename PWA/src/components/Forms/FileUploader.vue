@@ -1,6 +1,28 @@
 <template>
   <div class="example-drag">
     <template v-if="onlineStatus">
+      <v-snackbar
+        timeout=9000
+        v-model="snackbar"
+      >
+        <a 
+          class="white--text"
+          target="_blank" 
+          title="Link to How to Print/Download eXPRS Timesheet"
+          :href="xPRSLink" 
+        >
+          {{ $t('components_Forms_FileUploader_xPRS') }}
+        </a>
+        <v-btn
+          color="red"
+          dark
+          text
+          @click="snackbar=false"
+        >
+          {{ $t('close') }}
+        </v-btn>
+      </v-snackbar>
+
       <div class="upload">
         <v-container v-if="!files.length" class="pa-0 mx-0" fluid>
           <v-row class="pa-0 ma-0">
@@ -18,10 +40,6 @@
                   {{ $t('components_Forms_FileUploader_selectfiles') }}
                 </label>
               </v-alert>
-                <p class="text-center">
-                    TIP: Uploading timesheets downloaded from Exprs will be more accurate than photos from your camera. To learn how, 
-                    <a :href="howToDownloadeXPRSTimesheetUrl" target="_blank" title="Link to How to Print/Download eXPRS Timesheet">click here.</a>
-                </p>
             </v-col>
           </v-row>
           <v-row>
@@ -357,7 +375,8 @@
     },
     data() {
       return {
-        howToDownloadeXPRSTimesheetUrl: 'https://apps.state.or.us/exprsDocs/HowToPrintPSWTimesheetsFromeXPRS.pdf',
+        xPRSLink: 'https://apps.state.or.us/exprsDocs/HowToPrintPSWTimesheetsFromeXPRS.pdf',
+        snackbar: true,
         files: [],
         loader: null, //Calls our form retrieval and displays loading progress
         loading: false, //Is form retrieval loading
