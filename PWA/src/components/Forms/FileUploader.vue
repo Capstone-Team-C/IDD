@@ -121,6 +121,14 @@
             <div class="continue" v-if="check()">
               <v-col>
                 <div class="text-right">
+                  <button 
+                    type="button" 
+                    class="mx-5 btn btn-danger"
+                    ref="files" 
+                    @click="reset">
+                    {{ $t('components_Forms_FileUploader_resetfiles') }}
+                  </button>
+ 
                   <v-btn
                     :loading="loading"
                     :disabled="loading"
@@ -271,7 +279,7 @@
               self.$emit("success", response["data"]);
             })
             .catch(function (error) {
-              console.log("FileUploader:275", error);
+              console.log("FileUploader", error);
               for(let i = 0; i < self.files.length; i++){
                 self.files[i].active = false
                 self.files[i].success = false
@@ -321,15 +329,16 @@
           })
           .then(function (response) {
             console.log("Response from Appserver, FileUploader:293", response);
-            /*
             if (response["data"]["response"] == "too blurry"){
-              console.log('hello')
               for(let i = 0; i < self.files.length; i++){
                 self.files[i].active = false
                 self.files[i].success = false
                 self.files[i].error = true
               }
-            }*/
+              self.$emit('success', response);
+            }
+            else {
+            
             for (let i = 0; i < self.files.length; i++) {
               self.files[i].active = false;
               self.files[i].success = true;
@@ -339,6 +348,7 @@
             self.formId = response["data"]["id"];
             self.guid = response["data"]["guid"];
             self.submitted = true;
+            }
           })
           .catch(function (error) {
             console.log("FileUploader:331", error);
