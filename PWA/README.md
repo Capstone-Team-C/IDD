@@ -83,29 +83,28 @@ console.log(process.env.VUE_APP_NOT_SECRET_CODE)
 We have included an `.env.example` file that example env variables used in the code.  For local development, we recommend creating a `.env` file that includes at least the same variables in the `.env.example` file. You will need to specify these env variables before building the app.
 
 When deploying the app for production, we recommend specifying these env variables in the app settings of the service you are hosting the app on.
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
+***
 ### Running our Vue.js project locally
 1) Move to the PWA root directory in the project directory.
 2) Install necessary packages with npm:
-
-```
+```sh
 npm install
 ```
 3) Create a `.env` file with at least the same variables in the `.env.example` file and configure the variables to your needs.
+![](envExample.gif)
 
 4) Build Vue project:
 
-```
+```sh
 npm run build
 ```
+
 5) Serve the Vue project:
 
-```
+```sh
 npm run serve
 ```
-56 Open the project in your browser with the designated **localhost** url (ex http://localhost:8080) 
+6) Open the project in your browser with the designated **localhost** url (ex http://localhost:8080) 
 
 ***
 ### Lints and fixes files
