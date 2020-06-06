@@ -237,8 +237,9 @@
 
       // Successfully received parsed .json from the backend
       fillForm(response) {
-        if (response.response === "too blury") {
+        if (response.response === "too blurry") {
           this.resetForm();
+          console.log('too blurry');
           this.blurryForm = true;
         } else {
           // Check if textract had trouble parsing the form

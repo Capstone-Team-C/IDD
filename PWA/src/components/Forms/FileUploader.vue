@@ -272,6 +272,11 @@
             })
             .catch(function (error) {
               console.log("FileUploader:275", error);
+              for(let i = 0; i < self.files.length; i++){
+                self.files[i].active = false
+                self.files[i].success = false
+                self.files[i].error = true
+              }
               self.$emit("error", error);
             });
         }
@@ -316,6 +321,15 @@
           })
           .then(function (response) {
             console.log("Response from Appserver, FileUploader:293", response);
+            /*
+            if (response["data"]["response"] == "too blurry"){
+              console.log('hello')
+              for(let i = 0; i < self.files.length; i++){
+                self.files[i].active = false
+                self.files[i].success = false
+                self.files[i].error = true
+              }
+            }*/
             for (let i = 0; i < self.files.length; i++) {
               self.files[i].active = false;
               self.files[i].success = true;
@@ -328,6 +342,11 @@
           })
           .catch(function (error) {
             console.log("FileUploader:331", error);
+            for(let i = 0; i < self.files.length; i++){
+             self.files[i].active = false
+             self.files[i].success = false
+             self.files[i].error = true
+            }
             self.$emit("error", error);
           });
         return;
