@@ -58,21 +58,55 @@ brew update
 brew install node
 ```
 ***
-### Running our Vue.js project
-1) Move to the PWA directory in the project directory.
+
+### Setting up environment variables
+This app makes use of [Vue environment variables](https://cli.vuejs.org/guide/mode-and-env.html), an effective method of configuring Node.js applications. You can specify env variables by placing the following files the PWA root directory: 
+
+```sh
+.env                # loaded in all cases
+.env.local          # loaded in all cases, ignored by git
+.env.[mode]         # only loaded in specified mode
+.env.[mode].local   # only loaded in specified mode, ignored by git
+```
+> :warning: **Do not store any secrets (such as private API keys) in your app**: Environment variables are embedded into the build, meaning anyone can view them by inspecting your app's files.
+
+
+
+Please note that all env variables in this Vue app should start with `VUE_APP`, a requirement when running `vue-cli-service`.
+
+You can access env variables in your application code:
+
+```js
+console.log(process.env.VUE_APP_NOT_SECRET_CODE)
+```
+
+We have included an `.env.example` file that example env variables used in the code.  For local development, we recommend creating a `.env` file that includes at least the same variables in the `.env.example` file. You will need to specify these env variables before building the app.
+
+When deploying the app for production, we recommend specifying these env variables in the app settings of the service you are hosting the app on.
+
+See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Running our Vue.js project locally
+1) Move to the PWA root directory in the project directory.
 2) Install necessary packages with npm:
+
 ```
 npm install
 ```
-3) Build Vue project:
+3) Create a `.env` file with at least the same variables in the `.env.example` file and configure the variables to your needs.
+
+4) Build Vue project:
+
 ```
 npm run build
 ```
-4) Serve the Vue project:
+5) Serve the Vue project:
+
 ```
 npm run serve
 ```
-5) Open the project in your browser with the designated **localhost** url (ex http://localhost:8080) 
+56 Open the project in your browser with the designated **localhost** url (ex http://localhost:8080) 
+
 ***
 ### Lints and fixes files
 ```
@@ -84,9 +118,6 @@ npm run lint
 - npm list
 - prettify /directory_to_prettify --write
 
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Deployment
 - Build the project via `npm run build`
