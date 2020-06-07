@@ -2,8 +2,8 @@
   <div class="example-drag">
     <template v-if="onlineStatus">
       <v-snackbar
-        timeout=9000
         v-model="snackbar"
+        :timeout='9000'
       >
         <a 
           class="white--text"
