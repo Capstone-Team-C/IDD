@@ -67,7 +67,7 @@ namespace AdminUI.Controllers
          * Returns the LockTable Index
          */
         [HttpPost]
-        public async Task<IActionResult> ReleaseLock(int id)
+        public async Task<IActionResult> ReleaseLock(int id, string sortOrder)
         {
             var submission = _context.Submissions.Find(id);
             if (submission == null)
@@ -76,7 +76,7 @@ namespace AdminUI.Controllers
             submission.LockInfo = null;
             _context.Update(submission);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "LockTable");
+            return RedirectToAction("Index", "LockTable", new {sortOrder});
         }
 
         /*
