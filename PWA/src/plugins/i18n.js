@@ -8,6 +8,7 @@ const messages = {
     translate_error: "Translation error",
     yes: "Yes",
     no: "No",
+    close: "Close",
     App_nointernet:
       "No Internet connection! Some features may be unavailable at this time.",
     components_AppShell_AppBar_title: "IDD Timesheet Submission",
@@ -41,7 +42,8 @@ const messages = {
     views_About_contributors_position2: "Provider UI",
     views_About_contributors_position3: "Backend",
     views_Timesheet_continue: "Continue existing form?",
-    views_Timesheet_continue_desc0: "Form already exists!",
+    views_Timesheet_continue_desc0:
+      "Form already exists! You are working on form ",
     views_Timesheet_continue_desc1:
       "Do you want to continue or start a new form?",
     views_Timesheet_continue_btn0: "New form",
@@ -51,10 +53,12 @@ const messages = {
     views_Timesheet_timesheet: "Timesheet",
     views_Timesheet_invalid:
       "Warning: We couldn’t read the text from the file you uploaded. You will have to manually enter all of the form fields.",
-    views_Timesheet_blurry:
-      "Warning: Your form was too blury to process. Please upload a new image.",
     views_Timesheet_select_form: "Please select a form type above.",
     views_Timesheet_upload_error: "FILE UPLOAD ERROR!",
+    components_Forms_FileUploader_xPRS:
+      "TIP: Uploading timesheets downloaded" +
+      " from xPRS will be more accurate than photos from your camera." +
+      " To learn how, click here.",
     components_Forms_FileUploader_dropfiles:
       "Drop files anywhere to upload<br/>or<br/>",
     components_Forms_FileUploader_selectfiles: "Select Files or Take a Picture",
@@ -228,6 +232,7 @@ const messages = {
     translate_error: "Ошибка с переводом",
     yes: "Да",
     no: "Нет",
+    close: "Закрыть",
     App_nointernet:
       "Нет доступа к Интернету! Некоторые фичи могут быть отключёны в это время.",
     components_AppShell_AppBar_title: "IDD табели",
@@ -261,7 +266,7 @@ const messages = {
     views_About_contributors_position2: "Интерфейс для провайдеров",
     views_About_contributors_position3: "Бэкенд",
     views_Timesheet_continue: "Продолжать работать над этом табелем?",
-    views_Timesheet_continue_desc0: "Табель уже есть!",
+    views_Timesheet_continue_desc0: "Табель уже есть! Вы работаете над табелем",
     views_Timesheet_continue_desc1:
       "Хотите ли вы продольжать работать над этой табелем, или хотите пришлить новый табель?",
     views_Timesheet_continue_btn0: "Пришлите новый табель",
@@ -270,8 +275,6 @@ const messages = {
     views_Timesheet_timesheet: "Табель",
     views_Timesheet_invalid:
       "Осторожно: Мы не успели читать табель, который вы пришли нам. Вам приходится вручную выпольнить весь табель.",
-    views_Timesheet_blurry:
-      "Осторожно: Мы не успели читать ваш табель, сделайте новую фотографию, пожалуйста.",
     views_Timesheet_select_form: "Выбырайте тип табеля, пожалуйста.",
     views_Timesheet_upload_error: "ОШИБКА: МЫ НЕ МОГЛИ ПРИШЛИТЬ ФАЙЛЫ!",
     components_Forms_FileUploader_dropfiles: "Тащите файлы сюда<br/>или<br/>",
@@ -287,6 +290,8 @@ const messages = {
     components_Forms_FileUploader_continue: "Продолжайте...",
     components_Forms_FileUploader_offline:
       "Нет доступа к Интернету: Невозможно пришлить ваши файлы без доступа к Интернету.",
+    components_Forms_FileUploader_xPRS:
+      "Внимание: Результат будет лучше, если вы сохраняете табель из eXPRS как .pdf. Чтобы узнать больше, нажмите здесь.",
     components_Forms_ConfirmSubmission_submit: "Пришлите табель",
     components_Forms_ConfirmSubmission_cancel: "Отменить",
     components_Forms_ConfirmSubmission_confirm: "Хотите ли вы пришлить табель?",
@@ -401,7 +406,7 @@ const messages = {
     ServicesDelivered_providerSignature_label: "Подписание провайдера",
     ServicesDelivered_authorization_label:
       "Я разрешаю CDDP/Брокеража/CIIS пришлить информацию в этом" +
-      " табели в XPRS вместо меня для зарплаты провайдера",
+      " табели в eXPRS вместо меня для зарплаты провайдера",
     ServicesDelivered_approval_label: "Аббревиатура имени провайдера",
     Mileage_totalMiles_hint: "Сумма майлов",
     Mileage_totalMiles_label: "Сумма майлов",
@@ -435,6 +440,7 @@ const messages = {
     translate_error: "Error de traducción",
     yes: "Sí",
     no: "No",
+    close: "Cerrar",
     App_nointernet:
       "¡Sin conexión a Internet! Es posible que algunas funciones no estén disponibles en este momento",
     components_AppShell_AppBar_title: "IDD Envío de parte de horas",
@@ -469,7 +475,8 @@ const messages = {
     views_About_contributors_position2: "Proveedor UI",
     views_About_contributors_position3: "Backend",
     views_Timesheet_continue: "¿Continuar el formulario existente?",
-    views_Timesheet_continue_desc0: "¡El formulario ya existe!",
+    views_Timesheet_continue_desc0:
+      "¡El formulario ya existe! Estás trabajando en el formulario ",
     views_Timesheet_continue_desc1:
       "¿Desea continuar o comenzar un nuevo formulario?",
     views_Timesheet_continue_btn0: "Nuevo formulario",
@@ -478,8 +485,6 @@ const messages = {
     views_Timesheet_timesheet: "Envío de parte de horas ",
     views_Timesheet_invalid:
       "Advertencia: no pudimos leer el texto del archivo que cargó. Tendrá que ingresar manualmente todos los campos del formulario.",
-    views_Timesheet_blurry:
-      "Advertencia: no pudimos leer el texto del archivo que cargó. Tendrá que cargar una nueva foto del formulario.",
     views_Timesheet_select_form: "Seleccione un tipo de formulario arriba",
     views_Timesheet_upload_error: "ERROR DE CARGA DE ARCHIVO!",
     components_Forms_FileUploader_dropfiles:
@@ -496,6 +501,10 @@ const messages = {
     components_Forms_FileUploader_continue: "Continuar...",
     components_Forms_FileUploader_offline:
       "DESCONECTADA: no se puede cargar el archivo a menos que esté en línea",
+    components_Forms_FileUploader_xPRS:
+      "SUGERENCIA: la carga de hojas de " +
+      "tiempo descargadas de eXPRS será más precisa que las fotos de su cámara." +
+      "Para aprender cómo, da click aquí.",
     components_Forms_ConfirmSubmission_submit: "Enviar",
     components_Forms_ConfirmSubmission_cancel: "Cancelar",
     components_Forms_ConfirmSubmission_confirm:
@@ -591,44 +600,6 @@ const messages = {
       "ERROR: la fecha de firma del empleador o proveedor es anterior a la última fecha de entrega del servicio",
     components_forms_servicesdelivered_row: "Row",
 
-    ServicesDelivered_clientName_hint: "Nombre completo",
-    ServicesDelivered_clientName_label: "Nombre del cliente",
-    ServicesDelivered_prime_hint: "Entrada alfanumérica",
-    ServicesDelivered_prime_label: "Número Prime",
-    ServicesDelivered_submissionDate_hint: "AAAA-MM",
-    ServicesDelivered_submissionDate_label: "Período de pago Mes y año",
-    ServicesDelivered_providerName_hint: "Numbre completo",
-    ServicesDelivered_providerName_label: "Nombre del proveedor",
-    ServicesDelivered_providerNum_hint: "Número de seis dígitos",
-    ServicesDelivered_providerNum_label: "Número de proveedor",
-    ServicesDelivered_scpaName_hint: "Nombre del SC PA",
-    ServicesDelivered_scpaName_label: "Nombre del SC/PA ",
-    ServicesDelivered_brokerage_hint: "Nombre de la organización",
-    ServicesDelivered_brokerage_label: "CM Organización",
-    ServicesDelivered_serviceAuthorized_hint: "Servicio proporcionado",
-    ServicesDelivered_serviceAuthorized_label: "Servicio",
-    ServicesDelivered_totalHours_hint: "HH:mm",
-    ServicesDelivered_totalHours_label: "Horas en total",
-    ServicesDelivered_serviceGoal_hint: "Objetivo del servicio",
-    ServicesDelivered_serviceGoal_label: "Objetivo del servicio",
-    ServicesDelivered_progressNotes_hint: "Notas",
-    ServicesDelivered_progressNotes_label: "Notas de progreso",
-    ServicesDelivered_employerSignDate_hint: "AAAA-MM-DD",
-    ServicesDelivered_employerSignDate_label: "Fecha",
-    ServicesDelivered_providerSignDate_hint: "AAAA-MM-DD",
-    ServicesDelivered_providerSignDate_label: "Fecha",
-    ServicesDelivered_employerSignature_hint: "",
-    ServicesDelivered_employerSignature_label:
-      "Firma del empleador del cliente o representante del empleador",
-    ServicesDelivered_providerSignature_hint: "",
-    ServicesDelivered_providerSignature_label: "Firma del proveedor / empleado",
-    ServicesDelivered_authorization_label:
-      "Autorizo al personal de CDDP / Brokerage / CIIS a ingresar los datos" +
-      " informó en este formulario a eXPRS en mi nombre para la creación y el pago de reclamos",
-    ServicesDelivered_approval_label: " Iniciales del proveedor",
-    Mileage_totalMiles_hint: "Horas en total",
-    Mileage_totalMiles_label: "Horas en total",
-
     ServicesDeliveredTable_date_hint: "AAAA-MM-DD",
     ServicesDeliveredTable_date_label: "Fecha",
     ServicesDeliveredTable_starttime_hint: "HH:mm AM/PM",
@@ -658,6 +629,7 @@ const messages = {
     translate_error: "翻譯錯誤",
     yes: "是",
     no: "否",
+    close: "關",
     App_nointernet: "網路沒連線! 有些功能無法使用.",
     components_AppShell_AppBar_title: "IDD 時間表申請",
     components_AppShell_AppFooter_about: "關於我們",
@@ -690,7 +662,7 @@ const messages = {
     views_About_contributors_position2: "服務提共者界面",
     views_About_contributors_position3: "後端",
     views_Timesheet_continue: "繼續已存在的表?",
-    views_Timesheet_continue_desc0: "表已存在!",
+    views_Timesheet_continue_desc0: "表已存在! 正在使用表 ",
     views_Timesheet_continue_desc1: "您想繼續或是開始新的表?",
     views_Timesheet_continue_btn0: "新表",
     views_Timesheet_continue_btn1: "繼續",
@@ -698,7 +670,6 @@ const messages = {
     views_Timesheet_timesheet: "時間表",
     views_Timesheet_invalid:
       "警告: 我們無法讀成功您所上傳的檔案裡面的字. 您必須自己填寫表裡的每一個表格.",
-    views_Timesheet_blurry: "警告: 我們無法讀成功您所上傳的檔案裡面的字.",
     views_Timesheet_select_form: "請從上面選擇表類.",
     views_Timesheet_upload_error: "上傳錯誤!",
     components_Forms_FileUploader_dropfiles:
@@ -713,6 +684,10 @@ const messages = {
     components_Forms_FileUploader_processing: "處理檔案中...",
     components_Forms_FileUploader_continue: "繼續...",
     components_Forms_FileUploader_offline: "未連線: 除非上限無法上傳檔案.",
+    components_Forms_FileUploader_xPRS:
+      "TIP: Uploading timesheets downloaded" +
+      " from xPRS will be more accurate than photos from your camera." +
+      " To learn how, click here.",
     components_Forms_ConfirmSubmission_submit: "申請",
     components_Forms_ConfirmSubmission_cancel: "取消",
     components_Forms_ConfirmSubmission_confirm: "確定您想申請此表嗎?",
@@ -848,9 +823,9 @@ const messages = {
     rules_required: "必填項目",
     rules_max0: "此表格不能超過",
     rules_max1: "字",
-    rules_alpha: "此表格只能函英文字母",
-    rules_alphanumeric: "此表格只能函英文字母數字",
-    rules_numeric: "此表格只能函數字",
+    rules_alpha: "此表格只能含英文字母",
+    rules_alphanumeric: "此表格只能含英文字母數字",
+    rules_numeric: "此表格只能含數字",
     rules_name: "大名 姓名",
     rules_timeOfDay: "此表格的格式必須為 HH:mm AM/PM",
     rules_time: "此表格的格式必須為 HH:mm",

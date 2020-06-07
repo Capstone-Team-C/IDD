@@ -9,9 +9,17 @@ namespace IDD
 {
     public class FormToDbUtil
     {
+
+        /*******************************************************************************
+        /// Fields
+        *******************************************************************************/
         private SubmissionContext _scontext;
         private SubmissionStagingContext _sscontext;
 
+
+        /*******************************************************************************
+        /// Constructor
+        *******************************************************************************/
         public FormToDbUtil(SubmissionContext context, SubmissionStagingContext sscontext)
         {
             _scontext = context;
@@ -19,11 +27,17 @@ namespace IDD
         }
 
 
+        /*******************************************************************************
+        /// Methods
+        *******************************************************************************/
+
+
         // Give a timesheetform obj, get back a partially populated timesheet obj.
         public Timesheet PopulateTimesheet(PWATimesheet tsf, Timesheet tsheet=null)
         {
             if(tsheet == null){tsheet = new Timesheet();}
 
+            tsheet.Id = tsf.id;
             tsheet.ClientName = tsf.clientName.value;
             tsheet.ClientPrime = tsf.prime.value;
             tsheet.ProviderName = tsf.providerName.value;
@@ -41,6 +55,7 @@ namespace IDD
             PopulateTimesheetEntries(tsf, tsheet);
             return tsheet;
         }
+
         // Convert the timesheet form row items into timesheet time entries. Makes
         // certain assumptions about start times, end times, and group. 
         private void PopulateTimesheetEntries(PWATimesheet timesheetForm, Timesheet timesheet)
@@ -105,6 +120,7 @@ namespace IDD
         {
             if (mileageForm == null) { mileageForm = new MileageForm(); }
 
+            mileageForm.Id              = pwaForm.id;
             mileageForm.ClientName      = pwaForm.clientName.value;
             mileageForm.ClientPrime     = pwaForm.prime.value;
             mileageForm.ProviderName    = pwaForm.providerName.value;
@@ -122,6 +138,7 @@ namespace IDD
             PopulateMileageEntries(pwaForm, mileageForm);
             return mileageForm;
         }
+
         // Convert the timesheet form row items into timesheet time entries. Makes
         // certain assumptions about start times, end times, and group. 
         private void PopulateMileageEntries(PWAMileage pwaForm, MileageForm mileageForm)

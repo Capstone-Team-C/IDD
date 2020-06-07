@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Appserver.Data;
 using Appserver.Models;
-using Newtonsoft.Json;
-using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
-using Appserver.TextractDocument;
 using Newtonsoft.Json.Linq;
 using Common.Models;
 using IDD;
@@ -18,7 +12,7 @@ using Common.Data;
 
 namespace Appserver.Controllers
 {
-    public class TimesheetController : Controller
+    public class DocumentSubmissionController : Controller
     {
         /*******************************************************************************
         /// Fields
@@ -29,7 +23,7 @@ namespace Appserver.Controllers
         /*******************************************************************************
         /// Constructor
         *******************************************************************************/
-        public TimesheetController(SubmissionStagingContext context, SubmissionContext subcontext)
+        public DocumentSubmissionController(SubmissionStagingContext context, SubmissionContext subcontext)
         {
             _context = context;
             _subcontext = subcontext;
@@ -40,19 +34,11 @@ namespace Appserver.Controllers
         /// Methods
         *******************************************************************************/
 
+
+        // A previous upload is considered ready when the response from textract has
+        // been received. When ready, a json repersentation of the appropriate form is returned.
         [Produces("application/json")]
-        [Route("Timesheet/ReadyTest")]
-        [HttpGet]
-        public IActionResult ReadyTest(int id)
-        {
-            var result = _context.Stagings.FirstOrDefault(m=> m.Id == id );
-            if( result == null)
-            {
-                return Json(new JsonResponse("not ready"));
-            }
-            return Ready(id, result.Guid);
-        }
-        [Produces("application/json")]
+        [Route("Timesheet/Ready")]
         [HttpGet]
         public IActionResult Ready(int id, string guid)
         {
@@ -60,7 +46,10 @@ namespace Appserver.Controllers
 
             if (stage == null)
             {
-                return Json(new JsonResponse("not ready"));
+                return Json(new
+                {
+                    response = "not ready"
+                });
             }
 
             var textractform = new TextractDocument.TextractDocument();
@@ -72,66 +61,33 @@ namespace Appserver.Controllers
                 textractform.AddPages(childform);
             }
 
-            AbstractFormObject ts;
+            AbstractFormObject form;
 
             try
             {
-                ts = AbstractFormObject.FromTextract(textractform, stage.formType);
+                form = AbstractFormObject.FromTextract(textractform, stage.formType);
             }
             catch (Exception)
             {
-                return Json(new JsonResponse("invalid"));
+                return Json(new 
+                { 
+                    response = "invalid" 
+                });
             }
 
-            ts.id = id;
-            ts.guid = guid;
+            form.id = id;
+            form.guid = guid;
 
-            return Json(ts);
+            return Json(form);
         }
 
-        [Route("Timesheet/SubmitTest")]
-        [HttpGet]
+        // Takes a Timesheet submitted by the PWA after the user has had a chance
+        // to review the processed upload and possibly make edits. Converts the
+        // PWATimesheet model into a Timesheet model which can be placed into the submissions
+        // table. 
         [Produces("application/json")]
-        public IActionResult Submit(int id)
-        {
-            var stage = _context.Stagings.FirstOrDefault(m => m.Id == id);
-
-            if (stage == null)
-            {
-                return Json(new JsonResponse("not ready"));
-            }
-            var textractform = new TextractDocument.TextractDocument();
-
-            foreach (var a in JArray.Parse(stage.ParsedTextractJSON))
-            {
-                var childform = new TextractDocument.TextractDocument();
-                childform.FromJson(a);
-                textractform.AddPages(childform);
-            }
-            var ts = AbstractFormObject.FromTextract(textractform, stage.formType);
-
-            ts.id = id;
-            ts.guid = stage.Guid;
-
-            var PWAForm = PWAsubmission.FromForm(ts, stage.formType);
-            switch (stage.formType) {
-                case AbstractFormObject.FormType.OR526_ATTENDANT:
-                case AbstractFormObject.FormType.OR507_RELIEF:
-                    return SubmitTimesheet((PWATimesheet)PWAForm);
-                case AbstractFormObject.FormType.OR004_MILEAGE:
-                    return SubmitMileage((PWAMileage)PWAForm);
-                default:
-                    return Json(new
-                    {
-                        response = "invalid"
-                    }
-            );
-            }
-        }
-
         [Route("Timesheet/Submit")]
         [HttpPost("Submit")]
-        [Produces("application/json")]
         public IActionResult SubmitTimesheet([FromBody] PWATimesheet submittedform)
         {
             // Check correct authorization
@@ -143,33 +99,45 @@ namespace Appserver.Controllers
                     response = "invalid"
                 });
             }
+
             var dbutil = new FormToDbUtil(_subcontext, _context);
             Timesheet ts = dbutil.PopulateTimesheet(submittedform);
 
             var submission = _subcontext;
-            submission.Add(ts);
-            submission.SaveChanges();
+            using (var transaction = submission.Database.BeginTransaction())
+            {
+                submission.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Submissions ON");
+                submission.Add(ts);
+                submission.SaveChanges();
+                transaction.Commit();
+            }
 
-            // Do something with form
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             return Json(new {response="ok"});
         }
 
 
+        // Takes a submission from the PWA modeled by PWAMileage, converts that
+        // into a MileageForm (the model used the DB), and saves it to
+        // the Submissions table.
+        [Produces("application/json")]
         [Route("Timesheet/SubmitMileage")]
         [HttpPost("Submit")]
-        [Produces("application/json")]
         public IActionResult SubmitMileage([FromBody] PWAMileage submittedform)
         {
             var dbutil = new FormToDbUtil(_subcontext, _context);
             MileageForm mf = dbutil.PopulateMileage(submittedform);
 
             var submission = _subcontext;
-            submission.Add(mf);
-            submission.SaveChanges();
+            using (var transaction = submission.Database.BeginTransaction())
+            {
+                submission.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Submissions ON");
+                submission.Add(mf);
+                submission.SaveChanges();
+                transaction.Commit();
+            }
 
-            // Do something with form
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             return Json(new { response = "ok" });
@@ -179,19 +147,6 @@ namespace Appserver.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-
-        /*******************************************************************************
-        /// Classes
-        *******************************************************************************/
-        private class JsonResponse
-        {
-            public JsonResponse(string res = "ok")
-            {
-                response = res;
-            }
-            public string response;
         }
     }
 }

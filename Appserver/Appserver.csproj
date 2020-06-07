@@ -31,8 +31,6 @@
     <PackageReference Include="OpenCvSharp4.runtime.osx.10.15-x64" Version="4.3.0.20200421" />
   </ItemGroup>
 
-
-
   <ItemGroup>
     <Content Remove="Views\Index.cshtml" />
     <Content Remove="AppserverTest\obj\AppserverTest.csproj.nuget.dgspec.json" />
