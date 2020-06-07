@@ -91,7 +91,7 @@ console.log(process.env.VUE_APP_NOT_SECRET_CODE)
 We have included an `.env.example` file with env variables used in the code.  For local development, we recommend creating a `.env` file that includes at least the same variables in the `.env.example` file. You will need to specify these env variables before building the app.
 
 When deploying the app for production, we recommend specifying these env variables in the app settings of the service you are hosting the app on.
-***
+
 ## Running our Vue.js project locally
 1) Move to the PWA root directory in the project directory.
 2) Install necessary packages with npm:
@@ -144,14 +144,71 @@ NPM scripts specified in the `package.json` file are basically macros, which may
 - `npm run lint`
 	- Fixes the formatting of files
 
-### Validation
+## Validation
 The unit tests for this project are located in the `__tests__` folder. The `npm test` script will run all unit tests for this project. This project uses the [Jest](https://vue-test-utils.vuejs.org/guides/testing-single-file-components-with-jest.html) testing framework to execute unit tests.
 
 To run all unit tests, run the following command: `npm test`. To run a specific test or set of tests, run the following command **from the PWA root directory**: `jest __tests__/path/to/test/dir`.
 
 The configurations for jest are in the `package.json` file -- search for 'jest'.
 
-### Push Deployment onto Azure (not recommended)
+## Locales with i18n
+This project uses the `i18n` module for handling the displaying and switching of various languages. Translations are currently specified in the `src/plugins/i18n.js` file. In every component, validation rule, and form field hints, any text is replaced with a variable recognizable to `i18n`, which displays the correct translation. 
+
+After importing the `i18n` plugin in a vue component, these variables can be either directly used in the HTML and script section or, in the case of dynamically rendered HTML, returned in a switch statement:
+
+```html
+<!-- HTML section of a Vue component -->
+<!-- Directly used in the Vue HTML -->
+<p>{{ $t("insert_variable_name_here") }}</p>
+
+<!-- Dynamically loaded via js -->
+<v-btn v-for="(link, title) in links" :key="title":href="link">
+    {{ text_title(title) }}
+</v-btn>
+
+```
+```js
+// Script section of the above Vue component
+<script>
+  import i18n from "@/plugins/i18n";
+...
+    data: function () {
+      return {
+        links: { 0: link1.com, 1: link2.com, 2: link3.com },
+      };
+    },
+    methods: {
+      text_title(id) {
+        if (id == 0) return i18n.t("link1_text");
+        else if (id == 1) return i18n.t("link2_text");
+        else if (id == 2) return i18n.t("link3_text");
+        return i18n.t("translate_error_text");
+      },
+    },
+...
+</script>
+```
+
+## Adding a new form
+The files directly related to a form are stored in the `src/components/Forms` directory, but there are some other files which must be edited to include the form throughout the PWA. _NB: This assumes that the Appserver is already configured to parse the new form._
+
+1) In the `src/components/Forms` director, create a new directory to contain the files of the new form. Place the component's .vue file in this directory, as well as a .json file specifying for each of the form's fields: hints, labels, validation rules, maximum char counter, and other props for the `FormField` component.
+
+2) In the `src/components/Utility/Enums.js` file, append the new form's name to the `FORM` and `FORM_TYPE` enums.
+
+3) In the `src/views/Timesheet.vue` file, near the botton of the HTML section, add a new `<v-col v-else-if=""> <NewFormHere /> </v-col>` to dynamically render the new form, depending on the user's form selection.
+
+4) In the `src/components/Forms/ConfirmSubmission.vue` file, in the computed section, add the Appserver submission url to the `url` variable. If there is a table component in the form, update the `sheetType` variable in the `formatData` method to include the sheet name specified in the .json file from step 1.
+
+5) In the `src/store/modules/Forms/` directory, create a .js file to specify the vuex store for the new form component.
+
+6) In the `src/store/index.js` file, import the file created from the previous step, and append it to the 'modules' of the vuex store.
+
+7) In the following files, update 'mapMutations', 'mapFields', and reset function to include the new form where necessary:
+- `src/components/Forms/ConfirmSubmission.vue`
+- `src/views/Timesheet.vue`
+
+## Push Deployment onto Azure (not recommended)
 - Build the project via `npm run build`.
 - Ensure that the web.manifest file from the `public/`  directory was copied into the generated `dist/` folder, as this is where the website will be served.
 - In VS Code, download the Azure extension.
