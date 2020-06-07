@@ -199,8 +199,13 @@ namespace Appserver.Controllers
             MileageForm mf = dbutil.PopulateMileage(submittedform);
 
             var submission = _subcontext;
-            submission.Add(mf);
-            submission.SaveChanges();
+            using (var transaction = submission.Database.BeginTransaction())
+            {
+                submission.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Submissions ON");
+                submission.Add(mf);
+                submission.SaveChanges();
+                transaction.Commit();
+            }
 
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
