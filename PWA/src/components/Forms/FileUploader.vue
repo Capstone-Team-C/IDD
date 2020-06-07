@@ -7,15 +7,17 @@
             <v-col class="text-center pa-0 ma-0">
               <v-alert
                 class="text-center title px-3 py-5 ma-0"
-                width=80vw
+                width="80vw"
                 color="info"
                 outlined
                 dense
                 text
               >
-                <div v-html="$t('components_Forms_FileUploader_dropfiles')"></div>
+                <div
+                  v-html="$t('components_Forms_FileUploader_dropfiles')"
+                ></div>
                 <label for="file" class="btn btn-primary">
-                  {{ $t('components_Forms_FileUploader_selectfiles') }}
+                  {{ $t("components_Forms_FileUploader_selectfiles") }}
                 </label>
               </v-alert>
             </v-col>
@@ -26,7 +28,7 @@
               class="drop-active"
             >
               <h3>
-                {{ $t('components_Forms_FileUploader_drop') }}
+                {{ $t("components_Forms_FileUploader_drop") }}
               </h3>
             </v-col>
           </v-row>
@@ -51,7 +53,7 @@
                     ref="upload"
                   >
                     <i class="fa fa-plus"></i>
-                    {{ $t('components_Forms_FileUploader_select') }}
+                    {{ $t("components_Forms_FileUploader_select") }}
                   </file-upload>
 
                   <button
@@ -61,7 +63,7 @@
                     @click.prevent="$refs.upload.active = true"
                   >
                     <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                    {{ $t('components_Forms_FileUploader_startupload') }}
+                    {{ $t("components_Forms_FileUploader_startupload") }}
                   </button>
 
                   <button
@@ -71,14 +73,15 @@
                     @click.prevent="$refs.upload.active = false"
                   >
                     <i class="fa fa-stop" aria-hidden="true"></i>
-                    {{ $t('components_Forms_FileUploader_stopupload') }}
+                    {{ $t("components_Forms_FileUploader_stopupload") }}
                   </button>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     class="mx-5 btn btn-danger"
-                    ref="files" 
-                    @click="reset">
-                    {{ $t('components_Forms_FileUploader_resetfiles') }}
+                    ref="files"
+                    @click="reset"
+                  >
+                    {{ $t("components_Forms_FileUploader_resetfiles") }}
                   </button>
                 </div>
               </div>
@@ -89,7 +92,9 @@
                     <span data-testid="name">{{ file.name }}</span> -
                     <!--span>{{ file.size | formatSize }}</span-->
                     <span v-if="file.error">{{ file.error }}</span>
-                    <span v-else-if="file.success">{{ $t('components_Forms_FileUploader_success') }}</span>
+                    <span v-else-if="file.success">{{
+                      $t("components_Forms_FileUploader_success")
+                    }}</span>
                     <span v-else-if="file.active">
                       <v-dialog
                         value="true"
@@ -97,12 +102,9 @@
                         persistent
                         width="300"
                       >
-                        <v-card
-                          color="primary"
-                          dark
-                        >
+                        <v-card color="primary" dark>
                           <v-card-text>
-                            {{ $t('components_Forms_FileUploader_processing') }}
+                            {{ $t("components_Forms_FileUploader_processing") }}
                             <v-progress-linear
                               indeterminate
                               color="white"
@@ -121,14 +123,15 @@
             <div class="continue" v-if="check()">
               <v-col>
                 <div class="text-right">
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     class="mx-5 btn btn-danger"
-                    ref="files" 
-                    @click="reset">
-                    {{ $t('components_Forms_FileUploader_resetfiles') }}
+                    ref="files"
+                    @click="reset"
+                  >
+                    {{ $t("components_Forms_FileUploader_resetfiles") }}
                   </button>
- 
+
                   <v-btn
                     :loading="loading"
                     :disabled="loading"
@@ -136,7 +139,7 @@
                     class="ma-2 white--text"
                     @click="completeForm()"
                   >
-                    {{ $t('components_Forms_FileUploader_continue') }}
+                    {{ $t("components_Forms_FileUploader_continue") }}
                     <v-icon right dark>mdi-cloud-upload</v-icon>
                   </v-btn>
                 </div>
@@ -147,12 +150,12 @@
       </div>
     </template>
     <template v-else>
-      {{ $t('components_Forms_FileUploader_offline') }}
+      {{ $t("components_Forms_FileUploader_offline") }}
     </template>
   </div>
 </template>
 
-<style lang="scss"  scoped>
+<style lang="scss" scoped>
   .example-drag.drop-space {
     padding-inline-start: 0;
     background: #000;
@@ -248,7 +251,7 @@
   import FileUpload from "vue-upload-component";
   import axios from "axios";
   import { FORM } from "@/components/Utility/Enums.js";
-  
+
   export default {
     name: "file_uploader",
     components: {
@@ -271,7 +274,10 @@
         let self = this;
         //Retrieves json response from timesheet.
         if (!this.getUpdated) {
-          this.urlGet = this.urlGet.concat(this.formId).concat("&guid=").concat(this.guid);
+          this.urlGet = this.urlGet
+            .concat(this.formId)
+            .concat("&guid=")
+            .concat(this.guid);
           this.getUpdated = true;
           axios
             .get(this.urlGet)
@@ -280,10 +286,10 @@
             })
             .catch(function (error) {
               console.log("FileUploader", error);
-              for(let i = 0; i < self.files.length; i++){
-                self.files[i].active = false
-                self.files[i].success = false
-                self.files[i].error = true
+              for (let i = 0; i < self.files.length; i++) {
+                self.files[i].active = false;
+                self.files[i].success = false;
+                self.files[i].error = true;
               }
               self.$emit("error", error);
             });
@@ -329,33 +335,31 @@
           })
           .then(function (response) {
             console.log("Response from Appserver, FileUploader", response);
-            if (response["data"]["response"] == "too blurry"){
-              for(let i = 0; i < self.files.length; i++){
-                self.files[i].active = false
-                self.files[i].success = false
-                self.files[i].error = true
+            if (response["data"]["response"] == "too blurry") {
+              for (let i = 0; i < self.files.length; i++) {
+                self.files[i].active = false;
+                self.files[i].success = false;
+                self.files[i].error = true;
               }
               self.$emit("success", response["data"]);
-            }
-            else {
-            
-            for (let i = 0; i < self.files.length; i++) {
-              self.files[i].active = false;
-              self.files[i].success = true;
-            }
-            self.files.active = false;
-            self.files.success = true;
-            self.formId = response["data"]["id"];
-            self.guid = response["data"]["guid"];
-            self.submitted = true;
+            } else {
+              for (let i = 0; i < self.files.length; i++) {
+                self.files[i].active = false;
+                self.files[i].success = true;
+              }
+              self.files.active = false;
+              self.files.success = true;
+              self.formId = response["data"]["id"];
+              self.guid = response["data"]["guid"];
+              self.submitted = true;
             }
           })
           .catch(function (error) {
             console.log("FileUploader", error);
-            for(let i = 0; i < self.files.length; i++){
-             self.files[i].active = false
-             self.files[i].success = false
-             self.files[i].error = true
+            for (let i = 0; i < self.files.length; i++) {
+              self.files[i].active = false;
+              self.files[i].success = false;
+              self.files[i].error = true;
             }
             self.$emit("error", error);
           });
@@ -387,9 +391,7 @@
         loading: false, //Is form retrieval loading
         submitted: false,
         getUpdated: false,
-        urlGet: process.env.VUE_APP_SERVER_URL.concat(
-          "Timesheet/Ready?id="
-        ), //Retrieve timesheet
+        urlGet: process.env.VUE_APP_SERVER_URL.concat("Timesheet/Ready?id="), //Retrieve timesheet
         urlPost: process.env.VUE_APP_SERVER_URL.concat("ImageUpload/DocAsForm"), //Post AppServer
       };
     },
