@@ -105,6 +105,10 @@ namespace AdminUI
                 {
                     context.Database.Migrate();
                 }
+                using (var context = serviceScope.ServiceProvider.GetService<AdminUIUserContext>())
+                {
+                    context.Database.Migrate();
+                }
             }
         }
     }
