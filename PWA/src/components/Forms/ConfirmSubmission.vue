@@ -122,16 +122,16 @@
                           )
                         }}
                       </v-card-text>
-                    <v-card-text class="text-center">
-                      <v-btn
-                        class="mt-3 center"
-                        color="indigo"
-                        @click="resetForm()"
-                        dark
+                      <v-card-text class="text-center">
+                        <v-btn
+                          class="mt-3 center"
+                          color="indigo"
+                          @click="resetForm()"
+                          dark
                         >
-                        {{ $t("components_Forms_ConfirmSubmission_home") }}
-                      </v-btn>
-                    </v-card-text>
+                          {{ $t("components_Forms_ConfirmSubmission_home") }}
+                        </v-btn>
+                      </v-card-text>
                     </v-card-text>
                   </v-card>
                 </v-dialog>
@@ -178,7 +178,6 @@
 <style>
   .v-card__text {
     word-break: normal; /* maybe !important  */
-
   }
   .v-card__title {
     word-break: normal; /* maybe !important  */

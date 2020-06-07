@@ -42,8 +42,7 @@ const messages = {
     views_About_contributors_position2: "Provider UI",
     views_About_contributors_position3: "Backend",
     views_Timesheet_continue: "Continue existing form?",
-    views_Timesheet_continue_desc0:
-      "It looks like you already started a",
+    views_Timesheet_continue_desc0: "It looks like you already started a",
     views_Timesheet_continue_desc1:
       "form! Do you want to continue or start a new form?",
     views_Timesheet_continue_btn0: "New form",
