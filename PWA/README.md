@@ -80,29 +80,35 @@ This app makes use of [Vue environment variables](https://cli.vuejs.org/guide/mo
 
 
 
-Please note that all env variables in this Vue app should start with `VUE_APP`, a requirement when running `vue-cli-service`.
+Please note that all env variables in this Vue app must start with `VUE_APP`, a requirement when running `vue-cli-service`.
 
-You can access env variables in your application code:
+You can access env variables in the application code:
 
 ```js
 console.log(process.env.VUE_APP_NOT_SECRET_CODE)
 ```
 
-We have included an `.env.example` file that example env variables used in the code.  For local development, we recommend creating a `.env` file that includes at least the same variables in the `.env.example` file. You will need to specify these env variables before building the app.
+We have included an `.env.example` file with env variables used in the code.  For local development, we recommend creating a `.env` file that includes at least the same variables in the `.env.example` file. You will need to specify these env variables before building the app.
 
-When deploying the app for production, we recommend specifying these env variables in the app settings of the cloud service that hosts the app.
-
-See [Configuration Reference](https://cli.vuejs.org/config/) for more information.
-
-### Running our Vue.js project locally
-1) From the project directory, navigate to the PWA root directory.
+When deploying the app for production, we recommend specifying these env variables in the app settings of the service you are hosting the app on.
+***
+## Running our Vue.js project locally
+1) Move to the PWA root directory in the project directory.
 2) Install necessary packages with npm:
-
-```
+```sh
 npm install
 ```
 3) Create an `.env` file with at least the same variables in the `.env.example` file and configure the variables to your needs.
-
+```sh
+cp .env.example .env
+```
+```
+VUE_APP_SERVER_URL=https://your.website.net/
+VUE_APP_BUG_REPORT=https://github.com/your_team/your_repo/issues
+VUE_APP_ABOUT_US=https://you_organization.us/about-us
+VUE_APP_OPPORTUNITIES=https://your_organization.us/jobs
+VUE_APP_ACCESS=https://your_organization.us/access
+```
 4) Build the Vue project (_only if running the production server_):
 ```
 npm run build
