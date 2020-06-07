@@ -238,7 +238,7 @@
       // Successfully received parsed .json from the backend
       fillForm(response) {
         this.blurryForm = false;
-        if (response.data.response === "too blurry") {
+        if (response.response === "too blurry") {
           this.resetForm();
           this.blurryForm = true;
         } else {
