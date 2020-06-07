@@ -139,7 +139,7 @@ NPM scripts specified in the `package.json` file are basically macros, which may
 	- Runs the unit tests in the `__tests__/` directory
 - `npm list`
 	- View the node modules and dependencies
-- `prettify path/to/directory/to/prettify --write`
+- `prettier path/to/directory/to/format --write`
 	- Format the files in the specified directory
 - `npm run lint`
 	- Fixes the formatting of files
