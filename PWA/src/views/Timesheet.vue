@@ -4,6 +4,7 @@
     :class="continueColor"
     fluid 
   >
+    <!-- Prompt Upon Detecting Form Draft -->
     <!-- If there is already parsed form data, ask if the user wants to continue -->
     <template v-if="askContinue" >
       <v-row align="center" justify="center">
@@ -22,7 +23,9 @@
                 <strong> #{{ formId }}</strong><br />
                 {{ $t('views_Timesheet_continue_desc1') }}
               </v-card-text>
+
               <v-divider></v-divider>
+
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn class="white--text" color="red" @click="resetForm()">
@@ -41,8 +44,10 @@
         </v-col>
       </v-row>
     </template>
+    <!-- END Prompt Upon Detecting Form Draft -->
+    
     <template v-else>
-      <!-- Have the user choose which form they want to upload -->
+      <!-- Form Type Selector -->
       <v-row class="mt-9 mx-9">
         <v-col align="center">
           <p class="title">
@@ -76,8 +81,9 @@
           </v-select>
         </v-col>
       </v-row>
+      <!-- END Form Type Selector -->
       
-      <!-- Display warning at top if textract can't parse the uploaded imae -->
+      <!-- Invalid Form Uploaded Notification -->
       <v-row v-if="invalidForm === true" align="center">
         <v-col align="center">
           <v-alert 
@@ -90,10 +96,11 @@
           </v-alert>
         </v-col>
       </v-row>
+      <!-- END Invalid Form Uploaded Notification -->
       
+      <v-divider />
 
       <!-- Page Title -->
-      <v-divider />
       <v-row class="mt-9">
         <v-col align="center">
           <v-alert 
@@ -116,16 +123,19 @@
           </v-alert>
         </v-col>
       </v-row> 
+      <!-- END Page Title -->
 
-      <!-- Render either file upload or form -->
+      <!-- Render either file upload section or form section -->
       <v-row v-if="formChoice !== null">
+        <!-- Upload New Form Section -->
         <v-col v-if="fileStatus === FILE.INIT || fileStatus === FILE.FAILURE">
           <FileUploader
             @error="handleError($event)"
             @success="fillForm($event)"
             @reset="fileStatus = FILE.INIT"
           />
-
+          
+          <!-- File Upload Error Section -->
           <v-card v-if="fileStatus === FILE.FAILURE" class="ma-5">
             <v-card-title class="error white--text">
               {{ $t('views_Timesheet_upload_error') }}
@@ -134,8 +144,12 @@
               {{ errors }}
             </v-card-text>
           </v-card>
-        </v-col>
+          <!-- END File Upload Error Section -->
 
+        </v-col>
+        <!-- END Upload New Form Section -->
+        
+        <!-- Form Section -->
         <v-col
           v-else-if="
             fileStatus === FILE.SUCCESS &&
@@ -160,27 +174,29 @@
             :formChoice="FORM[formChoice]"
           />
         </v-col>
+        <!-- END Form Section -->
+
       </v-row>
     </template>
   </v-container>
 </template>
 
 <script>
+  import FileUploader from "@/components/Forms/FileUploader";
+  import Mileage from "@/components/Forms/Mileage/Mileage";
+  import ServicesDelivered from "@/components/Forms/ServicesDelivered/ServicesDelivered";
   import { mapFields } from "vuex-map-fields";
   import { mapMutations } from "vuex";
-
-  import FileUploader from "@/components/Forms/FileUploader";
-  import ServicesDelivered from "@/components/Forms/ServicesDelivered/ServicesDelivered";
-  import Mileage from "@/components/Forms/Mileage/Mileage";
-  import { FORM, FILE } from "@/components/Utility/Enums.js";
+  
   import mockServiceDelivered from "@/components/Utility/happy_path_mileage.json";
+  import { FORM, FILE } from "@/components/Utility/Enums.js";
   
   export default {
     name: "Timesheet",
     components: {
       FileUploader,
-      ServicesDelivered,
       Mileage,
+      ServicesDelivered,
     },
     data: function () {
       return {
@@ -206,15 +222,22 @@
       };
     },
     computed: {
+      // Import relevant fields in the vuex store
       ...mapFields(["formId", "formChoice", "newForm", "invalidForm"]),
+      
+      // Check if there is already a parsed form in the cache
       askContinue() {
         return this.newForm === false && this.willContinue === false;
       },
+      
+      // Darken background when asking user if they will continue editing 
+      // a form draft
       continueColor() {
         return this.askContinue ? "grey darken-1" : "";
       }
     },
     methods: {
+      // Import the functions for manipulating the vuex store
       ...mapMutations({
         resetState: "resetState",
         resetServiceDelivered: "ServiceDelivered/resetState",
@@ -234,12 +257,15 @@
         // Hide the image upload and display the pre-populated IDD form
         this.setWillContinue();
       },
+      
+      // Display the error prompt
       handleError(error) {
         this.errors = error;
         this.fileStatus = FILE.FAILURE;
       },
+
+      // Reset the vuex store
       resetForm() {
-        // Reset the vuex store
         this.resetState();
         this.resetServiceDelivered();
         this.resetMileage();
@@ -249,6 +275,9 @@
         this.willContinue = false;
         this.invalidForm = false;
       },
+      
+      // There is a form draft, or the Appserver returned with the parsed form text
+      // Go to the timesheet/mileagesheet page
       setWillContinue() {
         this.willContinue = true;
         this.fileStatus = FILE.SUCCESS;

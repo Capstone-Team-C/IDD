@@ -3,6 +3,9 @@ import VueI18n from 'vue-i18n';
 
 Vue.use(VueI18n);
 
+// Current languages: en, rus, es, zh-tw
+// For the most part, the name of each variable corresponds to the path
+// in which the variable is used. (not true for some re-used translations)
 const messages = { 
   'en': {
     translate_error: 'Translation error',

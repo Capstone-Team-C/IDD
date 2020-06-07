@@ -165,24 +165,23 @@
 </template>
 
 <script>
-  import i18n from '@/plugins/i18n';
-  import ServicesDeliveredTable from "@/components/Forms/ServicesDelivered/ServicesDeliveredTable";
-  import FormField from "@/components/Forms/FormField";
   import ConfirmSubmission from "@/components/Forms/ConfirmSubmission";
+  import FormField from "@/components/Forms/FormField";
   import fieldPropsFile from "@/components/Forms/ServicesDelivered/ServicesDeliveredFields.json";
+  import i18n from '@/plugins/i18n';
   import rules from "@/components/Utility/FormRules.js";
-  import { TIME } from "@/components/Utility/Enums.js";
-  import { subtractTime, isValid } from "@/components/Utility/TimeFunctions.js";
-
+  import ServicesDeliveredTable from "@/components/Forms/ServicesDelivered/ServicesDeliveredTable";
   import { mapFields } from "vuex-map-fields";
   import { mapMutations } from "vuex";
+  import { subtractTime, isValid } from "@/components/Utility/TimeFunctions.js";
+  import { TIME } from "@/components/Utility/Enums.js";
 
   export default {
     name: "ServicesDelivered",
     components: {
-      ServicesDeliveredTable,
-      FormField,
       ConfirmSubmission,
+      FormField,
+      ServicesDeliveredTable,
     },
 
     props: {
@@ -256,6 +255,7 @@
         "totalEdited",
       ]),
     },
+
     methods: {
       // Expose and rename the mutations for changing vuex state
       ...mapMutations({
@@ -264,6 +264,7 @@
         setTimesheet: "ServiceDelivered/updateTimesheet",
         set: "updateField",
       }),
+
       bindData() {
         // Bind data from a .json IDD timesheet to forFields in the vuex store
         if (this.parsedFileData !== null) {
@@ -286,9 +287,11 @@
           });
         }
       },
+
       combineProps(props) {
         return Object.assign(...props);
       },
+
       initialize() {
         // Initialize some fields
         this.set(this.wrapSet("willResign", false));
@@ -473,7 +476,9 @@
         }
         this.incrementEdited(amtEdited);
       },
-
+      
+      // Aux. function for updating vuex variables without breaking reactivity
+      // Wraps the variable path & update value to a vuex format
       wrapSet(path, value) {
         return { path: path, value: value };
       },

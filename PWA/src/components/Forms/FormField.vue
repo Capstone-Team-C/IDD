@@ -148,6 +148,7 @@
         type: [String, Boolean, Number],
         Default: null
       },
+      // can we skip the 'edit field warning' prompt
       willResign: {
         type: Boolean,
         Default: false
@@ -157,17 +158,10 @@
         Default: false
       }
     },
-
-    // Manage fields that change on this page
-    data: function() {
-      return {
-        isDisabled: this.disabled,
-        editDialog: false,
-        focusedElement: null
-      };
-    },
-
+    
     watch: {
+      // If the parent component was reset, reset this field to either the
+      // parsed value, or clear it out
       reset() {
         if (this.parsed_value !== null) {
           this.isDisabled = true;
@@ -178,6 +172,15 @@
       disabled(val) {
         this.isDisabled = val;
       }
+    },
+
+    // Manage fields that change on this page
+    data: function() {
+      return {
+        isDisabled: this.disabled,
+        editDialog: false,
+        focusedElement: null
+      };
     },
 
     // Do an action or communicate info to parent component upon a certain
