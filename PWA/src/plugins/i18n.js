@@ -43,9 +43,9 @@ const messages = {
     views_About_contributors_position3: "Backend",
     views_Timesheet_continue: "Continue existing form?",
     views_Timesheet_continue_desc0:
-      "Form already exists! You are working on form ",
+      "It looks like you already started a",
     views_Timesheet_continue_desc1:
-      "Do you want to continue or start a new form?",
+      "form! Do you want to continue or start a new form?",
     views_Timesheet_continue_btn0: "New form",
     views_Timesheet_continue_btn1: "Continue",
     views_Timesheet_select:
@@ -75,7 +75,7 @@ const messages = {
     components_Forms_ConfirmSubmission_submit: "Submit",
     components_Forms_ConfirmSubmission_cancel: "Cancel",
     components_Forms_ConfirmSubmission_confirm:
-      "Are you sure want to submit the form?",
+      "Are you ready to submit the form?",
     components_Forms_ConfirmSubmission_edited:
       "There are edited fields. Please confirm these edits.",
     components_Forms_ConfirmSubmission_confirm_desc:

@@ -11,6 +11,7 @@
               </v-card-title>
               <v-card-text class="text-center subtitle-1 mt-3">
                 {{ $t("views_Timesheet_continue_desc0") }}
+                <strong>{{ formChoice }}</strong>
                 <br />
                 {{ $t("views_Timesheet_continue_desc1") }}
               </v-card-text>

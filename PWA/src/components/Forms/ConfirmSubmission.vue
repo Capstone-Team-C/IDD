@@ -4,7 +4,7 @@
       {{ $t("components_Forms_ConfirmSubmission_submit") }}
     </v-btn>
 
-    <v-dialog v-model="displaySubmit" max-width="75%">
+    <v-dialog v-model="displaySubmit" max-width="50%">
       <template v-if="isValid">
         <v-card>
           <div v-if="!loading">
@@ -122,17 +122,16 @@
                           )
                         }}
                       </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                          class="mt-3 center"
-                          color="indigo"
-                          @click="resetForm()"
-                          dark
+                    <v-card-text class="text-center">
+                      <v-btn
+                        class="mt-3 center"
+                        color="indigo"
+                        @click="resetForm()"
+                        dark
                         >
-                          {{ $t("components_Forms_ConfirmSubmission_home") }}
-                        </v-btn>
-                      </v-card-actions>
+                        {{ $t("components_Forms_ConfirmSubmission_home") }}
+                      </v-btn>
+                    </v-card-text>
                     </v-card-text>
                   </v-card>
                 </v-dialog>
@@ -177,9 +176,13 @@
 </template>
 
 <style>
-  .v-card__text,
+  .v-card__text {
+    word-break: normal; /* maybe !important  */
+
+  }
   .v-card__title {
     word-break: normal; /* maybe !important  */
+    justify-content: center;
   }
   .v-progress-circular {
     margin: 1rem;
