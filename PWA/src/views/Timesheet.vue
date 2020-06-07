@@ -185,7 +185,6 @@
   import ServicesDelivered from "@/components/Forms/ServicesDelivered/ServicesDelivered";
   import Mileage from "@/components/Forms/Mileage/Mileage";
   import { FORM, FILE } from "@/components/Utility/Enums.js";
-  import mockServiceDelivered from "@/components/Utility/happy_path.json";
   
   export default {
     name: "Timesheet",
@@ -201,14 +200,10 @@
         FORM: FORM,
 
         // The uploaded timesheet, as a .json of parsed values from the backend
-        parsedFileData: process.env.NODE_ENV === 'development'
-                        ? mockServiceDelivered
-                        : null,
+        parsedFileData: null,
 
         // Possible statuses of the uploading the form
-        fileStatus: process.env.NODE_ENV === 'development'
-                    ? FILE.SUCCESS 
-                    : FILE.INIT,
+        fileStatus: FILE.INIT,
 
         // Upload errors
         errors: [],
@@ -238,7 +233,7 @@
       // Successfully received parsed .json from the backend
       fillForm(response) {
         this.blurryForm = false;
-        if (response.data.response === "too blurry") {
+        if (response.response === "too blurry") {
           this.resetForm();
           this.blurryForm = true;
         } else {
@@ -273,7 +268,7 @@
       setWillContinue() {
         this.willContinue = true;
         this.fileStatus = FILE.SUCCESS;
-        console.log("parsedFileData from Timesheet:236", this.parsedFileData);
+        console.log("parsedFileData from Timesheet", this.parsedFileData);
       },
     },
   };

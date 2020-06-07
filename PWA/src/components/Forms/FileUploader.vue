@@ -328,14 +328,14 @@
             },
           })
           .then(function (response) {
-            console.log("Response from Appserver, FileUploader:293", response);
+            console.log("Response from Appserver, FileUploader", response);
             if (response["data"]["response"] == "too blurry"){
               for(let i = 0; i < self.files.length; i++){
                 self.files[i].active = false
                 self.files[i].success = false
                 self.files[i].error = true
               }
-              self.$emit('success', response);
+              self.$emit("success", response["data"]);
             }
             else {
             
@@ -351,7 +351,7 @@
             }
           })
           .catch(function (error) {
-            console.log("FileUploader:331", error);
+            console.log("FileUploader", error);
             for(let i = 0; i < self.files.length; i++){
              self.files[i].active = false
              self.files[i].success = false
