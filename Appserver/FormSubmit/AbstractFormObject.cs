@@ -58,6 +58,13 @@ public abstract class AbstractFormObject{
     /// Static Methods
     *******************************************************************************/
 
+    /// <summary>
+    /// TextractDocuments do not know the context of their data. This function will take a textract document
+    /// and return it as the derived type based on the FormType parameter.
+    /// </summary>
+    /// <param name="doc">A Textract Document of the correct form</param>
+    /// <param name="formType">The type of form that the TextractDocument represents.</param>
+    /// <returns>A derived form.</returns>
     public static AbstractFormObject FromTextract(TextractDocument doc, FormType formType)
     {
         // Here we'll Determine the type of object (timesheet or mileage form) and then
@@ -168,12 +175,23 @@ public abstract class AbstractFormObject{
 
         return form;
     }
-    public static string FixHours( string s )
+    
+
+    protected string FixHours( string s )
     {
         return s.Replace(".", ":");
     }
+    
+    /*******************************************************************************
+    /// Methods
+    *******************************************************************************/
 
-    public static int ConvertInt( string s)
+    /// <summary>
+    /// Takes a string from Textract and determines if the answer is a group or not.
+    /// </summary>
+    /// <param name="s">A string to check</param>
+    /// <returns></returns>
+    protected int IsGroup( string s)
     {
         s = s.ToLower();
         if (s == "y" || s == "yes" )
@@ -182,7 +200,7 @@ public abstract class AbstractFormObject{
     }
 
     // Converts a date if possible, or returns the string for user to edit
-    public static string ConvertDate(string s)
+    protected static string ConvertDate(string s)
     {
         try
         {
@@ -196,7 +214,7 @@ public abstract class AbstractFormObject{
 
     // Returns true if the timesheet row is likely to be empty.
     // Not concerned with Group value.
-    public static bool isEmptyTimesheetRow(List<Cell> row)
+    protected bool isEmptyTimesheetRow(List<Cell> row)
     {
         var subdate = ConvertDate(row[0].ToString().Trim());
         var starttime = FixHours(row[1].ToString()).ToString().Trim();
@@ -227,7 +245,7 @@ public abstract class AbstractFormObject{
 
     // Returns true if the mileage form row is likely to be empty.
     // Not concerned with the Group value.
-    public static bool isEmptyMileageRow(List<Cell> row)
+    protected bool isEmptyMileageRow(List<Cell> row)
     {
         var subdate = ConvertDate(row[0].ToString().Trim());
         var miles = row[1].ToString().Trim();
@@ -250,7 +268,7 @@ public abstract class AbstractFormObject{
         return false;
     }
 
-    public static int minimum(params int[] rest)
+    protected int minimum(params int[] rest)
     {
         int min = int.MaxValue;
         foreach( var y in rest)
@@ -263,7 +281,7 @@ public abstract class AbstractFormObject{
     // This takes two strings and returns the generalized levenshtein distance which is
     // the number of edits (inserts, deletions, and substitutions) required to convert 
     // one string to the other.
-    public static int LevenshteinDistance(string s, string t)
+    protected int LevenshteinDistance(string s, string t)
     {
         // Initialize rows
         List<int> v0 = new List<int>(Enumerable.Range(0, t.Length+1).ToList<int>());
@@ -290,8 +308,15 @@ public abstract class AbstractFormObject{
         return v0[t.Length];
     }
 
-    // Takes two strings and returns the Normalized General Levenshtein Distance
-    public static double NGLD(string s, string t)
+    /// <summary>
+    /// Takes two strings and finds their Normalized General Levenshtein Distance. This distance has the property
+    /// that the distance from S to T is the same as the distance from T to S, and under the condition that the
+    /// weights of the edits are equal that the triangle inequality holds. The value returned is between 0 and 1.
+    /// </summary>
+    /// <param name="s">First string to compare</param>
+    /// <param name="t">Second string to compare</param>
+    /// <returns>The normalized general levenshtein distance.</returns>
+    protected double NGLD(string s, string t)
     {
         double gld = LevenshteinDistance(s, t);
         return (2.0 * gld/((double)(s.Length + t.Length + gld)));
@@ -300,7 +325,7 @@ public abstract class AbstractFormObject{
     // This takes two lists of strings and creates a mapping between keys and values.
     // If the set of values is less than the set of keys then it removes duplicates
     // and replaces them with an empty string.
-    public static List<KeyValuePair<string,string>> MatchKeyValuePairs(List<string> keys, List<string> values)
+    protected List<KeyValuePair<string,string>> MatchKeyValuePairs(List<string> keys, List<string> values)
     {
         var matches = new List<KeyValuePair<string, string>>(keys.Count);
 
@@ -364,8 +389,6 @@ public abstract class AbstractFormObject{
         return matches;
     }
 
-
-    protected abstract void AddTables(List<Table> tables);
     protected void AddBackForm(Page page)
     {
         var keys = new List<string>()
@@ -411,7 +434,7 @@ public abstract class AbstractFormObject{
 
     // This returns a substring starting at start and ending at either end
     // or Count.
-    public static string Substring(string s, int start, int end)
+    protected string Substring(string s, int start, int end)
     {
         if( start < 0 || end < 0)
         {
@@ -434,4 +457,10 @@ public abstract class AbstractFormObject{
 
         // Calculate end
     }
+
+
+    /*******************************************************************************
+    /// Virtual Methods
+    *******************************************************************************/
+    protected abstract void AddTables(List<Table> tables);
 }

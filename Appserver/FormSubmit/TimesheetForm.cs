@@ -66,7 +66,7 @@ public class TimesheetForm: AbstractFormObject
                   FixHours(row[1].ToString()).ToString().Trim(),
                   FixHours(row[2].ToString()).ToString().Trim(),
                   FixHours(row[3].ToString()).ToString().Trim(),
-                  ConvertInt(row[4].ToString()).ToString().Trim());
+                  IsGroup(row[4].ToString()).ToString().Trim());
             }
         }
 
