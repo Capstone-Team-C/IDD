@@ -31,9 +31,8 @@ namespace Appserver.Controllers
 
 
         /*******************************************************************************
-        /// Methods
+        /// Actions
         *******************************************************************************/
-
 
         // A previous upload is considered ready when the response from textract has
         // been received. When ready, a json repersentation of the appropriate form is returned.
