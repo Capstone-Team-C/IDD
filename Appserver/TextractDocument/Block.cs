@@ -17,7 +17,7 @@ namespace Appserver.TextractDocument
         /// <summary>
         /// Used in creation to create the structure of the document.
         /// </summary>
-        protected abstract void CreateStructure();
+        public abstract void CreateStructure();
         public abstract void PrintSummary();
         public abstract float GetConfidence();
     }

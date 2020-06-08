@@ -177,7 +177,7 @@ public abstract class AbstractFormObject{
     }
     
 
-    protected string FixHours( string s )
+    protected static string FixHours( string s )
     {
         return s.Replace(".", ":");
     }
@@ -268,7 +268,7 @@ public abstract class AbstractFormObject{
         return false;
     }
 
-    protected int minimum(params int[] rest)
+    protected static int minimum(params int[] rest)
     {
         int min = int.MaxValue;
         foreach( var y in rest)
@@ -281,7 +281,7 @@ public abstract class AbstractFormObject{
     // This takes two strings and returns the generalized levenshtein distance which is
     // the number of edits (inserts, deletions, and substitutions) required to convert 
     // one string to the other.
-    protected int LevenshteinDistance(string s, string t)
+    protected static int LevenshteinDistance(string s, string t)
     {
         // Initialize rows
         List<int> v0 = new List<int>(Enumerable.Range(0, t.Length+1).ToList<int>());
@@ -316,7 +316,7 @@ public abstract class AbstractFormObject{
     /// <param name="s">First string to compare</param>
     /// <param name="t">Second string to compare</param>
     /// <returns>The normalized general levenshtein distance.</returns>
-    protected double NGLD(string s, string t)
+    protected static double NGLD(string s, string t)
     {
         double gld = LevenshteinDistance(s, t);
         return (2.0 * gld/((double)(s.Length + t.Length + gld)));
@@ -325,7 +325,7 @@ public abstract class AbstractFormObject{
     // This takes two lists of strings and creates a mapping between keys and values.
     // If the set of values is less than the set of keys then it removes duplicates
     // and replaces them with an empty string.
-    protected List<KeyValuePair<string,string>> MatchKeyValuePairs(List<string> keys, List<string> values)
+    protected static List<KeyValuePair<string,string>> MatchKeyValuePairs(List<string> keys, List<string> values)
     {
         var matches = new List<KeyValuePair<string, string>>(keys.Count);
 
@@ -434,7 +434,7 @@ public abstract class AbstractFormObject{
 
     // This returns a substring starting at start and ending at either end
     // or Count.
-    protected string Substring(string s, int start, int end)
+    protected static string Substring(string s, int start, int end)
     {
         if( start < 0 || end < 0)
         {
