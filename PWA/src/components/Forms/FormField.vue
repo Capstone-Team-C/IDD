@@ -15,18 +15,18 @@
       <v-dialog v-model="editDialog" max-width="500px">
         <v-card>
           <v-card-title class="headline">
-            {{ $t('components_Forms_FormField_edit') }}
+            {{ $t("components_Forms_FormField_edit") }}
           </v-card-title>
 
           <v-card-text>
-            {{ $t('components_Forms_FormField_edit_desc') }}
+            {{ $t("components_Forms_FormField_edit_desc") }}
           </v-card-text>
 
           <v-card-actions>
             <v-spacer></v-spacer>
 
             <v-btn color="red white--text" @click="closeDialog()">
-              {{ $t('components_Forms_FormField_cancel') }}
+              {{ $t("components_Forms_FormField_cancel") }}
             </v-btn>
 
             <v-btn
@@ -36,7 +36,7 @@
                 closeDialog();
               "
             >
-              {{ $t('components_Forms_FormField_editbtn') }}
+              {{ $t("components_Forms_FormField_editbtn") }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -102,63 +102,72 @@
       // does the text field grow in size as more text is entered
       auto_grow: {
         type: Boolean,
-        Default: false
+        Default: false,
       },
       // max strlen for text field
       counter: {
-        default: 25
+        default: 25,
       },
       // 0 - text-field/textarea
       // 1 - checkbox
       field_type: {
         type: Number,
-        default: 0
+        default: 0,
       },
       // appears below text field
       hint: {
         type: String,
-        default: ""
+        default: "",
       },
       // appears above text field
       label: {
         type: String,
-        default: ""
+        default: "",
       },
       // value parsed from .json
       parsed_value: {
-        default: null
+        default: null,
       },
       // Reset to default props or no
       reset: {
         type: Boolean,
-        default: false
+        default: false,
       },
       // size of this text field
       rows: {
         type: Number,
-        Default: 1
+        Default: 1,
       },
       // validation rules for text field
       rules: {
         type: Array,
-        Default: null
+        Default: null,
       },
       // value entered in text field
       value: {
         type: [String, Boolean, Number],
-        Default: null
+        Default: null,
       },
       // can we skip the 'edit field warning' prompt
       willResign: {
         type: Boolean,
-        Default: false
+        Default: false,
       },
       disabled: {
         type: Boolean,
-        Default: false
-      }
+        Default: false,
+      },
     },
-    
+
+    // Manage fields that change on this page
+    data: function () {
+      return {
+        isDisabled: this.disabled,
+        editDialog: false,
+        focusedElement: null,
+      };
+    },
+
     watch: {
       // If the parent component was reset, reset this field to either the
       // parsed value, or clear it out
@@ -171,16 +180,7 @@
       },
       disabled(val) {
         this.isDisabled = val;
-      }
-    },
-
-    // Manage fields that change on this page
-    data: function() {
-      return {
-        isDisabled: this.disabled,
-        editDialog: false,
-        focusedElement: null
-      };
+      },
     },
 
     // Do an action or communicate info to parent component upon a certain
@@ -217,7 +217,7 @@
         } else {
           this.$emit("disable-change", 1);
         }
-      }
-    }
+      },
+    },
   };
 </script>

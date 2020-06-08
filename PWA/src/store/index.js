@@ -22,8 +22,8 @@ const initialState = () => ({
 
 // Setup for saving the cached vuex store to localStorage
 const vuexLocal = new VuexPersistence({
-  storage: window.localStorage
-})
+  storage: window.localStorage,
+});
 
 export default new Vuex.Store({
   modules: {
@@ -50,5 +50,5 @@ export default new Vuex.Store({
     },
   },
   strict: debug,
-  plugins: [vuexLocal.plugin]
+  plugins: [vuexLocal.plugin],
 });

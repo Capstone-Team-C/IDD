@@ -53,43 +53,50 @@
           </v-col>
         </v-row>
       </v-container>
-    <div class="text-center">
-      <v-bottom-sheet 
-        hide-overlay
-        :value="modalOpen" 
-      >
-        <v-alert
-          color="light-green darken-3"
-          class="py-3 my-0 pr-6" 
-          border="top"
-          tile
-          dismissible
-          v-model="modalOpen"
-        >
-          <template v-slot:prepend>
-            <div
-              class="pa-1 mr-6"
-              style="border-radius:4px; background-color: rgba(255,255,255,.7);"
-            >
-            <v-img 
-              max-width="5vw"
-              max-height="5vw"
-              :src="pic_logo" 
-              contain
-            />
-            </div>
-          </template>
-          <v-row>
-            <v-col justify="center" class="py-0 my-0 white--text" >
-                This website looks better if you save it onto your device 
-                <v-btn @click.stop="promptInstall" class="grey darken-3 ml-5" small dark depressed rounded>
+      <div class="text-center">
+        <v-bottom-sheet hide-overlay :value="modalOpen">
+          <v-alert
+            color="light-green darken-3"
+            class="py-3 my-0 pr-6"
+            border="top"
+            tile
+            dismissible
+            v-model="modalOpen"
+          >
+            <template v-slot:prepend>
+              <div
+                class="pa-1 mr-6"
+                style="
+                  border-radius: 4px;
+                  background-color: rgba(255, 255, 255, 0.7);
+                "
+              >
+                <v-img
+                  max-width="5vw"
+                  max-height="5vw"
+                  :src="pic_logo"
+                  contain
+                />
+              </div>
+            </template>
+            <v-row>
+              <v-col justify="center" class="py-0 my-0 white--text">
+                This website looks better if you save it onto your device
+                <v-btn
+                  @click.stop="promptInstall"
+                  class="grey darken-3 ml-5"
+                  small
+                  dark
+                  depressed
+                  rounded
+                >
                   Save
                 </v-btn>
-            </v-col>
-          </v-row>
-        </v-alert>
-      </v-bottom-sheet>
-    </div>
+              </v-col>
+            </v-row>
+          </v-alert>
+        </v-bottom-sheet>
+      </div>
     </v-container>
   </v-img>
 </template>
@@ -117,7 +124,7 @@
 
   const pic_timesheet = require("@/assets/card_timesheet.jpg");
   const pic_burnside = require("@/assets/card_burnside.jpg");
-  const pic_logo = require('@/assets/icons/logo_short.svg');
+  const pic_logo = require("@/assets/icons/logo_short.svg");
 
   export default {
     name: "Home",
@@ -160,16 +167,16 @@
     },
     methods: {
       text_title(id) {
-        if (id === 0) return i18n.t('views_Home_upload');
-        else if (id === 1) return i18n.t('views_Home_about');
-        return i18n.t('translate_error');
+        if (id === 0) return i18n.t("views_Home_upload");
+        else if (id === 1) return i18n.t("views_Home_about");
+        return i18n.t("translate_error");
       },
       
       // If the client accepts to install the PWA via our custom prompt, show the browser's install prompt
       promptInstall() {
         // Show the prompt:
         this.deferredPrompt.prompt();
-   
+
         // Wait for the user to respond to the prompt:
         this.deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === "accepted") {
@@ -177,7 +184,7 @@
           } else {
             console.log("User dismissed the install prompt");
           }
-   
+
           this.deferredPrompt = null;
           this.modalOpen = false;
         });

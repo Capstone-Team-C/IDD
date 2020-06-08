@@ -3,24 +3,19 @@
     <template v-if="onlineStatus">
       <!-- Pop-up at the bottom of the page -->
       <v-snackbar
-        timeout=9000
         v-model="snackbar"
+        :timeout=9000
       >
         <a 
           class="white--text"
-          target="_blank" 
+          target="_blank"
           title="Link to How to Print/Download eXPRS Timesheet"
-          :href="xPRSLink" 
+          :href="xPRSLink"
         >
-          {{ $t('components_Forms_FileUploader_xPRS') }}
+          {{ $t("components_Forms_FileUploader_xPRS") }}
         </a>
-        <v-btn
-          color="red"
-          dark
-          text
-          @click="snackbar=false"
-        >
-          {{ $t('close') }}
+        <v-btn color="red" dark text @click="snackbar = false">
+          {{ $t("close") }}
         </v-btn>
       </v-snackbar>
       <!-- END Pop-up at the bottom of the page -->
@@ -33,15 +28,17 @@
             <v-col class="text-center pa-0 ma-0">
               <v-alert
                 class="text-center title px-3 py-5 ma-0"
-                width=80vw
+                width="80vw"
                 color="info"
                 outlined
                 dense
                 text
               >
-                <div v-html="$t('components_Forms_FileUploader_dropfiles')"></div>
+                <div
+                  v-html="$t('components_Forms_FileUploader_dropfiles')"
+                ></div>
                 <label for="file" class="btn btn-primary">
-                  {{ $t('components_Forms_FileUploader_selectfiles') }}
+                  {{ $t("components_Forms_FileUploader_selectfiles") }}
                 </label>
               </v-alert>
             </v-col>
@@ -52,7 +49,7 @@
               class="drop-active"
             >
               <h3>
-                {{ $t('components_Forms_FileUploader_drop') }}
+                {{ $t("components_Forms_FileUploader_drop") }}
               </h3>
             </v-col>
           </v-row>
@@ -79,7 +76,7 @@
                     ref="upload"
                   >
                     <i class="fa fa-plus"></i>
-                    {{ $t('components_Forms_FileUploader_select') }}
+                    {{ $t("components_Forms_FileUploader_select") }}
                   </file-upload>
 
                   <button
@@ -89,7 +86,7 @@
                     @click.prevent="$refs.upload.active = true"
                   >
                     <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                    {{ $t('components_Forms_FileUploader_startupload') }}
+                    {{ $t("components_Forms_FileUploader_startupload") }}
                   </button>
 
                   <button
@@ -99,7 +96,7 @@
                     @click.prevent="$refs.upload.active = false"
                   >
                     <i class="fa fa-stop" aria-hidden="true"></i>
-                    {{ $t('components_Forms_FileUploader_stopupload') }}
+                    {{ $t("components_Forms_FileUploader_stopupload") }}
                   </button>
                 </div>
                 <!-- END File Upload Buttons -->
@@ -107,9 +104,13 @@
               </div>
               <div v-else>
                 <div class="text-center">
-                  <v-btn class="white--text"
-                  color="red" ref="files" @click="reset">
-                    {{ $t('components_Forms_FileUploader_resetfiles') }}
+                  <v-btn
+                    class="white--text"
+                    color="red"
+                    ref="files"
+                    @click="reset"
+                  >
+                    {{ $t("components_Forms_FileUploader_resetfiles") }}
                   </v-btn>
                 </div>
               </div>
@@ -121,7 +122,9 @@
                     <span data-testid="name">{{ file.name }}</span> -
                     <!--span>{{ file.size | formatSize }}</span-->
                     <span v-if="file.error">{{ file.error }}</span>
-                    <span v-else-if="file.success">{{ $t('components_Forms_FileUploader_success') }}</span>
+                    <span v-else-if="file.success">{{
+                      $t("components_Forms_FileUploader_success")
+                    }}</span>
                     <span v-else-if="file.active">
 
                       <!-- Files Processing Dialog Box -->
@@ -131,12 +134,9 @@
                         persistent
                         width="300"
                       >
-                        <v-card
-                          color="primary"
-                          dark
-                        >
+                        <v-card color="primary" dark>
                           <v-card-text>
-                            {{ $t('components_Forms_FileUploader_processing') }}
+                            {{ $t("components_Forms_FileUploader_processing") }}
                             <v-progress-linear
                               indeterminate
                               color="white"
@@ -167,7 +167,7 @@
                     class="ma-0 white--text"
                     @click="completeForm()"
                   >
-                    {{ $t('components_Forms_FileUploader_continue') }}
+                    {{ $t("components_Forms_FileUploader_continue") }}
                     <v-icon right dark>mdi-cloud-upload</v-icon>
                   </v-btn>
               </v-col>
@@ -179,12 +179,12 @@
 
     </template>
     <template v-else>
-      {{ $t('components_Forms_FileUploader_offline') }}
+      {{ $t("components_Forms_FileUploader_offline") }}
     </template>
   </div>
 </template>
 
-<style lang="scss"  scoped>
+<style lang="scss" scoped>
   .example-drag.drop-space {
     padding-inline-start: 0;
     background: #000;
@@ -365,7 +365,10 @@
 
         // Retrieves a .json response from timesheet
         if (!this.getUpdated) {
-          this.urlGet = this.urlGet.concat(this.formId).concat("&guid=").concat(this.guid);
+          this.urlGet = this.urlGet
+            .concat(this.formId)
+            .concat("&guid=")
+            .concat(this.guid);
           this.getUpdated = true;
           axios
             .get(this.urlGet)
