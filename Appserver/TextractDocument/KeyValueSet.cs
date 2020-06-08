@@ -120,7 +120,7 @@ namespace Appserver.TextractDocument
         /*******************************************************************************
         /// Methods
         *******************************************************************************/
-        public override void CreateStructure()
+        protected override void CreateStructure()
         {
 
             if (_parent == null)

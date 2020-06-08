@@ -79,7 +79,7 @@ namespace Appserver.TextractDocument
             _childMap.Add(block.GetId(), block);
         }
 
-        public override void CreateStructure()
+        protected override void CreateStructure()
         {
             foreach(var child in _children)
             {

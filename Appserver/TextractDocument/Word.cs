@@ -55,7 +55,7 @@ namespace Appserver.TextractDocument
         /*******************************************************************************
         /// Methods
         *******************************************************************************/
-        public override void CreateStructure()
+        protected override void CreateStructure()
         {
         }
         public override void PrintSummary()

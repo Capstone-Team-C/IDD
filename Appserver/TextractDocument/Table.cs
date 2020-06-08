@@ -85,7 +85,7 @@ namespace Appserver.TextractDocument
         /// The structure in Textract is by row. We want to create the rows then stack them
         /// in a list.
         /// </summary>
-        public override void CreateStructure()
+        protected override void CreateStructure()
         {
 
             if (_parent == null)

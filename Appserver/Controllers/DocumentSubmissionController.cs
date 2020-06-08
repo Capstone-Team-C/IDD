@@ -111,8 +111,6 @@ namespace Appserver.Controllers
                 transaction.Commit();
             }
 
-            Response.Headers.Add("Access-Control-Allow-Origin", "*");
-            Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             return Json(new {response="ok"});
         }
 
@@ -137,8 +135,6 @@ namespace Appserver.Controllers
                 transaction.Commit();
             }
 
-            Response.Headers.Add("Access-Control-Allow-Origin", "*");
-            Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             return Json(new { response = "ok" });
         }
 

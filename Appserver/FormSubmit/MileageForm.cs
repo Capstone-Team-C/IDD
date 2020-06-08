@@ -86,8 +86,12 @@ namespace Appserver.FormSubmit
             }
         }
 
-
-        public static bool isTotalMilesRow(List<Cell> lastrow)
+        /// <summary>
+        /// Checks if the row is the total row or a normal row of the mileage sheet.
+        /// </summary>
+        /// <param name="lastrow">Takes a candidiate for the last row</param>
+        /// <returns>True if this is the total row.</returns>
+        private bool isTotalMilesRow(List<Cell> lastrow)
         {
             Regex rxNumberGroup = new Regex(@"([0-9])+");
             int confidence = 0;
