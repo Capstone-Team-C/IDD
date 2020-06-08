@@ -39,7 +39,7 @@ namespace Common.Models
 
 
         /*
-         *  Creates a PDF representation of the Timesheet
+         *  Creates a PDF representation of the Submission
          *  No Parameters
          *  Returns a PDF
          */
