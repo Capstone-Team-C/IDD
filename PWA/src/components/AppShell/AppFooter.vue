@@ -60,5 +60,6 @@ export default {
         return i18n.t("translate_error");
       },
     },
-  };
+  }
+}
 </script>
