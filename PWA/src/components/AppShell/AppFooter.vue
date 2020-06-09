@@ -39,7 +39,7 @@ export default {
         0: process.env.VUE_APP_ABOUT_US,
         1: process.env.VUE_APP_OPPORTUNITIES,
         2: process.env.VUE_APP_ACCESS,
-        4: "https://www.youtube.com/watch?v=krLqp89Sf5U"
+        3: "https://www.youtube.com/watch?v=krLqp89Sf5U"
       }
     };
   },
