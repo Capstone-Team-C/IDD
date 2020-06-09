@@ -53,6 +53,7 @@ module.exports = {
       ]
     },
     "manifestPath": "manifest.json",
+    workboxPluginMode: 'GenerateSW',
     workboxOptions: {
       navigateFallback: 'index.html'
     }
