@@ -54,6 +54,7 @@ const messages = {
     views_Timesheet_timesheet: "Timesheet",
     views_Timesheet_invalid:
       "Warning: We couldn’t read the text from the file you uploaded. You will have to manually enter all of the form fields.",
+    views_Timesheet_blurry: 'Warning: Your form was too blury to process. Please upload a new image.',
     views_Timesheet_select_form: "Please select a form type above.",
     views_Timesheet_upload_error: "FILE UPLOAD ERROR!",
     components_Forms_FileUploader_xPRS:
@@ -277,6 +278,7 @@ const messages = {
     views_Timesheet_timesheet: "Табель",
     views_Timesheet_invalid:
       "Осторожно: Мы не успели читать табель, который вы пришли нам. Вам приходится вручную выпольнить весь табель.",
+    views_Timesheet_blurry: 'Осторожно: Мы не успели читать ваш табель, сделайте новую фотографию, пожалуйста.',
     views_Timesheet_select_form: "Выбырайте тип табеля, пожалуйста.",
     views_Timesheet_upload_error: "ОШИБКА: МЫ НЕ МОГЛИ ПРИШЛИТЬ ФАЙЛЫ!",
     components_Forms_FileUploader_dropfiles: "Тащите файлы сюда<br/>или<br/>",
@@ -488,6 +490,7 @@ const messages = {
     views_Timesheet_timesheet: "Envío de parte de horas ",
     views_Timesheet_invalid:
       "Advertencia: no pudimos leer el texto del archivo que cargó. Tendrá que ingresar manualmente todos los campos del formulario.",
+    views_Timesheet_blurry: 'Advertencia: no pudimos leer el texto del archivo que cargó. Tendrá que cargar una nueva foto del formulario.',
     views_Timesheet_select_form: "Seleccione un tipo de formulario arriba",
     views_Timesheet_upload_error: "ERROR DE CARGA DE ARCHIVO!",
     components_Forms_FileUploader_dropfiles:
@@ -665,6 +668,7 @@ const messages = {
     rules_monthYear: "Este campo debe estar en formato AAAA-MM",
     rules_date: "Este campo debe estar en formato AAAA-MM-DD",
     rules_email: "El correo electrónico debe ser válido",
+    
   },
   "zh-tw": {
     translate_error: "翻譯錯誤",
@@ -712,6 +716,7 @@ const messages = {
     views_Timesheet_timesheet: "時間表",
     views_Timesheet_invalid:
       "警告: 我們無法讀成功您所上傳的檔案裡面的字. 您必須自己填寫表裡的每一個表格.",
+    views_Timesheet_blurry: '警告: 我們無法讀成功您所上傳的檔案裡面的字.',
     views_Timesheet_select_form: "請從上面選擇表類.",
     views_Timesheet_upload_error: "上傳錯誤!",
     components_Forms_FileUploader_dropfiles:
