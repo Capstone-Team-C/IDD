@@ -15,6 +15,7 @@ const messages = {
     components_AppShell_AppFooter_about: "About us",
     components_AppShell_AppFooter_opportunities: "Opportunities",
     components_AppShell_AppFooter_access: "Access",
+    components_AppShell_AppFooter_howtouse: "How to Use",
     components_AppShell_AppFooter_phone:
       "Multnomah County General Information Line",
     components_AppShell_NavigationDrawer_home: "Home",
@@ -239,6 +240,7 @@ const messages = {
     components_AppShell_AppFooter_about: "О нас",
     components_AppShell_AppFooter_opportunities: "Возможности",
     components_AppShell_AppFooter_access: "Доступ",
+    components_AppShell_AppFooter_howtouse: "Как пользоваться",
     components_AppShell_AppFooter_phone:
       "Общая информационная линия округа Малтнома",
     components_AppShell_NavigationDrawer_home: "Главное",
@@ -447,6 +449,7 @@ const messages = {
     components_AppShell_AppFooter_about: "Sobre nosotros",
     components_AppShell_AppFooter_opportunities: "Oportunidades",
     components_AppShell_AppFooter_access: "Acceso",
+    components_AppShell_AppFooter_howtouse: "Cómo utilizar",
     components_AppShell_AppFooter_phone:
       "Línea de información general del condado de Multnomah",
     components_AppShell_NavigationDrawer_home: "Inicio",
@@ -673,6 +676,7 @@ const messages = {
     components_AppShell_AppFooter_about: "關於我們",
     components_AppShell_AppFooter_opportunities: "機會",
     components_AppShell_AppFooter_access: "Access",
+    components_AppShell_AppFooter_howtouse: "如何使用",
     components_AppShell_AppFooter_phone:
       "Multnomah County General Information Line",
     components_AppShell_NavigationDrawer_home: "主頁",
