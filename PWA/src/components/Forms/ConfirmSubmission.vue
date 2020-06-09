@@ -1,10 +1,14 @@
 <template>
   <v-container class="text-center">
+    <!-- Submit button at the bottom of a form, next to the 'validate' button -->
     <v-btn color="success" dark @click.stop="signalParentValidate">
       {{ $t("components_Forms_ConfirmSubmission_submit") }}
     </v-btn>
-
+    <!-- END Submit button -->
+    
+    <!-- Dialog box that appears when client presses 'submit' -->
     <v-dialog v-model="displaySubmit" max-width="75%">
+      <!-- No errors on the form -->
       <template v-if="isValid">
         <v-card>
           <div v-if="!loading">
@@ -53,6 +57,7 @@
                 {{ $t("components_Forms_ConfirmSubmission_provider_desc") }}
               </v-card>
             </v-card-text>
+            <!-- END require re-sign -->
 
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -65,7 +70,8 @@
               >
                 {{ $t("components_Forms_ConfirmSubmission_cancel") }}
               </v-btn>
-
+              
+              <!-- Disable submission if offline -->
               <template v-if="onlineStatus">
                 <v-btn
                   class="white--text"
@@ -101,10 +107,12 @@
                   </v-card-text>
                 </v-card>
               </v-dialog>
+              <!-- END Submitting the form -->
             </div>
 
+            <!-- Display submission status -->
             <div v-else>
-              <!-- Display submission status -->
+              <!-- Successfully submitted form -->
               <div v-if="submissionStatus">
                 <v-dialog value="true" hide-overlay persistent width="300">
                   <v-card>
@@ -136,6 +144,9 @@
                   </v-card>
                 </v-dialog>
               </div>
+              <!-- END Successfully submitted form -->
+
+              <!-- Error submitting the form -->
               <div v-else>
                 <v-alert class="headline" id="failure" type="error">
                   {{ $t("components_Forms_ConfirmSubmission_error") }}
@@ -145,12 +156,17 @@
                   {{ $t("components_Forms_ConfirmSubmission_error_desc") }}
                 </v-card-text>
               </div>
+              <!-- END Error submitting the form -->
+
             </div>
+            <!-- END Display submission status -->
+
           </div>
         </v-card>
       </template>
+      <!-- END No errors on the form -->
 
-      <!-- The form is not valid -->
+      <!-- Errors on the form-->
       <template v-else>
         <v-card>
           <v-card-title class="headline text-danger" id="invalid">
@@ -171,14 +187,20 @@
           </v-card-text>
         </v-card>
       </template>
+      <!-- END Errors on the form-->
     </v-dialog>
+    <!-- END Dialog box ... when presses 'submit' -->
+
   </v-container>
 </template>
 
 <style>
-  .v-card__text,
+  .v-card__text {
+    word-break: normal; /* maybe !important  */
+  }
   .v-card__title {
     word-break: normal; /* maybe !important  */
+    justify-content: center;
   }
   .v-progress-circular {
     margin: 1rem;
@@ -312,6 +334,7 @@
         resetServiceDelivered: "ServiceDelivered/resetState",
         resetMileage: "Mileage/resetState",
       }),
+
       // Reset all submission values
       resetValid() {
         this.reSigned = [];
@@ -406,6 +429,7 @@
             });
         }
       },
+
       resetForm() {
         // Reset the vuex store
         this.resetState();

@@ -36,9 +36,9 @@
       return {
         // A list of links for more info about the company
         links: {
-          0: "https://multco.us/multnomah-county/about-multnomah-county",
-          1: "https://multco.us/jobs",
-          2: "https://multco.us/diversity-equity/ada-policy-notice-and-disability-complaint-process",
+          0: process.env.VUE_APP_ABOUT_US,
+          1: process.env.VUE_APP_OPPORTUNITIES,
+          2: process.env.VUE_APP_ACCESS,
         },
       };
     },

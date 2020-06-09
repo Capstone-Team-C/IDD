@@ -75,7 +75,7 @@ const messages = {
     components_Forms_ConfirmSubmission_submit: "Submit",
     components_Forms_ConfirmSubmission_cancel: "Cancel",
     components_Forms_ConfirmSubmission_confirm:
-      "Are you sure want to submit the form?",
+      "Are you ready to submit the form?",
     components_Forms_ConfirmSubmission_edited:
       "There are edited fields. Please confirm these edits.",
     components_Forms_ConfirmSubmission_confirm_desc:
@@ -599,6 +599,44 @@ const messages = {
     components_Forms_ServicesDelivered_err7:
       "ERROR: la fecha de firma del empleador o proveedor es anterior a la última fecha de entrega del servicio",
     components_forms_servicesdelivered_row: "Row",
+
+    ServicesDelivered_clientName_hint: "Nombre completo",
+    ServicesDelivered_clientName_label: "Nombre del cliente",
+    ServicesDelivered_prime_hint: "Entrada alfanumérica",
+    ServicesDelivered_prime_label: "Número Prime",
+    ServicesDelivered_submissionDate_hint: "AAAA-MM",
+    ServicesDelivered_submissionDate_label: "Período de pago Mes y año",
+    ServicesDelivered_providerName_hint: "Numbre completo",
+    ServicesDelivered_providerName_label: "Nombre del proveedor",
+    ServicesDelivered_providerNum_hint: "Número de seis dígitos",
+    ServicesDelivered_providerNum_label: "Número de proveedor",
+    ServicesDelivered_scpaName_hint: "Nombre del SC PA",
+    ServicesDelivered_scpaName_label: "Nombre del SC/PA ",
+    ServicesDelivered_brokerage_hint: "Nombre de la organización",
+    ServicesDelivered_brokerage_label: "CM Organización",
+    ServicesDelivered_serviceAuthorized_hint: "Servicio proporcionado",
+    ServicesDelivered_serviceAuthorized_label: "Servicio",
+    ServicesDelivered_totalHours_hint: "HH:mm",
+    ServicesDelivered_totalHours_label: "Horas en total",
+    ServicesDelivered_serviceGoal_hint: "Objetivo del servicio",
+    ServicesDelivered_serviceGoal_label: "Objetivo del servicio",
+    ServicesDelivered_progressNotes_hint: "Notas",
+    ServicesDelivered_progressNotes_label: "Notas de progreso",
+    ServicesDelivered_employerSignDate_hint: "AAAA-MM-DD",
+    ServicesDelivered_employerSignDate_label: "Fecha",
+    ServicesDelivered_providerSignDate_hint: "AAAA-MM-DD",
+    ServicesDelivered_providerSignDate_label: "Fecha",
+    ServicesDelivered_employerSignature_hint: "",
+    ServicesDelivered_employerSignature_label:
+      "Firma del empleador del cliente o representante del empleador",
+    ServicesDelivered_providerSignature_hint: "",
+    ServicesDelivered_providerSignature_label: "Firma del proveedor / empleado",
+    ServicesDelivered_authorization_label:
+      "Autorizo al personal de CDDP / Brokerage / CIIS a ingresar los datos" +
+      " informó en este formulario a eXPRS en mi nombre para la creación y el pago de reclamos",
+    ServicesDelivered_approval_label: " Iniciales del proveedor",
+    Mileage_totalMiles_hint: "Horas en total",
+    Mileage_totalMiles_label: "Horas en total",
 
     ServicesDeliveredTable_date_hint: "AAAA-MM-DD",
     ServicesDeliveredTable_date_label: "Fecha",

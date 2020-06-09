@@ -50,7 +50,7 @@ namespace TextToDoc
                     {
                         imageFile.CopyTo(ms);
                         ms.Seek(0, SeekOrigin.Begin);
-                        var blur = ImageUploadController.detect_blur(new FormFile(ms, 0, ms.Length, imageFile.Name, imageFile.Name)
+                        var blur = DocumentUploadController.detect_blur(new FormFile(ms, 0, ms.Length, imageFile.Name, imageFile.Name)
                         {
                             Headers = new HeaderDictionary(),
                             ContentType = contenttype
