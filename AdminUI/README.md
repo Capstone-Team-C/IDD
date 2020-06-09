@@ -8,8 +8,6 @@ If Common doesn't show up in your solution window, right Solution 'AdminUI' -> '
 
 By default, this creates a local SQL db that you can test on. To change this, alter the connection string in appsettings.json
 
-In the Package Manager Console, run the following commands:
-
 If you see an error along the lines of "Database xxx already exists, pick a different name",
 then go to view -> SQL Server Object Explorer -> (localdb)\MSSQL.... -> Databases -> Right Click AzureDB -> Delete.
 Now re-run the commands and it should work.
