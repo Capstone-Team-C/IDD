@@ -28,7 +28,7 @@
     "es6-promise": "^4.2.8",
     "eslint": "^7.1.0",
     "eslint-plugin-vue": "^6.2.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "material-design-icons-iconfont": "^5.0.1",
     "moment-duration-format": "^2.3.2",
     "register-service-worker": "^1.7.1",
