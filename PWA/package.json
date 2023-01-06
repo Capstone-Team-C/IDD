@@ -16,7 +16,7 @@
     "@vue/cli-plugin-babel": "~4.4.1",
     "@vue/cli-plugin-eslint": "~4.4.1",
     "@vue/cli-plugin-pwa": "^4.4.1",
-    "@vue/cli-service": "^4.4.1",
+    "@vue/cli-service": "^5.0.8",
     "axios": "^0.19.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
@@ -61,7 +61,7 @@
     "deepmerge": "^4.2.2",
     "jest": "^25.5.4",
     "sinon": "^9.0.2",
-    "vue-jest": "^3.0.5",
+    "vue-jest": "^4.0.1",
     "vue-template-compiler": "^2.6.11",
     "yargs-parser": "^18.1.3"
   },
